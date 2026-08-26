@@ -548,6 +548,96 @@
   <p class="eyebrow">Uso: alocar os parados nas três reservas pendentes</p>
 </section>
 
+<!-- ╔═══════════════════════════════════════════════════════════════╗
+     ║  FECHAMENTO                                slides 30 a 32      ║
+     ╚═══════════════════════════════════════════════════════════════╝ -->
+
+<section class="slide" id="cobertura" data-titulo="Cobertura da entrega">
+  <div class="top"><div><span class="eyebrow">Fechamento</span>
+    <h2>Cobertura da entrega</h2></div></div>
+
+  <div class="tbox">
+    <div class="cap"><span>Quatro junções, uma por integrante</span><span>4 de 4</span></div>
+    <div class="tscroll"><table>
+      <thead><tr><th>integrante</th><th>evento</th><th>junção</th><th>função</th><th>pergunta de negócio</th></tr></thead>
+      <tbody>
+        <tr><td><b>Augusto</b></td><td>Multa</td>
+            <td><span class="tag" style="--tc:var(--inner)">INNER JOIN</span></td>
+            <td class="mono">COUNT</td><td>Clientes com duas ou mais multas</td></tr>
+        <tr><td><b>André</b></td><td>Manutenção</td>
+            <td><span class="tag" style="--tc:var(--left)">LEFT JOIN</span></td>
+            <td class="mono">SUM</td><td>Veículos caros de manter e os que nunca foram à oficina</td></tr>
+        <tr><td><b>Daniel</b></td><td>Avaliação</td>
+            <td><span class="tag" style="--tc:var(--right)">RIGHT JOIN</span></td>
+            <td class="mono">AVG</td><td>Nota por canal e reservas sem avaliação</td></tr>
+        <tr><td><b>Guilherme</b></td><td>Reserva</td>
+            <td><span class="tag" style="--tc:var(--full)">FULL OUTER</span></td>
+            <td class="mono">MAX · MIN</td><td>Veículos parados e reservas sem carro</td></tr>
+      </tbody></table></div>
+  </div>
+
+  <div class="chips">
+    <div class="chip ok" style="--ac:var(--full)"><span class="k">Funções</span>
+      <span class="v" style="font-size:1.6rem">COUNT · SUM · AVG · MAX · MIN</span>
+      <span class="n">5 de 5</span></div>
+    <div class="chip ok" style="--ac:var(--full)"><span class="k">Em todas</span>
+      <span class="v" style="font-size:1.6rem">GROUP BY · HAVING</span>
+      <span class="n">4 de 4 consultas</span></div>
+  </div>
+</section>
+
+<section class="slide" id="aprendizados" data-titulo="O que aprendemos">
+  <div class="top"><div><span class="eyebrow">Fechamento</span>
+    <h2>O que aprendemos</h2></div></div>
+
+  <div class="track" style="grid-template-columns:repeat(3,1fr)">
+    <div class="step now" style="--brand:var(--full); opacity:1">
+      <span class="sn">01 · MODELAGEM</span>
+      <span class="st">A FK que faltava</span>
+      <span class="sd">A relação Veículo–Reserva estava no modelo conceitual, mas não tinha
+        sido implementada no DDL. O erro só apareceu quando tentamos responder
+        qual carro foi reservado.</span></div>
+    <div class="step now" style="--brand:var(--left); opacity:1">
+      <span class="sn">02 · JUNÇÕES</span>
+      <span class="st">NULL é o que separa LEFT de FULL</span>
+      <span class="sd">Quando a chave estrangeira é obrigatória, LEFT JOIN e FULL OUTER JOIN
+        devolvem o mesmo. O lado direito só sobra se a FK aceitar NULL —
+        por isso a consulta do Guilherme usa Reserva.</span></div>
+    <div class="step now" style="--brand:var(--inner); opacity:1">
+      <span class="sn">03 · HAVING</span>
+      <span class="st">O filtro pode desfazer a junção</span>
+      <span class="sd">Sem a condição <code>v.placa IS NULL</code>, o HAVING descartava
+        as reservas sem carro que o FULL OUTER tinha acabado de trazer.
+        A junção certa com o filtro errado dá resposta errada.</span></div>
+  </div>
+</section>
+
+<section class="slide center" id="fim" data-titulo="Encerramento" style="gap:3rem">
+  <span class="eyebrow">Etapa 05 · Consultas Avançadas</span>
+  <h2>Entregáveis</h2>
+
+  <div class="chips">
+    <div class="chip" style="--ac:var(--brand)"><span class="k">Script</span>
+      <span class="v" style="font-size:1.5rem">etapa05_completo.sql</span>
+      <span class="n">DDL, DML e as 4 consultas</span></div>
+    <div class="chip" style="--ac:var(--brand)"><span class="k">Prints</span>
+      <span class="v" style="font-size:1.5rem">Execução no SGBD</span>
+      <span class="n">PostgreSQL 16</span></div>
+    <div class="chip" style="--ac:var(--brand)"><span class="k">Slides</span>
+      <span class="v" style="font-size:1.5rem">Este site</span>
+      <span class="n">32 slides</span></div>
+  </div>
+
+  <p class="lede wide" style="font-size:1.7rem">
+    <a class="baixar" href="sql/etapa05_completo.sql" target="_blank" rel="noopener">Abrir o script SQL</a>
+  </p>
+
+  <div class="credits">
+    <span><b>IFES</b> · Banco de Dados · Prof. Rafael Vargas</span>
+    <span>Augusto · André · Daniel · Guilherme</span>
+  </div>
+</section>
+
 </div><!-- /.stage -->
 
 <div class="zone l" id="zona-esq" aria-hidden="true"></div>
@@ -555,7 +645,7 @@
 <div class="grid" id="grade"></div>
 
 <div class="chrome">
-  <span class="count"><b id="contador">1</b> / <span id="total">29</span></span>
+  <span class="count"><b id="contador">1</b> / <span id="total">32</span></span>
   <span class="who-now" id="dono-atual"></span>
   <div class="road" id="estrada"></div>
   <button class="btn" id="btn-grade" title="Visão geral (O)">Slides</button>

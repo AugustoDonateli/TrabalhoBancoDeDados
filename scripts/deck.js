@@ -456,6 +456,15 @@
 
   montarGrade();
 
+  /* Responde a mudancas no endereco depois de carregado: link direto colado
+     na barra, botao voltar do navegador, atalho do professor. Sem isso o
+     hash muda e o slide fica onde estava. */
+  function irPeloEndereco() {
+    var alvo = slides.map(function (s) { return "#" + s.id; }).indexOf(location.hash);
+    if (alvo > -1 && alvo !== pos.i) { pos.i = alvo; pos.passo = 0; desenhar(); }
+  }
+  window.addEventListener("hashchange", irPeloEndereco);
+
   /* abre no slide do endereço, se houver */
   if (location.hash) {
     var alvo = slides.map(function (s) { return "#" + s.id; }).indexOf(location.hash);

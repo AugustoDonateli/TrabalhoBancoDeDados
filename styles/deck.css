@@ -283,6 +283,19 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
 }
 .swap[aria-pressed="true"]{ background:var(--inner); border-color:var(--inner); color:var(--surface) }
 
+.tag{
+  font-family:"JetBrains Mono",monospace; font-size:1.05rem; font-weight:700;
+  letter-spacing:.05em; color:var(--tc); background:var(--surface-2);
+  border:1px solid var(--tc); border-radius:.25rem; padding:.1rem .6rem;
+}
+.chip.ok .k::after{ content:" ✓"; color:var(--full) }
+.baixar{
+  font-family:"JetBrains Mono",monospace; font-size:1.35rem; font-weight:700;
+  color:var(--brand); text-decoration:none; border:2px solid var(--brand);
+  border-radius:var(--r); padding:.8rem 1.6rem; display:inline-block;
+}
+.baixar:hover{ background:var(--brand); color:var(--brand-ink) }
+
 /* ---------- CROMO --------------------------------------------------------- */
 .chrome{
   position:fixed; left:0; right:0; bottom:0; height:4.4rem; padding:0 3rem;
