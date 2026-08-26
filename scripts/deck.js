@@ -271,6 +271,12 @@
       history.replaceState(null, "", "#" + id);
     }
     marcarGrade();
+
+    /* O console SQL escuta isto para so acordar o Postgres quando o slide
+       dele aparece. Carregar 17 MB na abertura atrasaria o deck a toa. */
+    document.dispatchEvent(new CustomEvent("slide:mudou", {
+      detail: { id: slides[pos.i].id, indice: pos.i }
+    }));
   }
 
   function avancar() {
@@ -330,7 +336,8 @@
 
   /* ---- teclado, clique e toque -------------------------------------------- */
   document.addEventListener("keydown", function (e) {
-    if (e.target.tagName === "INPUT" || e.ctrlKey || e.metaKey || e.altKey) return;
+    var campo = e.target.tagName;
+    if (campo === "INPUT" || campo === "TEXTAREA" || e.ctrlKey || e.metaKey || e.altKey) return;
     var k = e.key;
     if (k === "ArrowRight" || k === " " || k === "PageDown") { e.preventDefault(); avancar(); }
     else if (k === "ArrowLeft" || k === "PageUp") { e.preventDefault(); voltar(); }
@@ -345,8 +352,19 @@
     }
   });
 
-  document.getElementById("zona-dir").addEventListener("click", avancar);
-  document.getElementById("zona-esq").addEventListener("click", voltar);
+  /* Clique nas bordas para avancar, util em tablet e sem teclado.
+     Antes isso eram duas faixas sobrepostas a tela, que passavam a 11px do
+     botao mais a esquerda de cada slide interativo. Agora a decisao e no
+     alvo: se o clique caiu num controle, ele e do controle. */
+  var INTERATIVO = "button, a, input, select, textarea, label, summary, [role=button]";
+  document.addEventListener("click", function (e) {
+    if (grade.classList.contains("on")) return;
+    if (e.target.closest && e.target.closest(INTERATIVO)) return;
+    if (String(getSelection()).length) return;          /* selecionando texto */
+    var faixa = e.clientX / window.innerWidth;
+    if (faixa > 0.91) avancar();
+    else if (faixa < 0.09) voltar();
+  });
   document.getElementById("btn-tema").addEventListener("click", trocarTema);
   document.getElementById("btn-grade").addEventListener("click", function () {
     grade.classList.toggle("on");

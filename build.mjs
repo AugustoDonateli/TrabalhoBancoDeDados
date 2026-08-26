@@ -16,9 +16,18 @@ const html = ler("./index.html");
 const corpo = html.split("<body>")[1].split("</body>")[0];
 
 /* tira as tags de script, que serão embutidas */
-const corpoLimpo = corpo.replace(/\s*<script src="[^"]+"><\/script>/g, "");
+let corpoLimpo = corpo.replace(/\s*<script src="[^"]+"><\/script>/g, "");
 
-const saida = `<title>Quatro Junções</title>
+/* O console SQL carrega 18 MB de PostgreSQL em arquivos separados, que nao
+   cabem num HTML unico. Na copia empacotada ele sai de cena e o slide diz
+   onde encontrar a versao que funciona. */
+corpoLimpo = corpoLimpo
+  .replace(/\s*<script type="module" src="[^"]+"><\/script>/g, "")
+  .replace(
+    'Abra este slide para acordar o banco.',
+    'O banco não vem nesta cópia empacotada — abra o site publicado.');
+
+const saida = `<title>Consultas Avançadas</title>
 <style>
 ${ler("./assets/fontes.css")}
 </style>

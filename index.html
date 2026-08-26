@@ -15,7 +15,7 @@
 
 <!-- ═══════════════ 01 · CAPA ═══════════════ -->
 <section class="slide center on" id="capa" data-titulo="Capa" style="gap:4rem">
-  <span class="eyebrow">Etapa 05 · PostgreSQL 16</span>
+  <span class="eyebrow">Etapa 05 · PostgreSQL</span>
   <h1>Consultas<br>Avançadas</h1>
   <p class="lede wide" style="font-size:2.1rem">
     Banco de dados de uma concessionária: reservas, manutenções, multas e avaliações.</p>
@@ -549,7 +549,55 @@
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  FECHAMENTO                                slides 30 a 32      ║
+     ║  CONSOLE SQL · PostgreSQL rodando no navegador   slide 30      ║
+     ╚═══════════════════════════════════════════════════════════════╝ -->
+
+<section class="slide" id="console" data-titulo="Console SQL">
+  <div class="top">
+    <div><span class="eyebrow">O banco está aqui dentro</span>
+      <h2>Console SQL</h2></div>
+    <div class="plate"><b>POSTGRES</b><span>NO NAVEGADOR</span></div>
+  </div>
+
+  <div class="picker" id="sql-atalhos">
+    <button class="pick p-inner" data-q="augusto"   aria-pressed="false">Augusto</button>
+    <button class="pick p-left"  data-q="andre"     aria-pressed="false">André</button>
+    <button class="pick p-right" data-q="daniel"    aria-pressed="false">Daniel</button>
+    <button class="pick p-full"  data-q="guilherme" aria-pressed="false">Guilherme</button>
+    <button class="pick"         data-q="plano"     aria-pressed="false">EXPLAIN</button>
+    <button class="pick"         data-q="livre"     aria-pressed="false">o esquema</button>
+  </div>
+
+  <div class="cols c-console" id="console-sql">
+    <div class="editor">
+      <div class="cap"><span>consulta</span><span>Ctrl + Enter</span></div>
+      <textarea id="sql-campo" spellcheck="false" wrap="off" aria-label="Consulta SQL">SELECT c.nome AS cliente,
+       COUNT(m.id) AS total_multas
+FROM Multa m
+INNER JOIN Reserva r ON m.fk_Reserva_id  = r.id
+INNER JOIN Cliente c ON r.fk_Cliente_cpf = c.cpf
+GROUP BY c.cpf, c.nome
+HAVING COUNT(m.id) >= 2
+ORDER BY total_multas DESC;</textarea>
+      <div class="editor-pe">
+        <button class="rodar" id="sql-rodar" disabled>Executar</button>
+        <span class="sql-estado" id="sql-estado">Abra este slide para acordar o banco.</span>
+      </div>
+    </div>
+
+    <div class="tbox">
+      <div class="cap"><span>resultado</span><span id="sql-legenda">—</span></div>
+      <div class="tscroll"><table id="sql-saida"></table></div>
+    </div>
+  </div>
+
+  <p class="lede wide" style="font-size:1.6rem">
+    Não é tabela pronta: é o <b>PostgreSQL compilado para o navegador</b>, com a mesma
+    carga do <code>etapa05_completo.sql</code>. Escreva qualquer consulta e execute.</p>
+</section>
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗
+     ║  FECHAMENTO                                slides 31 a 33      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide" id="cobertura" data-titulo="Cobertura da entrega">
@@ -625,7 +673,7 @@
       <span class="n">PostgreSQL 16</span></div>
     <div class="chip" style="--ac:var(--brand)"><span class="k">Slides</span>
       <span class="v" style="font-size:1.5rem">Este site</span>
-      <span class="n">32 slides</span></div>
+      <span class="n">33 slides</span></div>
   </div>
 
   <p class="lede wide" style="font-size:1.7rem">
@@ -640,12 +688,10 @@
 
 </div><!-- /.stage -->
 
-<div class="zone l" id="zona-esq" aria-hidden="true"></div>
-<div class="zone r" id="zona-dir" aria-hidden="true"></div>
 <div class="grid" id="grade"></div>
 
 <div class="chrome">
-  <span class="count"><b id="contador">1</b> / <span id="total">32</span></span>
+  <span class="count"><b id="contador">1</b> / <span id="total">33</span></span>
   <span class="who-now" id="dono-atual"></span>
   <div class="road" id="estrada"></div>
   <button class="btn" id="btn-grade" title="Visão geral (O)">Slides</button>
@@ -654,5 +700,6 @@
 
 <script src="scripts/dados.js"></script>
 <script src="scripts/deck.js"></script>
+<script type="module" src="scripts/console.js"></script>
 </body>
 </html>

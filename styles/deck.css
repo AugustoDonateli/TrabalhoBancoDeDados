@@ -15,15 +15,22 @@ html{ font-size:min(1vw, 1.7778vh); }
    Neutro de aço com viés azul. As quatro cores das junções vêm da
    sinalização automotiva e carregam significado:
    autuação (vermelho) · oficina (azul) · avaliação (âmbar) · pátio (verde)
+
+   Os tons de apoio do tema claro foram escurecidos para passar em WCAG AA
+   (4,5 para texto). Projetor lava cor: o que mede 4,5 aqui fica no limite
+   na parede da sala.
+     --ink-3  4,56 sobre o fundo   (era 3,84)
+     --null   4,50 sobre --nullbg  (era 3,05)
+     --line-2 3,08 sobre o fundo   (era 1,84 — e borda, nao texto)
    -------------------------------------------------------------------------- */
 :root{
   --ground:#EDF0F5; --surface:#FFFFFF; --surface-2:#F4F7FB; --surface-3:#E3E9F1;
-  --line:#C9D3E0;   --line-2:#A6B4C6;
-  --ink:#0B1017;    --ink-2:#43505F;  --ink-3:#6B7A8C;
+  --line:#C9D3E0;   --line-2:#7C8A9C;
+  --ink:#0B1017;    --ink-2:#43505F;  --ink-3:#5F6E80;
   --brand:#0F3555;  --brand-ink:#FFFFFF;
   --inner:#B22D1A;  --left:#0F52B0;   --right:#855800;  --full:#046443;
   --inner-t:#FAE9E6; --left-t:#E6EEFC; --right-t:#FAF0D9; --full-t:#DDF3EA;
-  --null:#7C8A9C;   --nullbg:#EBEFF5;
+  --null:#606E80;   --nullbg:#EBEFF5;
   --shadow:0 .1rem .2rem rgba(11,16,23,.05), 0 1rem 3rem -1.4rem rgba(11,16,23,.2);
   --r:.4rem;
 }
@@ -143,6 +150,39 @@ tbody tr.fresh{ animation:pop .3s cubic-bezier(.22,.9,.3,1) both }
 .c-res{ grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) }
 .c-diag{ grid-template-columns:minmax(0,1fr) 22rem }
 .c-3{ grid-template-columns:repeat(3,minmax(0,1fr)) }
+.c-console{ grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) }
+
+/* ---------- CONSOLE SQL --------------------------------------------------- */
+.editor{
+  display:flex; flex-direction:column; min-height:0; background:var(--surface);
+  border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden;
+}
+.editor textarea{
+  flex:1; min-height:0; resize:none; border:0; outline:0; width:100%;
+  padding:1.2rem 1.4rem; background:var(--surface); color:var(--ink);
+  font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  font-size:1.35rem; line-height:1.6; tab-size:2; white-space:pre; overflow:auto;
+}
+.editor textarea:focus{ background:var(--surface-2) }
+.editor-pe{
+  display:flex; align-items:center; gap:1.2rem; padding:.9rem 1.2rem;
+  border-top:1px solid var(--line); background:var(--surface-2);
+}
+.rodar{
+  font-family:"JetBrains Mono",monospace; font-size:1.2rem; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; padding:.7rem 1.6rem;
+  border-radius:var(--r); cursor:pointer; border:2px solid var(--brand);
+  background:var(--brand); color:var(--brand-ink); white-space:nowrap;
+}
+.rodar:hover:not(:disabled){ filter:brightness(1.15) }
+.rodar:disabled{ background:transparent; color:var(--ink-3); border-color:var(--line); cursor:progress }
+.sql-estado{
+  font-size:1.15rem; color:var(--ink-2); line-height:1.35; min-width:0;
+  font-family:"JetBrains Mono",monospace;
+}
+.sql-estado.ok{ color:var(--full) }
+.sql-estado.erro{ color:var(--inner) }
+
 
 /* ---------- CAPA ---------------------------------------------------------- */
 .crew{ display:flex; gap:1.6rem; flex-wrap:wrap }
@@ -319,8 +359,6 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
   padding:.5rem 1rem; cursor:pointer; text-transform:uppercase;
 }
 .btn:hover{ border-color:var(--line-2); color:var(--ink) }
-.zone{ position:fixed; top:0; bottom:4.4rem; width:9%; z-index:10; cursor:pointer }
-.zone.l{ left:0 } .zone.r{ right:0 }
 
 /* ---------- VISÃO GERAL (tecla O) ----------------------------------------- */
 .grid{
@@ -345,7 +383,6 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
 @media (max-width:820px){
   html{ font-size:min(2.4vw,1.4vh) }
   .cols{ grid-template-columns:1fr !important }
-  .zone{ display:none }
   .track{ grid-template-columns:1fr 1fr }
 }
 @media (prefers-reduced-motion:reduce){
