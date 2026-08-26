@@ -24,7 +24,7 @@ console funcionar, sirva a pasta:
 npx http-server -p 8080
 ```
 
-Nos outros 32 slides tanto faz.
+Nos outros 28 slides tanto faz.
 
 **Teclas:** `→` avança · `←` volta · `O` visão geral · `T` claro/escuro ·
 `F` tela cheia · `Home`/`End` primeiro/último slide.
@@ -66,7 +66,7 @@ scripts/dados.js    esquema e amostras das tabelas
 scripts/deck.js     navegação, diagrama e demonstrações
 assets/fontes.css   fontes embutidas (gerado, não editar)
 assets/pglite/      PostgreSQL compilado para o navegador (18 MB)
-scripts/console.js  o console SQL do slide 30
+scripts/console.js  o console SQL do slide 26
 sql/                DDL, DML, as quatro consultas e o script completo
 build.mjs           gera preview.html num arquivo só
 ```
@@ -74,22 +74,25 @@ build.mjs           gera preview.html num arquivo só
 Para mexer no texto de um slide, edite direto o `index.html` — cada slide é
 uma `<section>` comentada.
 
-## Os 33 slides
+## Os 29 slides
 
 | | |
 |---|---|
-| 1 – 9 | Capa, contextualização, modelo lógico e fundamentação |
-| 10 – 14 | Augusto · Multa · `INNER JOIN` |
-| 15 – 19 | André · Manutenção · `LEFT JOIN` |
-| 20 – 24 | Daniel · Avaliação · `RIGHT JOIN` |
-| 25 – 29 | Guilherme · Reserva · `FULL OUTER JOIN` |
-| 30 | Console SQL — PostgreSQL rodando no navegador |
-| 31 – 33 | Cobertura, aprendizados e encerramento |
+| 1 – 5 | Capa, contextualização e modelo lógico |
+| 6 – 10 | Augusto · Multa · `INNER JOIN` |
+| 11 – 15 | André · Manutenção · `LEFT JOIN` |
+| 16 – 20 | Daniel · Avaliação · `RIGHT JOIN` |
+| 21 – 25 | Guilherme · Reserva · `FULL OUTER JOIN` |
+| 26 | Console SQL — PostgreSQL rodando no navegador |
+| 27 – 29 | Cobertura, aprendizados e encerramento |
 
 Cada bloco segue a ordem do enunciado: pergunta de negócio, dados originais,
 o script comentado, o resultado da execução e a leitura de negócio.
 
-No slide 30 o banco está dentro da página: dá para escrever qualquer consulta
+Não há seção de fundamentação no começo: cada conceito é explicado por quem
+usa, dentro do próprio bloco, no passo a passo do SQL.
+
+No slide 26 o banco está dentro da página: dá para escrever qualquer consulta
 e executar na hora, contra a mesma carga do `etapa05_completo.sql`.
 
 ## Publicar

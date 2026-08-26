@@ -116,36 +116,6 @@ const EQUIPE = [
   { nome: "Guilherme", evento: "Reserva",    tabela: "Reserva",    junta: "FULL OUTER",  cor: "full",  fn: "MAX · MIN" }
 ];
 
-/* ---------------------------------------------------------------------------
-   AMOSTRAS — recortes reais da carga, usados nos slides de demonstração.
-   --------------------------------------------------------------------------- */
-
-/* Par Veiculo x Reserva: a FK aceita NULL, então as quatro junções
-   devolvem quantidades diferentes. É o que sustenta o slide "ao vivo". */
-const DEMO_VEICULO = [
-  { placa: "ABC1D23", modelo: "Nivus" },
-  { placa: "HIJ8K90", modelo: "Kwid" },
-  { placa: "KLM1N23", modelo: "208" },
-  { placa: "LMN2O34", modelo: "C3" }
-];
-const DEMO_RESERVA = [
-  { id: 1,  placa: "ABC1D23" },
-  { id: 5,  placa: "HIJ8K90" },
-  { id: 18, placa: null },
-  { id: 20, placa: null }
-];
-
-/* Multas por cliente, antes e depois do GROUP BY — slides de agrupamento. */
-const DEMO_MULTAS = [
-  { cliente: "Carlos Eduardo Lima", valor: 293, tipo: "Média" },
-  { cliente: "Carlos Eduardo Lima", valor: 195, tipo: "Leve" },
-  { cliente: "Carlos Eduardo Lima", valor: 880, tipo: "Gravíssima" },
-  { cliente: "Gabriel Fonseca",     valor: 130, tipo: "Leve" },
-  { cliente: "Gabriel Fonseca",     valor: 293, tipo: "Média" },
-  { cliente: "Ana Beatriz Moraes",  valor: 293, tipo: "Média" }
-];
-
-
 /* ===========================================================================
    OS QUATRO BLOCOS
    Amostras das tabelas de origem e o resultado real de cada consulta,

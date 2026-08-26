@@ -97,54 +97,6 @@
   }
 
   /* =========================================================================
-     AS QUATRO JUNÇÕES AO VIVO
-     ========================================================================= */
-  var EXPLICA = {
-    inner: "Só as linhas que têm par nos dois lados.",
-    left:  "Todos os veículos. Sem reserva, o lado direito fica NULL.",
-    right: "Todas as reservas. Sem veículo, o lado esquerdo fica NULL.",
-    full:  "Todas as linhas dos dois lados."
-  };
-
-  function juntar(tipo) {
-    var saida = [];
-    DEMO_VEICULO.forEach(function (v) {
-      var pares = DEMO_RESERVA.filter(function (r) { return r.placa === v.placa; });
-      if (pares.length) pares.forEach(function (r) { saida.push({ v: v, r: r }); });
-      else if (tipo === "left" || tipo === "full") saida.push({ v: v, r: null });
-    });
-    if (tipo === "right" || tipo === "full") {
-      DEMO_RESERVA.filter(function (r) { return r.placa === null; })
-                  .forEach(function (r) { saida.push({ v: null, r: r }); });
-    }
-    return saida;
-  }
-
-  var COLUNAS_JUNCAO = [
-    { h: "placa",   f: function (o) { return o.v ? o.v.placa : null; } },
-    { h: "modelo",  f: function (o) { return o.v ? o.v.modelo : null; } },
-    { h: "reserva", f: function (o) { return o.r ? o.r.id : null; }, num: true }
-  ];
-
-  var tipoAtual = "left";
-
-  function desenharJuncao() {
-    var linhas = juntar(tipoAtual);
-    montarTabela(document.getElementById("t-juncao"), COLUNAS_JUNCAO, linhas, true);
-    document.getElementById("juncao-cap").textContent = linhas.length + " linhas";
-    var n = document.getElementById("juncao-n");
-    n.textContent = linhas.length;
-    n.style.setProperty("--ac", "var(--" + tipoAtual + ")");
-    document.getElementById("juncao-txt").textContent = EXPLICA[tipoAtual];
-    document.getElementById("juncao-placa").textContent =
-      tipoAtual === "full" ? "FULL OUTER" : tipoAtual.toUpperCase() + " JOIN";
-    [].forEach.call(document.querySelectorAll("#picker-juncao .pick"), function (b) {
-      b.setAttribute("aria-pressed", b.dataset.j === tipoAtual ? "true" : "false");
-    });
-  }
-
-
-  /* =========================================================================
      OS QUATRO BLOCOS
      Cada integrante tem um controle ligado à própria consulta.
      ========================================================================= */
@@ -264,7 +216,6 @@
     rot.style.setProperty("--ac", dono ? "var(--" + dono + ")" : "var(--ink-3)");
 
     pintarPassos(pos.passo);
-    if (slides[pos.i].querySelector("#t-juncao")) desenharJuncao();
 
     var id = slides[pos.i].id;
     if (id && location.hash !== "#" + id) {
@@ -389,29 +340,6 @@
     document.getElementById("diagrama-estrutura"), "estrutura",
     document.getElementById("campos-tabela"));
   montarDiagrama(document.getElementById("diagrama-donos"), "donos", null);
-
-  [].forEach.call(document.querySelectorAll("#picker-juncao .pick"), function (b) {
-    b.addEventListener("click", function () { tipoAtual = b.dataset.j; desenharJuncao(); });
-  });
-
-  /* amostra de multas — slides de GROUP BY */
-  montarTabela(document.getElementById("t-multas-cru"), [
-    { h: "cliente", f: function (r) { return r.cliente; } },
-    { h: "tipo",    f: function (r) { return r.tipo; } },
-    { h: "valor",   f: function (r) { return r.valor; }, num: true }
-  ], DEMO_MULTAS);
-
-  var agrupado = [];
-  DEMO_MULTAS.forEach(function (m) {
-    var g = agrupado.filter(function (x) { return x.cliente === m.cliente; })[0];
-    if (!g) { g = { cliente: m.cliente, qtd: 0, soma: 0 }; agrupado.push(g); }
-    g.qtd++; g.soma += m.valor;
-  });
-  montarTabela(document.getElementById("t-multas-agrupado"), [
-    { h: "cliente",      f: function (r) { return r.cliente; } },
-    { h: "COUNT(*)",     f: function (r) { return r.qtd; },  num: true },
-    { h: "SUM(valor)",   f: function (r) { return r.soma; }, num: true }
-  ], agrupado);
 
   document.getElementById("aug-rng").addEventListener("input", desenharAugusto);
   desenharAugusto();

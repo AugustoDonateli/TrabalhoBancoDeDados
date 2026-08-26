@@ -482,100 +482,8 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
   </div>
 </section>
 
-<!-- ═══════════════ 06 · POR QUE USAR JOIN ═══════════════ -->
-<section class="slide" id="por-que-join" data-titulo="Por que usar JOIN">
-  <div class="top"><div><span class="eyebrow">Fundamentação</span><h2>Por que usar JOIN</h2></div></div>
-  <div class="cols c-2">
-    <div class="tbox">
-      <div class="cap"><span>Multa</span><span>tem o valor</span></div>
-      <div class="tscroll"><table>
-        <thead><tr><th>id</th><th>valor</th><th>fk_Reserva_id</th></tr></thead>
-        <tbody>
-          <tr><td class="num">1</td><td class="num">293</td><td class="num">2</td></tr>
-          <tr><td class="num">2</td><td class="num">195</td><td class="num">4</td></tr>
-          <tr><td class="num">3</td><td class="num">880</td><td class="num">12</td></tr>
-        </tbody></table></div>
-    </div>
-    <div class="tbox">
-      <div class="cap"><span>Cliente</span><span>tem o nome</span></div>
-      <div class="tscroll"><table>
-        <thead><tr><th>cpf</th><th>nome</th></tr></thead>
-        <tbody>
-          <tr><td class="num">22233344455</td><td>Carlos Eduardo Lima</td></tr>
-          <tr><td class="num">66677788899</td><td>Gabriel Fonseca</td></tr>
-          <tr><td class="num">11122233344</td><td>Ana Beatriz Moraes</td></tr>
-        </tbody></table></div>
-    </div>
-  </div>
-  <p class="lede wide" style="font-size:1.8rem">
-    A tabela <b>Multa</b> guarda o valor, mas não o nome. A tabela <b>Cliente</b> guarda o
-    nome, mas não as multas. Para responder quem são os clientes reincidentes é preciso
-    ler as duas ao mesmo tempo — é o que o JOIN faz.</p>
-</section>
-
-<!-- ═══════════════ 07 · OS QUATRO TIPOS ═══════════════ -->
-<section class="slide" id="juncoes" data-titulo="Os quatro tipos de junção">
-  <div class="top">
-    <div><span class="eyebrow">Fundamentação</span><h2>Os quatro tipos de junção</h2></div>
-    <div class="plate"><b>AO VIVO</b><span id="juncao-placa">LEFT JOIN</span></div>
-  </div>
-  <div class="picker" id="picker-juncao">
-    <button class="pick p-inner" data-j="inner" aria-pressed="false">INNER</button>
-    <button class="pick p-left"  data-j="left"  aria-pressed="true">LEFT</button>
-    <button class="pick p-right" data-j="right" aria-pressed="false">RIGHT</button>
-    <button class="pick p-full"  data-j="full"  aria-pressed="false">FULL OUTER</button>
-  </div>
-  <div class="cols c-res">
-    <div class="tbox">
-      <div class="cap"><span>Veiculo ⋈ Reserva</span><span id="juncao-cap">4 linhas</span></div>
-      <div class="tscroll"><table id="t-juncao"></table></div>
-    </div>
-    <div style="display:flex; flex-direction:column; gap:1.6rem; min-width:0">
-      <div class="big" id="juncao-n" style="font-size:9rem">4</div>
-      <p class="lede" id="juncao-txt" style="font-size:1.7rem"></p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════ 08 · GROUP BY ═══════════════ -->
-<section class="slide" id="group-by" data-titulo="GROUP BY">
-  <div class="top"><div><span class="eyebrow">Fundamentação</span><h2>GROUP BY</h2></div></div>
-  <div class="cols c-2">
-    <div class="tbox"><div class="cap"><span>Antes</span><span>6 linhas</span></div>
-      <div class="tscroll"><table id="t-multas-cru"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Depois · GROUP BY cliente</span><span>3 grupos</span></div>
-      <div class="tscroll"><table id="t-multas-agrupado"></table></div></div>
-  </div>
-  <p class="lede wide" style="font-size:1.8rem">
-    As três multas de Carlos viraram uma linha. O <code>GROUP BY</code> reduz várias linhas
-    a um grupo, e as funções de agregação calculam um valor para cada grupo.</p>
-</section>
-
-<!-- ═══════════════ 09 · WHERE E HAVING ═══════════════ -->
-<section class="slide center" id="having" data-titulo="WHERE e HAVING" style="gap:3rem">
-  <span class="eyebrow">Fundamentação</span>
-  <h2>WHERE e HAVING</h2>
-  <div class="track">
-    <div class="step now" style="--brand:var(--ink-3); opacity:1">
-      <span class="sn">1 · FROM + JOIN</span><span class="st">As linhas</span>
-      <span class="sd">As tabelas se encontram. Ainda é tudo linha solta.</span></div>
-    <div class="step now" style="--brand:var(--inner); opacity:1">
-      <span class="sn">2 · WHERE</span><span class="st">Filtra linhas</span>
-      <span class="sd">Age antes do agrupamento. Aqui COUNT e SUM ainda não existem.</span></div>
-    <div class="step now" style="--brand:var(--ink-3); opacity:1">
-      <span class="sn">3 · GROUP BY</span><span class="st">Forma os grupos</span>
-      <span class="sd">As funções de agregação são calculadas.</span></div>
-    <div class="step now" style="--brand:var(--full); opacity:1">
-      <span class="sn">4 · HAVING</span><span class="st">Filtra grupos</span>
-      <span class="sd">Age depois. É onde cabe <code>COUNT(*) >= 2</code>.</span></div>
-  </div>
-  <p class="lede wide" style="font-size:1.8rem">
-    <code>WHERE COUNT(*) >= 2</code> dá erro porque, na hora em que o WHERE roda,
-    o COUNT ainda não foi calculado.</p>
-</section>
-
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  AUGUSTO · MULTA · INNER JOIN · COUNT      slides 10 a 14      ║
+     ║  AUGUSTO · MULTA · INNER JOIN · COUNT      slides 6 a 10      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide center" id="aug-pergunta" data-titulo="Augusto · Pergunta"
@@ -605,8 +513,9 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
       <div class="tscroll"><table id="t-aug-cliente"></table></div></div>
   </div>
   <p class="lede wide" style="font-size:1.7rem">
-    A multa não guarda o CPF. <b>Reserva é a ponte</b>: liga cada multa ao cliente que
-    estava com o carro.</p>
+    <b>Multa</b> tem o valor mas não o nome. <b>Cliente</b> tem o nome mas não as multas.
+    E a multa nem guarda o CPF — <b>Reserva é a ponte</b>. Responder a pergunta exige
+    ler as três ao mesmo tempo, e é isso que o JOIN faz.</p>
 </section>
 
 <section class="slide" id="aug-sql" data-titulo="Augusto · A consulta" data-steps="6"
@@ -628,7 +537,7 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
       <div data-nota="2"><span class="nt">FROM Multa</span>A consulta parte da multa, não do cliente. O relatório é sobre quem tem multa.</div>
       <div data-nota="3"><span class="nt">INNER JOIN</span>Duas junções encadeadas. Cliente sem multa não aparece nem zerado — é a interseção das três tabelas.</div>
       <div data-nota="4"><span class="nt">GROUP BY</span>Um grupo por cliente. As três multas de Carlos passam a ser uma linha.</div>
-      <div data-nota="5"><span class="nt">HAVING</span>Filtra os grupos já calculados. Quem tem uma multa só sai do relatório.</div>
+      <div data-nota="5"><span class="nt">HAVING</span>Filtra os <b>grupos já calculados</b> — quem tem uma multa só sai do relatório. Não dá para usar <code>WHERE</code> aqui: quando ele roda, o <code>COUNT</code> ainda nem foi calculado.</div>
       <div data-nota="6"><span class="nt">ORDER BY</span>Do maior número de multas para o menor.</div>
     </div>
   </div>
@@ -667,7 +576,7 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  ANDRÉ · MANUTENÇÃO · LEFT JOIN · SUM      slides 15 a 19      ║
+     ║  ANDRÉ · MANUTENÇÃO · LEFT JOIN · SUM      slides 11 a 15      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide center" id="and-pergunta" data-titulo="André · Pergunta"
@@ -757,7 +666,7 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  DANIEL · AVALIAÇÃO · RIGHT JOIN · AVG     slides 20 a 24      ║
+     ║  DANIEL · AVALIAÇÃO · RIGHT JOIN · AVG     slides 16 a 20      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide center" id="dan-pergunta" data-titulo="Daniel · Pergunta"
@@ -848,7 +757,7 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  GUILHERME · RESERVA · FULL OUTER · MAX e MIN  slides 25 a 29  ║
+     ║  GUILHERME · RESERVA · FULL OUTER · MAX e MIN  slides 21 a 25  ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide center" id="gui-pergunta" data-titulo="Guilherme · Pergunta"
@@ -941,7 +850,7 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  CONSOLE SQL · PostgreSQL rodando no navegador   slide 30      ║
+     ║  CONSOLE SQL · PostgreSQL rodando no navegador   slide 26      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide" id="console" data-titulo="Console SQL">
@@ -989,7 +898,7 @@ ORDER BY total_multas DESC;</textarea>
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  FECHAMENTO                                slides 31 a 33      ║
+     ║  FECHAMENTO                                slides 27 a 29      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide" id="cobertura" data-titulo="Cobertura da entrega">
@@ -1065,7 +974,7 @@ ORDER BY total_multas DESC;</textarea>
       <span class="n">PostgreSQL 16</span></div>
     <div class="chip" style="--ac:var(--brand)"><span class="k">Slides</span>
       <span class="v" style="font-size:1.5rem">Este site</span>
-      <span class="n">33 slides</span></div>
+      <span class="n">29 slides</span></div>
   </div>
 
   <p class="lede wide" style="font-size:1.7rem">
@@ -1083,7 +992,7 @@ ORDER BY total_multas DESC;</textarea>
 <div class="grid" id="grade"></div>
 
 <div class="chrome">
-  <span class="count"><b id="contador">1</b> / <span id="total">33</span></span>
+  <span class="count"><b id="contador">1</b> / <span id="total">29</span></span>
   <span class="who-now" id="dono-atual"></span>
   <div class="road" id="estrada"></div>
   <button class="btn" id="btn-grade" title="Visão geral (O)">Slides</button>
@@ -1208,36 +1117,6 @@ const EQUIPE = [
   { nome: "Daniel",    evento: "Avaliação",  tabela: "Avaliacao",  junta: "RIGHT JOIN",  cor: "right", fn: "AVG" },
   { nome: "Guilherme", evento: "Reserva",    tabela: "Reserva",    junta: "FULL OUTER",  cor: "full",  fn: "MAX · MIN" }
 ];
-
-/* ---------------------------------------------------------------------------
-   AMOSTRAS — recortes reais da carga, usados nos slides de demonstração.
-   --------------------------------------------------------------------------- */
-
-/* Par Veiculo x Reserva: a FK aceita NULL, então as quatro junções
-   devolvem quantidades diferentes. É o que sustenta o slide "ao vivo". */
-const DEMO_VEICULO = [
-  { placa: "ABC1D23", modelo: "Nivus" },
-  { placa: "HIJ8K90", modelo: "Kwid" },
-  { placa: "KLM1N23", modelo: "208" },
-  { placa: "LMN2O34", modelo: "C3" }
-];
-const DEMO_RESERVA = [
-  { id: 1,  placa: "ABC1D23" },
-  { id: 5,  placa: "HIJ8K90" },
-  { id: 18, placa: null },
-  { id: 20, placa: null }
-];
-
-/* Multas por cliente, antes e depois do GROUP BY — slides de agrupamento. */
-const DEMO_MULTAS = [
-  { cliente: "Carlos Eduardo Lima", valor: 293, tipo: "Média" },
-  { cliente: "Carlos Eduardo Lima", valor: 195, tipo: "Leve" },
-  { cliente: "Carlos Eduardo Lima", valor: 880, tipo: "Gravíssima" },
-  { cliente: "Gabriel Fonseca",     valor: 130, tipo: "Leve" },
-  { cliente: "Gabriel Fonseca",     valor: 293, tipo: "Média" },
-  { cliente: "Ana Beatriz Moraes",  valor: 293, tipo: "Média" }
-];
-
 
 /* ===========================================================================
    OS QUATRO BLOCOS
@@ -1474,54 +1353,6 @@ const GUI_PERDA = {
   }
 
   /* =========================================================================
-     AS QUATRO JUNÇÕES AO VIVO
-     ========================================================================= */
-  var EXPLICA = {
-    inner: "Só as linhas que têm par nos dois lados.",
-    left:  "Todos os veículos. Sem reserva, o lado direito fica NULL.",
-    right: "Todas as reservas. Sem veículo, o lado esquerdo fica NULL.",
-    full:  "Todas as linhas dos dois lados."
-  };
-
-  function juntar(tipo) {
-    var saida = [];
-    DEMO_VEICULO.forEach(function (v) {
-      var pares = DEMO_RESERVA.filter(function (r) { return r.placa === v.placa; });
-      if (pares.length) pares.forEach(function (r) { saida.push({ v: v, r: r }); });
-      else if (tipo === "left" || tipo === "full") saida.push({ v: v, r: null });
-    });
-    if (tipo === "right" || tipo === "full") {
-      DEMO_RESERVA.filter(function (r) { return r.placa === null; })
-                  .forEach(function (r) { saida.push({ v: null, r: r }); });
-    }
-    return saida;
-  }
-
-  var COLUNAS_JUNCAO = [
-    { h: "placa",   f: function (o) { return o.v ? o.v.placa : null; } },
-    { h: "modelo",  f: function (o) { return o.v ? o.v.modelo : null; } },
-    { h: "reserva", f: function (o) { return o.r ? o.r.id : null; }, num: true }
-  ];
-
-  var tipoAtual = "left";
-
-  function desenharJuncao() {
-    var linhas = juntar(tipoAtual);
-    montarTabela(document.getElementById("t-juncao"), COLUNAS_JUNCAO, linhas, true);
-    document.getElementById("juncao-cap").textContent = linhas.length + " linhas";
-    var n = document.getElementById("juncao-n");
-    n.textContent = linhas.length;
-    n.style.setProperty("--ac", "var(--" + tipoAtual + ")");
-    document.getElementById("juncao-txt").textContent = EXPLICA[tipoAtual];
-    document.getElementById("juncao-placa").textContent =
-      tipoAtual === "full" ? "FULL OUTER" : tipoAtual.toUpperCase() + " JOIN";
-    [].forEach.call(document.querySelectorAll("#picker-juncao .pick"), function (b) {
-      b.setAttribute("aria-pressed", b.dataset.j === tipoAtual ? "true" : "false");
-    });
-  }
-
-
-  /* =========================================================================
      OS QUATRO BLOCOS
      Cada integrante tem um controle ligado à própria consulta.
      ========================================================================= */
@@ -1641,7 +1472,6 @@ const GUI_PERDA = {
     rot.style.setProperty("--ac", dono ? "var(--" + dono + ")" : "var(--ink-3)");
 
     pintarPassos(pos.passo);
-    if (slides[pos.i].querySelector("#t-juncao")) desenharJuncao();
 
     var id = slides[pos.i].id;
     if (id && location.hash !== "#" + id) {
@@ -1766,29 +1596,6 @@ const GUI_PERDA = {
     document.getElementById("diagrama-estrutura"), "estrutura",
     document.getElementById("campos-tabela"));
   montarDiagrama(document.getElementById("diagrama-donos"), "donos", null);
-
-  [].forEach.call(document.querySelectorAll("#picker-juncao .pick"), function (b) {
-    b.addEventListener("click", function () { tipoAtual = b.dataset.j; desenharJuncao(); });
-  });
-
-  /* amostra de multas — slides de GROUP BY */
-  montarTabela(document.getElementById("t-multas-cru"), [
-    { h: "cliente", f: function (r) { return r.cliente; } },
-    { h: "tipo",    f: function (r) { return r.tipo; } },
-    { h: "valor",   f: function (r) { return r.valor; }, num: true }
-  ], DEMO_MULTAS);
-
-  var agrupado = [];
-  DEMO_MULTAS.forEach(function (m) {
-    var g = agrupado.filter(function (x) { return x.cliente === m.cliente; })[0];
-    if (!g) { g = { cliente: m.cliente, qtd: 0, soma: 0 }; agrupado.push(g); }
-    g.qtd++; g.soma += m.valor;
-  });
-  montarTabela(document.getElementById("t-multas-agrupado"), [
-    { h: "cliente",      f: function (r) { return r.cliente; } },
-    { h: "COUNT(*)",     f: function (r) { return r.qtd; },  num: true },
-    { h: "SUM(valor)",   f: function (r) { return r.soma; }, num: true }
-  ], agrupado);
 
   document.getElementById("aug-rng").addEventListener("input", desenharAugusto);
   desenharAugusto();

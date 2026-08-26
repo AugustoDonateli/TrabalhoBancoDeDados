@@ -90,100 +90,8 @@
   </div>
 </section>
 
-<!-- ═══════════════ 06 · POR QUE USAR JOIN ═══════════════ -->
-<section class="slide" id="por-que-join" data-titulo="Por que usar JOIN">
-  <div class="top"><div><span class="eyebrow">Fundamentação</span><h2>Por que usar JOIN</h2></div></div>
-  <div class="cols c-2">
-    <div class="tbox">
-      <div class="cap"><span>Multa</span><span>tem o valor</span></div>
-      <div class="tscroll"><table>
-        <thead><tr><th>id</th><th>valor</th><th>fk_Reserva_id</th></tr></thead>
-        <tbody>
-          <tr><td class="num">1</td><td class="num">293</td><td class="num">2</td></tr>
-          <tr><td class="num">2</td><td class="num">195</td><td class="num">4</td></tr>
-          <tr><td class="num">3</td><td class="num">880</td><td class="num">12</td></tr>
-        </tbody></table></div>
-    </div>
-    <div class="tbox">
-      <div class="cap"><span>Cliente</span><span>tem o nome</span></div>
-      <div class="tscroll"><table>
-        <thead><tr><th>cpf</th><th>nome</th></tr></thead>
-        <tbody>
-          <tr><td class="num">22233344455</td><td>Carlos Eduardo Lima</td></tr>
-          <tr><td class="num">66677788899</td><td>Gabriel Fonseca</td></tr>
-          <tr><td class="num">11122233344</td><td>Ana Beatriz Moraes</td></tr>
-        </tbody></table></div>
-    </div>
-  </div>
-  <p class="lede wide" style="font-size:1.8rem">
-    A tabela <b>Multa</b> guarda o valor, mas não o nome. A tabela <b>Cliente</b> guarda o
-    nome, mas não as multas. Para responder quem são os clientes reincidentes é preciso
-    ler as duas ao mesmo tempo — é o que o JOIN faz.</p>
-</section>
-
-<!-- ═══════════════ 07 · OS QUATRO TIPOS ═══════════════ -->
-<section class="slide" id="juncoes" data-titulo="Os quatro tipos de junção">
-  <div class="top">
-    <div><span class="eyebrow">Fundamentação</span><h2>Os quatro tipos de junção</h2></div>
-    <div class="plate"><b>AO VIVO</b><span id="juncao-placa">LEFT JOIN</span></div>
-  </div>
-  <div class="picker" id="picker-juncao">
-    <button class="pick p-inner" data-j="inner" aria-pressed="false">INNER</button>
-    <button class="pick p-left"  data-j="left"  aria-pressed="true">LEFT</button>
-    <button class="pick p-right" data-j="right" aria-pressed="false">RIGHT</button>
-    <button class="pick p-full"  data-j="full"  aria-pressed="false">FULL OUTER</button>
-  </div>
-  <div class="cols c-res">
-    <div class="tbox">
-      <div class="cap"><span>Veiculo ⋈ Reserva</span><span id="juncao-cap">4 linhas</span></div>
-      <div class="tscroll"><table id="t-juncao"></table></div>
-    </div>
-    <div style="display:flex; flex-direction:column; gap:1.6rem; min-width:0">
-      <div class="big" id="juncao-n" style="font-size:9rem">4</div>
-      <p class="lede" id="juncao-txt" style="font-size:1.7rem"></p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════ 08 · GROUP BY ═══════════════ -->
-<section class="slide" id="group-by" data-titulo="GROUP BY">
-  <div class="top"><div><span class="eyebrow">Fundamentação</span><h2>GROUP BY</h2></div></div>
-  <div class="cols c-2">
-    <div class="tbox"><div class="cap"><span>Antes</span><span>6 linhas</span></div>
-      <div class="tscroll"><table id="t-multas-cru"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Depois · GROUP BY cliente</span><span>3 grupos</span></div>
-      <div class="tscroll"><table id="t-multas-agrupado"></table></div></div>
-  </div>
-  <p class="lede wide" style="font-size:1.8rem">
-    As três multas de Carlos viraram uma linha. O <code>GROUP BY</code> reduz várias linhas
-    a um grupo, e as funções de agregação calculam um valor para cada grupo.</p>
-</section>
-
-<!-- ═══════════════ 09 · WHERE E HAVING ═══════════════ -->
-<section class="slide center" id="having" data-titulo="WHERE e HAVING" style="gap:3rem">
-  <span class="eyebrow">Fundamentação</span>
-  <h2>WHERE e HAVING</h2>
-  <div class="track">
-    <div class="step now" style="--brand:var(--ink-3); opacity:1">
-      <span class="sn">1 · FROM + JOIN</span><span class="st">As linhas</span>
-      <span class="sd">As tabelas se encontram. Ainda é tudo linha solta.</span></div>
-    <div class="step now" style="--brand:var(--inner); opacity:1">
-      <span class="sn">2 · WHERE</span><span class="st">Filtra linhas</span>
-      <span class="sd">Age antes do agrupamento. Aqui COUNT e SUM ainda não existem.</span></div>
-    <div class="step now" style="--brand:var(--ink-3); opacity:1">
-      <span class="sn">3 · GROUP BY</span><span class="st">Forma os grupos</span>
-      <span class="sd">As funções de agregação são calculadas.</span></div>
-    <div class="step now" style="--brand:var(--full); opacity:1">
-      <span class="sn">4 · HAVING</span><span class="st">Filtra grupos</span>
-      <span class="sd">Age depois. É onde cabe <code>COUNT(*) >= 2</code>.</span></div>
-  </div>
-  <p class="lede wide" style="font-size:1.8rem">
-    <code>WHERE COUNT(*) >= 2</code> dá erro porque, na hora em que o WHERE roda,
-    o COUNT ainda não foi calculado.</p>
-</section>
-
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  AUGUSTO · MULTA · INNER JOIN · COUNT      slides 10 a 14      ║
+     ║  AUGUSTO · MULTA · INNER JOIN · COUNT      slides 6 a 10      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide center" id="aug-pergunta" data-titulo="Augusto · Pergunta"
@@ -213,8 +121,9 @@
       <div class="tscroll"><table id="t-aug-cliente"></table></div></div>
   </div>
   <p class="lede wide" style="font-size:1.7rem">
-    A multa não guarda o CPF. <b>Reserva é a ponte</b>: liga cada multa ao cliente que
-    estava com o carro.</p>
+    <b>Multa</b> tem o valor mas não o nome. <b>Cliente</b> tem o nome mas não as multas.
+    E a multa nem guarda o CPF — <b>Reserva é a ponte</b>. Responder a pergunta exige
+    ler as três ao mesmo tempo, e é isso que o JOIN faz.</p>
 </section>
 
 <section class="slide" id="aug-sql" data-titulo="Augusto · A consulta" data-steps="6"
@@ -236,7 +145,7 @@
       <div data-nota="2"><span class="nt">FROM Multa</span>A consulta parte da multa, não do cliente. O relatório é sobre quem tem multa.</div>
       <div data-nota="3"><span class="nt">INNER JOIN</span>Duas junções encadeadas. Cliente sem multa não aparece nem zerado — é a interseção das três tabelas.</div>
       <div data-nota="4"><span class="nt">GROUP BY</span>Um grupo por cliente. As três multas de Carlos passam a ser uma linha.</div>
-      <div data-nota="5"><span class="nt">HAVING</span>Filtra os grupos já calculados. Quem tem uma multa só sai do relatório.</div>
+      <div data-nota="5"><span class="nt">HAVING</span>Filtra os <b>grupos já calculados</b> — quem tem uma multa só sai do relatório. Não dá para usar <code>WHERE</code> aqui: quando ele roda, o <code>COUNT</code> ainda nem foi calculado.</div>
       <div data-nota="6"><span class="nt">ORDER BY</span>Do maior número de multas para o menor.</div>
     </div>
   </div>
@@ -275,7 +184,7 @@
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  ANDRÉ · MANUTENÇÃO · LEFT JOIN · SUM      slides 15 a 19      ║
+     ║  ANDRÉ · MANUTENÇÃO · LEFT JOIN · SUM      slides 11 a 15      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide center" id="and-pergunta" data-titulo="André · Pergunta"
@@ -365,7 +274,7 @@
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  DANIEL · AVALIAÇÃO · RIGHT JOIN · AVG     slides 20 a 24      ║
+     ║  DANIEL · AVALIAÇÃO · RIGHT JOIN · AVG     slides 16 a 20      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide center" id="dan-pergunta" data-titulo="Daniel · Pergunta"
@@ -456,7 +365,7 @@
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  GUILHERME · RESERVA · FULL OUTER · MAX e MIN  slides 25 a 29  ║
+     ║  GUILHERME · RESERVA · FULL OUTER · MAX e MIN  slides 21 a 25  ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide center" id="gui-pergunta" data-titulo="Guilherme · Pergunta"
@@ -549,7 +458,7 @@
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  CONSOLE SQL · PostgreSQL rodando no navegador   slide 30      ║
+     ║  CONSOLE SQL · PostgreSQL rodando no navegador   slide 26      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide" id="console" data-titulo="Console SQL">
@@ -597,7 +506,7 @@ ORDER BY total_multas DESC;</textarea>
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
-     ║  FECHAMENTO                                slides 31 a 33      ║
+     ║  FECHAMENTO                                slides 27 a 29      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
 <section class="slide" id="cobertura" data-titulo="Cobertura da entrega">
@@ -673,7 +582,7 @@ ORDER BY total_multas DESC;</textarea>
       <span class="n">PostgreSQL 16</span></div>
     <div class="chip" style="--ac:var(--brand)"><span class="k">Slides</span>
       <span class="v" style="font-size:1.5rem">Este site</span>
-      <span class="n">33 slides</span></div>
+      <span class="n">29 slides</span></div>
   </div>
 
   <p class="lede wide" style="font-size:1.7rem">
@@ -691,7 +600,7 @@ ORDER BY total_multas DESC;</textarea>
 <div class="grid" id="grade"></div>
 
 <div class="chrome">
-  <span class="count"><b id="contador">1</b> / <span id="total">33</span></span>
+  <span class="count"><b id="contador">1</b> / <span id="total">29</span></span>
   <span class="who-now" id="dono-atual"></span>
   <div class="road" id="estrada"></div>
   <button class="btn" id="btn-grade" title="Visão geral (O)">Slides</button>
