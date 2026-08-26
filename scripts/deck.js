@@ -93,19 +93,17 @@
       b.addEventListener("click", function () { abrir(b.dataset.ent); });
     });
     painel.innerHTML = '<h3>Sete tabelas</h3>' +
-      '<p class="hint">Clique numa tabela para ver os campos dela. ' +
-      'Os atributos ficam escondidos de propósito: listados todos de uma vez, ' +
-      'ninguém lê do fundo da sala.</p>';
+      '<p class="hint">Clique numa tabela para ver os campos dela.</p>';
   }
 
   /* =========================================================================
      AS QUATRO JUNÇÕES AO VIVO
      ========================================================================= */
   var EXPLICA = {
-    inner: "Só quem tem par nos dois lados. Carro sem reserva e reserva sem carro somem.",
-    left:  "Todo carro do pátio aparece. Sem reserva, o lado direito vira NULL.",
-    right: "Toda reserva aparece. Sem carro alocado, o lado esquerdo vira NULL.",
-    full:  "Os dois lados inteiros. Carro encalhado e reserva sem carro na mesma tabela."
+    inner: "Só as linhas que têm par nos dois lados.",
+    left:  "Todos os veículos. Sem reserva, o lado direito fica NULL.",
+    right: "Todas as reservas. Sem veículo, o lado esquerdo fica NULL.",
+    full:  "Todas as linhas dos dois lados."
   };
 
   function juntar(tipo) {
@@ -142,6 +140,91 @@
       tipoAtual === "full" ? "FULL OUTER" : tipoAtual.toUpperCase() + " JOIN";
     [].forEach.call(document.querySelectorAll("#picker-juncao .pick"), function (b) {
       b.setAttribute("aria-pressed", b.dataset.j === tipoAtual ? "true" : "false");
+    });
+  }
+
+
+  /* =========================================================================
+     OS QUATRO BLOCOS
+     Cada integrante tem um controle ligado à própria consulta.
+     ========================================================================= */
+
+  /* --- AUGUSTO: o mínimo de multas do HAVING ------------------------------ */
+  function desenharAugusto() {
+    var corte = +document.getElementById("aug-rng").value;
+    var linhas = AUG_RESULTADO.filter(function (r) { return r.multas >= corte; });
+    montarTabela(document.getElementById("t-aug-res"), [
+      { h: "cliente",  f: function (r) { return r.cliente; } },
+      { h: "contato",  f: function (r) { return r.contato; } },
+      { h: "total_multas", f: function (r) { return r.multas; },   num: true },
+      { h: "reservas",     f: function (r) { return r.reservas; }, num: true }
+    ], linhas, true);
+    document.getElementById("aug-cap").textContent =
+      linhas.length + " linha" + (linhas.length === 1 ? "" : "s");
+    document.getElementById("aug-val").textContent =
+      corte + " multa" + (corte === 1 ? "" : "s");
+    document.getElementById("aug-num").textContent = corte;
+  }
+
+  /* --- ANDRÉ: o corte em reais e a troca por INNER JOIN ------------------- */
+  var andInner = false;
+  function desenharAndre() {
+    var corte = +document.getElementById("and-rng").value;
+    var linhas = AND_RESULTADO.filter(function (r) {
+      return r.custo === null ? !andInner : r.custo >= corte;
+    });
+    montarTabela(document.getElementById("t-and-res"), [
+      { h: "placa",           f: function (r) { return r.placa; } },
+      { h: "marca",           f: function (r) { return r.marca; } },
+      { h: "modelo",          f: function (r) { return r.modelo; } },
+      { h: "qtd_manutencoes", f: function (r) { return r.qtd; }, num: true },
+      { h: "custo_total",     f: function (r) { return r.custo === null ? 0 : r.custo; }, num: true }
+    ], linhas, true);
+    document.getElementById("and-cap").textContent =
+      linhas.length + " linha" + (linhas.length === 1 ? "" : "s");
+    document.getElementById("and-val").textContent = "R$ " + corte.toLocaleString("pt-BR");
+    document.getElementById("and-warn").innerHTML = andInner
+      ? "Quatro veículos sumiram do relatório. Continuam no pátio — o INNER JOIN é que não os enxerga."
+      : "";
+  }
+
+  /* --- DANIEL: a nota de corte -------------------------------------------- */
+  function desenharDaniel() {
+    var corte = +document.getElementById("dan-rng").value;
+    var linhas = DAN_RESULTADO.filter(function (r) {
+      return r.nota === null || r.nota < corte;
+    });
+    montarTabela(document.getElementById("t-dan-res"), [
+      { h: "canal",      f: function (r) { return r.canal; } },
+      { h: "reservas",   f: function (r) { return r.reservas; }, num: true },
+      { h: "nota_media", f: function (r) {
+          return r.nota === null ? null : r.nota.toFixed(2).replace(".", ","); }, num: true }
+    ], linhas, true);
+    document.getElementById("dan-cap").textContent =
+      linhas.length + " linha" + (linhas.length === 1 ? "" : "s");
+    document.getElementById("dan-val").textContent = corte.toFixed(1).replace(".", ",");
+  }
+
+  /* --- GUILHERME: a mesma consulta com cada junção ------------------------ */
+  var guiTipo = "full";
+  function desenharGuilherme() {
+    var linhas = GUI_POR_JUNCAO[guiTipo];
+    montarTabela(document.getElementById("t-gui-res"), [
+      { h: "veiculo",  f: function (r) { return r.veiculo; } },
+      { h: "modelo",   f: function (r) { return r.modelo; } },
+      { h: "reservas", f: function (r) { return r.n; }, num: true },
+      { h: "primeira", f: function (r) { return r.pri; } },
+      { h: "ultima",   f: function (r) { return r.ult; } }
+    ], linhas, true);
+    document.getElementById("gui-cap").textContent = linhas.length + " linhas";
+    var n = document.getElementById("gui-n");
+    n.textContent = linhas.length;
+    n.style.setProperty("--ac", "var(--" + guiTipo + ")");
+    document.getElementById("gui-txt").textContent = GUI_PERDA[guiTipo];
+    document.getElementById("gui-placa").textContent =
+      guiTipo === "full" ? "FULL OUTER" : guiTipo.toUpperCase() + " JOIN";
+    [].forEach.call(document.querySelectorAll("#gui-picker .pick"), function (b) {
+      b.setAttribute("aria-pressed", b.dataset.j === guiTipo ? "true" : "false");
     });
   }
 
@@ -311,6 +394,65 @@
     { h: "COUNT(*)",     f: function (r) { return r.qtd; },  num: true },
     { h: "SUM(valor)",   f: function (r) { return r.soma; }, num: true }
   ], agrupado);
+
+  document.getElementById("aug-rng").addEventListener("input", desenharAugusto);
+  desenharAugusto();
+
+  document.getElementById("and-rng").addEventListener("input", desenharAndre);
+  document.getElementById("and-inner").addEventListener("click", function () {
+    andInner = !andInner;
+    this.setAttribute("aria-pressed", andInner ? "true" : "false");
+    this.textContent = andInner ? "voltar para LEFT JOIN" : "trocar por INNER JOIN";
+    desenharAndre();
+  });
+  desenharAndre();
+
+  document.getElementById("dan-rng").addEventListener("input", desenharDaniel);
+  desenharDaniel();
+
+  [].forEach.call(document.querySelectorAll("#gui-picker .pick"), function (b) {
+    b.addEventListener("click", function () { guiTipo = b.dataset.j; desenharGuilherme(); });
+  });
+  desenharGuilherme();
+
+  /* amostras das tabelas de origem dos quatro blocos */
+  montarTabela(document.getElementById("t-aug-multa"), [
+    { h: "id", f: function (r) { return r.id; }, num: true },
+    { h: "valor", f: function (r) { return r.valor; }, num: true },
+    { h: "reserva", f: function (r) { return r.reserva; }, num: true }], AUG_MULTA);
+  montarTabela(document.getElementById("t-aug-reserva"), [
+    { h: "id", f: function (r) { return r.id; }, num: true },
+    { h: "fk_Cliente_cpf", f: function (r) { return r.cpf; }, num: true }], AUG_RESERVA);
+  montarTabela(document.getElementById("t-aug-cliente"), [
+    { h: "cpf", f: function (r) { return r.cpf; }, num: true },
+    { h: "nome", f: function (r) { return r.nome; } }], AUG_CLIENTE);
+
+  montarTabela(document.getElementById("t-and-veiculo"), [
+    { h: "placa", f: function (r) { return r.placa; } },
+    { h: "marca", f: function (r) { return r.marca; } },
+    { h: "modelo", f: function (r) { return r.modelo; } }], AND_VEICULO);
+  montarTabela(document.getElementById("t-and-manut"), [
+    { h: "id", f: function (r) { return r.id; }, num: true },
+    { h: "fk_Veiculo_placa", f: function (r) { return r.placa; } },
+    { h: "valor", f: function (r) { return r.valor; }, num: true }], AND_MANUT);
+
+  montarTabela(document.getElementById("t-dan-aval"), [
+    { h: "id", f: function (r) { return r.id; }, num: true },
+    { h: "nota", f: function (r) { return r.nota; }, num: true },
+    { h: "plataforma", f: function (r) { return r.plataforma; } },
+    { h: "reserva", f: function (r) { return r.reserva; }, num: true }], DAN_AVAL);
+  montarTabela(document.getElementById("t-dan-reserva"), [
+    { h: "id", f: function (r) { return r.id; }, num: true },
+    { h: "status", f: function (r) { return r.status; } }], DAN_RESERVA);
+
+  montarTabela(document.getElementById("t-gui-veiculo"), [
+    { h: "placa", f: function (r) { return r.placa; } },
+    { h: "modelo", f: function (r) { return r.modelo; } }], GUI_VEICULO);
+  montarTabela(document.getElementById("t-gui-reserva"), [
+    { h: "id", f: function (r) { return r.id; }, num: true },
+    { h: "inicio", f: function (r) { return r.inicio; } },
+    { h: "fim", f: function (r) { return r.fim; } },
+    { h: "fk_Veiculo_placa", f: function (r) { return r.placa; } }], GUI_RESERVA);
 
   montarGrade();
 

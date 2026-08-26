@@ -52,6 +52,7 @@ html{ font-size:min(1vw, 1.7778vh); }
 
 /* ---------- BASE ---------------------------------------------------------- */
 *{ box-sizing:border-box }
+[hidden]{ display:none !important }
 body{
   margin:0; background:var(--ground); color:var(--ink);
   font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -136,10 +137,12 @@ tbody tr.fresh{ animation:pop .3s cubic-bezier(.22,.9,.3,1) both }
 
 /* ---------- GRADES -------------------------------------------------------- */
 .cols{ display:grid; gap:2.2rem; flex:1; min-height:0 }
+.cols > *{ min-height:0 }
 .c-2{ grid-template-columns:1fr 1fr }
 .c-sql{ grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) }
 .c-res{ grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) }
 .c-diag{ grid-template-columns:minmax(0,1fr) 22rem }
+.c-3{ grid-template-columns:repeat(3,minmax(0,1fr)) }
 
 /* ---------- CAPA ---------------------------------------------------------- */
 .crew{ display:flex; gap:1.6rem; flex-wrap:wrap }
@@ -260,6 +263,7 @@ tbody tr.fresh{ animation:pop .3s cubic-bezier(.22,.9,.3,1) both }
 .note{
   background:var(--surface); border:1px solid var(--line); border-top:.4rem solid var(--ac);
   border-radius:var(--r); padding:1.5rem 1.8rem; font-size:1.5rem; box-shadow:var(--shadow);
+  overflow:auto;
 }
 .note .nt{
   font-family:"JetBrains Mono",monospace; font-size:.95rem; font-weight:700;

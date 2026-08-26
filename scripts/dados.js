@@ -144,3 +144,138 @@ const DEMO_MULTAS = [
   { cliente: "Gabriel Fonseca",     valor: 293, tipo: "Média" },
   { cliente: "Ana Beatriz Moraes",  valor: 293, tipo: "Média" }
 ];
+
+
+/* ===========================================================================
+   OS QUATRO BLOCOS
+   Amostras das tabelas de origem e o resultado real de cada consulta,
+   conferido no PostgreSQL 16.
+   =========================================================================== */
+
+/* --- AUGUSTO · Multa · INNER JOIN · COUNT -------------------------------- */
+const AUG_MULTA = [
+  { id: 1, valor: 293, tipo: "Media",      reserva: 2 },
+  { id: 2, valor: 195, tipo: "Leve",       reserva: 4 },
+  { id: 3, valor: 880, tipo: "Gravissima", reserva: 12 },
+  { id: 4, valor: 130, tipo: "Leve",       reserva: 7 }
+];
+const AUG_RESERVA = [
+  { id: 2,  cpf: 22233344455 },
+  { id: 4,  cpf: 22233344455 },
+  { id: 12, cpf: 22233344455 },
+  { id: 7,  cpf: 66677788899 }
+];
+const AUG_CLIENTE = [
+  { cpf: 22233344455, nome: "Carlos Eduardo Lima" },
+  { cpf: 66677788899, nome: "Gabriel Fonseca" },
+  { cpf: 88899900011, nome: "Igor Salgado" },
+  { cpf: 11122233344, nome: "Ana Beatriz Moraes" }
+];
+/* agregado completo, antes do HAVING */
+const AUG_RESULTADO = [
+  { cliente: "Carlos Eduardo Lima", contato: "(11) 97654-3210", multas: 3, reservas: 3 },
+  { cliente: "Gabriel Fonseca",     contato: "(11) 93210-9876", multas: 2, reservas: 2 },
+  { cliente: "Igor Salgado",        contato: "(11) 91098-7654", multas: 2, reservas: 2 },
+  { cliente: "Ana Beatriz Moraes",  contato: "(11) 98765-4321", multas: 1, reservas: 1 },
+  { cliente: "Daniela Prado",       contato: "(11) 96543-2109", multas: 1, reservas: 1 },
+  { cliente: "Leonardo Castro",     contato: "(11) 99876-5432", multas: 1, reservas: 1 }
+];
+
+/* --- ANDRÉ · Manutenção · LEFT JOIN · SUM -------------------------------- */
+const AND_VEICULO = [
+  { placa: "ABC1D23", marca: "Volkswagen", modelo: "Nivus" },
+  { placa: "BRA2E19", marca: "Chevrolet",  modelo: "Onix" },
+  { placa: "CDE3F45", marca: "Fiat",       modelo: "Pulse" },
+  { placa: "DEF4G56", marca: "Toyota",     modelo: "Corolla" }
+];
+const AND_MANUT = [
+  { id: 1, placa: "ABC1D23", valor: 1800 },
+  { id: 2, placa: "ABC1D23", valor: 950 },
+  { id: 3, placa: "DEF4G56", valor: 1200 },
+  { id: 4, placa: "DEF4G56", valor: 2400 },
+  { id: 5, placa: "DEF4G56", valor: 1500 }
+];
+/* agregado completo, antes do HAVING */
+const AND_RESULTADO = [
+  { placa: "DEF4G56", marca: "Toyota",     modelo: "Corolla",  qtd: 3, custo: 5100 },
+  { placa: "GHI7J89", marca: "Jeep",       modelo: "Renegade", qtd: 2, custo: 4090 },
+  { placa: "JKL0M12", marca: "Ford",       modelo: "Ranger",   qtd: 2, custo: 3550 },
+  { placa: "ABC1D23", marca: "Volkswagen", modelo: "Nivus",    qtd: 2, custo: 2750 },
+  { placa: "IJK9L01", marca: "Nissan",     modelo: "Kicks",    qtd: 1, custo: 1750 },
+  { placa: "FGH6I78", marca: "Hyundai",    modelo: "HB20",     qtd: 1, custo: 680 },
+  { placa: "KLM1N23", marca: "Peugeot",    modelo: "208",      qtd: 1, custo: 520 },
+  { placa: "BRA2E19", marca: "Chevrolet",  modelo: "Onix",     qtd: 1, custo: 450 },
+  { placa: "CDE3F45", marca: "Fiat",       modelo: "Pulse",    qtd: 0, custo: null },
+  { placa: "EFG5H67", marca: "Honda",      modelo: "Civic",    qtd: 0, custo: null },
+  { placa: "HIJ8K90", marca: "Renault",    modelo: "Kwid",     qtd: 0, custo: null },
+  { placa: "LMN2O34", marca: "Citroen",    modelo: "C3",       qtd: 0, custo: null }
+];
+
+/* --- DANIEL · Avaliação · RIGHT JOIN · AVG ------------------------------- */
+const DAN_AVAL = [
+  { id: 1, nota: 9,  plataforma: "Google Maps",  reserva: 1 },
+  { id: 3, nota: 7,  plataforma: "Instagram",    reserva: 3 },
+  { id: 5, nota: 5,  plataforma: "WhatsApp",     reserva: 5 },
+  { id: 8, nota: 9,  plataforma: "Site Proprio", reserva: 8 }
+];
+const DAN_RESERVA = [
+  { id: 1,  status: "Concluida" },
+  { id: 3,  status: "Concluida" },
+  { id: 15, status: "Concluida" },
+  { id: 18, status: "Pendente" },
+  { id: 20, status: "Pendente" }
+];
+/* agregado completo, antes do HAVING */
+const DAN_RESULTADO = [
+  { canal: "WhatsApp",        reservas: 2, nota: 5.50 },
+  { canal: "Instagram",       reservas: 3, nota: 7.00 },
+  { canal: "Site Proprio",    reservas: 3, nota: 8.00 },
+  { canal: "Google Maps",     reservas: 4, nota: 9.00 },
+  { canal: "(sem avaliacao)", reservas: 8, nota: null }
+];
+
+/* --- GUILHERME · Reserva · FULL OUTER JOIN · MAX e MIN ------------------- */
+const GUI_VEICULO = [
+  { placa: "BRA2E19", modelo: "Onix" },
+  { placa: "HIJ8K90", modelo: "Kwid" },
+  { placa: "KLM1N23", modelo: "208" },
+  { placa: "LMN2O34", modelo: "C3" }
+];
+const GUI_RESERVA = [
+  { id: 3,  inicio: "2025-10-15", fim: "2025-10-22", placa: "BRA2E19" },
+  { id: 5,  inicio: "2025-11-13", fim: "2025-11-20", placa: "HIJ8K90" },
+  { id: 18, inicio: "2026-07-06", fim: "2026-07-13", placa: null },
+  { id: 20, inicio: "2026-08-10", fim: "2026-08-17", placa: null }
+];
+/* Resultado real de cada variante da consulta. Trocar a juncao muda o que
+   se enxerga: 2 / 4 / 3 / 5 linhas. Conferido no PostgreSQL 16. */
+const GUI_POR_JUNCAO = {
+  inner: [
+    { veiculo: "BRA2E19", modelo: "Onix", n: 1, pri: "2025-10-15", ult: "2025-10-22" },
+    { veiculo: "HIJ8K90", modelo: "Kwid", n: 1, pri: "2025-11-13", ult: "2025-11-20" }
+  ],
+  left: [
+    { veiculo: "KLM1N23", modelo: "208",  n: 0, pri: null, ult: null },
+    { veiculo: "LMN2O34", modelo: "C3",   n: 0, pri: null, ult: null },
+    { veiculo: "BRA2E19", modelo: "Onix", n: 1, pri: "2025-10-15", ult: "2025-10-22" },
+    { veiculo: "HIJ8K90", modelo: "Kwid", n: 1, pri: "2025-11-13", ult: "2025-11-20" }
+  ],
+  right: [
+    { veiculo: "BRA2E19", modelo: "Onix", n: 1, pri: "2025-10-15", ult: "2025-10-22" },
+    { veiculo: "HIJ8K90", modelo: "Kwid", n: 1, pri: "2025-11-13", ult: "2025-11-20" },
+    { veiculo: "(sem veiculo alocado)", modelo: "---", n: 3, pri: "2026-07-06", ult: "2026-08-17" }
+  ],
+  full: [
+    { veiculo: "KLM1N23", modelo: "208",  n: 0, pri: null, ult: null },
+    { veiculo: "LMN2O34", modelo: "C3",   n: 0, pri: null, ult: null },
+    { veiculo: "BRA2E19", modelo: "Onix", n: 1, pri: "2025-10-15", ult: "2025-10-22" },
+    { veiculo: "HIJ8K90", modelo: "Kwid", n: 1, pri: "2025-11-13", ult: "2025-11-20" },
+    { veiculo: "(sem veiculo alocado)", modelo: "---", n: 3, pri: "2026-07-06", ult: "2026-08-17" }
+  ]
+};
+const GUI_PERDA = {
+  inner: "Perde tudo que nao tem par: some o carro parado e some a reserva sem carro.",
+  left:  "Mostra os carros parados, mas nao ve as reservas sem veiculo alocado.",
+  right: "Mostra as reservas sem carro, mas nao ve os carros que ninguem reservou.",
+  full:  "Unico que mostra os dois problemas ao mesmo tempo."
+};

@@ -29,7 +29,7 @@
 SELECT c.nome                    AS cliente,
        c.contato,
        COUNT(m.id)               AS total_multas,
-       COUNT(DISTINCT r.id)      AS reservas_envolvidas
+       COUNT(DISTINCT r.id)      AS reservas
 FROM Multa m
 INNER JOIN Reserva r ON m.fk_Reserva_id  = r.id
 INNER JOIN Cliente c ON r.fk_Cliente_cpf = c.cpf
@@ -57,13 +57,13 @@ SELECT v.placa,
        v.marca,
        v.modelo,
        COUNT(m.id)                 AS qtd_manutencoes,
-       COALESCE(SUM(m.valor), 0)   AS custo_total_manutencao
+       COALESCE(SUM(m.valor), 0)   AS custo_total
 FROM Veiculo v
 LEFT JOIN Manutencao m ON v.placa = m.fk_Veiculo_placa
 GROUP BY v.placa, v.marca, v.modelo
 HAVING COALESCE(SUM(m.valor), 0) >= 2000   -- veiculos caros de manter
     OR SUM(m.valor) IS NULL                -- veiculos que nunca foram a oficina
-ORDER BY custo_total_manutencao DESC, v.placa;
+ORDER BY custo_total DESC, v.placa;
 
 
 -- =====================================================================
@@ -119,13 +119,13 @@ ORDER BY nota_media NULLS LAST;
 
 SELECT COALESCE(v.placa,  '(sem veiculo alocado)') AS veiculo,
        COALESCE(v.modelo, '---')                   AS modelo,
-       COUNT(r.id)                                 AS total_reservas,
-       MIN(r.inicio)                               AS primeira_reserva,
-       MAX(r.fim)                                  AS ultima_reserva
+       COUNT(r.id)                                 AS reservas,
+       MIN(r.inicio)                               AS primeira,
+       MAX(r.fim)                                  AS ultima
 FROM Veiculo v
 FULL OUTER JOIN Reserva r ON v.placa = r.fk_Veiculo_placa
 GROUP BY v.placa, v.modelo
 HAVING MAX(r.fim) IS NULL                 -- veiculo nunca reservado
     OR v.placa IS NULL                    -- reserva sem veiculo alocado
     OR MAX(r.fim) < DATE '2026-01-01'     -- veiculo parado ha mais de 6 meses
-ORDER BY ultima_reserva NULLS FIRST, veiculo;
+ORDER BY ultima NULLS FIRST, veiculo;

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quatro Junções · Consultas Avançadas</title>
-<meta name="description" content="Deck da Etapa 05 — Consultas Avançadas sobre o banco de dados de uma concessionária. IFES · Banco de Dados · Prof. Rafael Vargas.">
+<title>Consultas Avançadas · Concessionária</title>
+<meta name="description" content="Etapa 05 — Consultas Avançadas sobre o banco de dados de uma concessionária. IFES · Banco de Dados · Prof. Rafael Vargas.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
 <link rel="stylesheet" href="assets/fontes.css">
 <link rel="stylesheet" href="styles/deck.css">
@@ -13,12 +13,12 @@
 
 <div class="stage">
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     01 · CAPA
-     ═══════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════ 01 · CAPA ═══════════════ -->
 <section class="slide center on" id="capa" data-titulo="Capa" style="gap:4rem">
-  <span class="eyebrow">Etapa 05 · Consultas Avançadas · PostgreSQL</span>
-  <h1>Quatro junções,<br><span style="color:var(--brand)">um pátio só.</span></h1>
+  <span class="eyebrow">Etapa 05 · PostgreSQL 16</span>
+  <h1>Consultas<br>Avançadas</h1>
+  <p class="lede wide" style="font-size:2.1rem">
+    Banco de dados de uma concessionária: reservas, manutenções, multas e avaliações.</p>
 
   <div class="crew">
     <div class="mem"><div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div><div class="who">Augusto</div></div>
@@ -28,129 +28,74 @@
   </div>
 
   <div class="credits">
-    <span><b>IFES</b></span>
-    <span><b>Banco de Dados</b></span>
-    <span>Prof. <b>Rafael Vargas</b></span>
-    <span><b>2026</b> · 2º semestre</span>
+    <span><b>IFES</b></span><span><b>Banco de Dados</b></span>
+    <span>Prof. <b>Rafael Vargas</b></span><span><b>2026</b> · 2º semestre</span>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     02 · CONTEXTUALIZAÇÃO — O ESTABELECIMENTO
-     ═══════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════ 02 · O ESTABELECIMENTO ═══════════════ -->
 <section class="slide center" id="contexto" data-titulo="O estabelecimento" style="gap:3rem">
   <span class="eyebrow">Contextualização</span>
-  <h2 style="max-width:24ch">Uma concessionária não termina na venda.</h2>
+  <h2>O estabelecimento</h2>
   <p class="lede wide" style="font-size:1.9rem">
-    O carro é <b>reservado</b>, sai para a rua, volta para a <b>oficina</b>,
-    às vezes traz uma <b>multa</b> — e o cliente deixa uma <b>avaliação</b>.
-    São esses quatro eventos que o nosso banco registra.
-  </p>
+    A concessionária registra quatro eventos no banco: a <b>reserva</b> do veículo,
+    a <b>manutenção</b> da frota, as <b>multas</b> cometidas durante o período de posse
+    e a <b>avaliação</b> deixada pelo cliente.</p>
 
   <div class="chips">
-    <div class="chip" style="--ac:var(--full)">
-      <span class="k">Reserva</span><span class="v">20</span><span class="n">registros</span></div>
-    <div class="chip" style="--ac:var(--left)">
-      <span class="k">Manutenção</span><span class="v">13</span><span class="n">registros</span></div>
-    <div class="chip" style="--ac:var(--inner)">
-      <span class="k">Multa</span><span class="v">10</span><span class="n">registros</span></div>
-    <div class="chip" style="--ac:var(--right)">
-      <span class="k">Avaliação</span><span class="v">12</span><span class="n">registros</span></div>
+    <div class="chip" style="--ac:var(--full)"><span class="k">Reserva</span><span class="v">20</span><span class="n">registros</span></div>
+    <div class="chip" style="--ac:var(--left)"><span class="k">Manutenção</span><span class="v">13</span><span class="n">registros</span></div>
+    <div class="chip" style="--ac:var(--inner)"><span class="k">Multa</span><span class="v">10</span><span class="n">registros</span></div>
+    <div class="chip" style="--ac:var(--right)"><span class="k">Avaliação</span><span class="v">12</span><span class="n">registros</span></div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     03 · A TRILHA DO SEMESTRE
-     ═══════════════════════════════════════════════════════════════════ -->
-<section class="slide center" id="trilha" data-titulo="A trilha do semestre" style="gap:3rem">
+<!-- ═══════════════ 03 · AS ETAPAS ═══════════════ -->
+<section class="slide center" id="trilha" data-titulo="As etapas do trabalho" style="gap:3rem">
   <span class="eyebrow">Onde estamos</span>
-  <h2>Quatro etapas até aqui</h2>
-
+  <h2>As etapas do trabalho</h2>
   <div class="track">
-    <div class="step done">
-      <span class="sn">ETAPA 02</span>
-      <span class="st">Modelo Conceitual</span>
-      <span class="sd">Entidades, relacionamentos e cardinalidades no ER.</span>
-    </div>
-    <div class="step done">
-      <span class="sn">ETAPA 03</span>
-      <span class="st">Modelo Lógico</span>
-      <span class="sd">Tabelas, chaves primárias e estrangeiras.</span>
-    </div>
-    <div class="step done">
-      <span class="sn">ETAPA 04</span>
-      <span class="st">Implementação SQL</span>
-      <span class="sd">DDL e DML no PostgreSQL. O banco saiu do papel.</span>
-    </div>
-    <div class="step now">
-      <span class="sn">ETAPA 05</span>
-      <span class="st">Consultas Avançadas</span>
-      <span class="sd">Perguntar ao banco o que a concessionária precisa decidir.</span>
-    </div>
+    <div class="step done"><span class="sn">ETAPA 02</span><span class="st">Modelo Conceitual</span>
+      <span class="sd">Entidades, relacionamentos e cardinalidades no ER.</span></div>
+    <div class="step done"><span class="sn">ETAPA 03</span><span class="st">Modelo Lógico</span>
+      <span class="sd">Tabelas, chaves primárias e estrangeiras.</span></div>
+    <div class="step done"><span class="sn">ETAPA 04</span><span class="st">Implementação SQL</span>
+      <span class="sd">DDL e DML no PostgreSQL.</span></div>
+    <div class="step now"><span class="sn">ETAPA 05</span><span class="st">Consultas Avançadas</span>
+      <span class="sd">Quatro consultas analíticas, uma por integrante.</span></div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     04 · O MODELO LÓGICO
-     ═══════════════════════════════════════════════════════════════════ -->
-<section class="slide" id="modelo" data-titulo="O modelo lógico">
+<!-- ═══════════════ 04 · MODELO LÓGICO ═══════════════ -->
+<section class="slide" id="modelo" data-titulo="Modelo lógico">
   <div class="top">
-    <div>
-      <span class="eyebrow">Modelo Lógico · Etapa 03</span>
-      <h2>Sete tabelas, seis ligações</h2>
-    </div>
+    <div><span class="eyebrow">Modelo Lógico · Etapa 03</span><h2>Modelo lógico</h2></div>
     <div class="plate"><b>CLIQUE</b><span>NAS TABELAS</span></div>
   </div>
-
   <div class="cols c-diag">
     <div class="diagram" id="diagrama-estrutura"></div>
     <div class="fields" id="campos-tabela"></div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     05 · QUEM CUIDA DE QUÊ
-     ═══════════════════════════════════════════════════════════════════ -->
-<section class="slide" id="donos" data-titulo="Quem cuida de quê">
-  <div class="top">
-    <div>
-      <span class="eyebrow">Divisão do grupo</span>
-      <h2>Um evento para cada um</h2>
-    </div>
-  </div>
-
+<!-- ═══════════════ 05 · DIVISÃO DO GRUPO ═══════════════ -->
+<section class="slide" id="donos" data-titulo="Divisão do grupo">
+  <div class="top"><div><span class="eyebrow">Responsabilidades</span><h2>Divisão do grupo</h2></div></div>
   <div class="diagram" id="diagrama-donos" style="flex:1"></div>
-
   <div class="crew" style="gap:2.4rem">
-    <div class="mem" style="--ac:var(--inner)">
-      <span class="eyebrow" style="color:var(--inner)">Multa · INNER JOIN</span>
-      <span class="who">Augusto</span></div>
-    <div class="mem" style="--ac:var(--left)">
-      <span class="eyebrow" style="color:var(--left)">Manutenção · LEFT JOIN</span>
-      <span class="who">André</span></div>
-    <div class="mem" style="--ac:var(--right)">
-      <span class="eyebrow" style="color:var(--right)">Avaliação · RIGHT JOIN</span>
-      <span class="who">Daniel</span></div>
-    <div class="mem" style="--ac:var(--full)">
-      <span class="eyebrow" style="color:var(--full)">Reserva · FULL OUTER</span>
-      <span class="who">Guilherme</span></div>
+    <div class="mem"><span class="eyebrow" style="color:var(--inner)">Multa · INNER JOIN · COUNT</span><span class="who">Augusto</span></div>
+    <div class="mem"><span class="eyebrow" style="color:var(--left)">Manutenção · LEFT JOIN · SUM</span><span class="who">André</span></div>
+    <div class="mem"><span class="eyebrow" style="color:var(--right)">Avaliação · RIGHT JOIN · AVG</span><span class="who">Daniel</span></div>
+    <div class="mem"><span class="eyebrow" style="color:var(--full)">Reserva · FULL OUTER · MAX e MIN</span><span class="who">Guilherme</span></div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     06 · POR QUE PRECISAMOS DE JOIN
-     ═══════════════════════════════════════════════════════════════════ -->
-<section class="slide" id="por-que-join" data-titulo="Por que precisamos de JOIN">
-  <div class="top">
-    <div>
-      <span class="eyebrow">Fundamentação</span>
-      <h2>Nenhuma tabela responde sozinha</h2>
-    </div>
-  </div>
-
+<!-- ═══════════════ 06 · POR QUE USAR JOIN ═══════════════ -->
+<section class="slide" id="por-que-join" data-titulo="Por que usar JOIN">
+  <div class="top"><div><span class="eyebrow">Fundamentação</span><h2>Por que usar JOIN</h2></div></div>
   <div class="cols c-2">
     <div class="tbox">
-      <div class="cap"><span>Multa</span><span>sabe o valor</span></div>
+      <div class="cap"><span>Multa</span><span>tem o valor</span></div>
       <div class="tscroll"><table>
         <thead><tr><th>id</th><th>valor</th><th>fk_Reserva_id</th></tr></thead>
         <tbody>
@@ -160,7 +105,7 @@
         </tbody></table></div>
     </div>
     <div class="tbox">
-      <div class="cap"><span>Cliente</span><span>sabe o nome</span></div>
+      <div class="cap"><span>Cliente</span><span>tem o nome</span></div>
       <div class="tscroll"><table>
         <thead><tr><th>cpf</th><th>nome</th></tr></thead>
         <tbody>
@@ -170,32 +115,24 @@
         </tbody></table></div>
     </div>
   </div>
-
   <p class="lede wide" style="font-size:1.8rem">
-    <b>“Quem são os clientes reincidentes em multas?”</b> não tem resposta em nenhuma
-    das duas. A pergunta mora no <b>encontro</b> delas — e é isso que o JOIN faz.
-  </p>
+    A tabela <b>Multa</b> guarda o valor, mas não o nome. A tabela <b>Cliente</b> guarda o
+    nome, mas não as multas. Para responder quem são os clientes reincidentes é preciso
+    ler as duas ao mesmo tempo — é o que o JOIN faz.</p>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     07 · AS QUATRO JUNÇÕES AO VIVO
-     ═══════════════════════════════════════════════════════════════════ -->
-<section class="slide" id="juncoes" data-titulo="As quatro junções ao vivo">
+<!-- ═══════════════ 07 · OS QUATRO TIPOS ═══════════════ -->
+<section class="slide" id="juncoes" data-titulo="Os quatro tipos de junção">
   <div class="top">
-    <div>
-      <span class="eyebrow">Fundamentação</span>
-      <h2>Troque a junção. A resposta muda.</h2>
-    </div>
+    <div><span class="eyebrow">Fundamentação</span><h2>Os quatro tipos de junção</h2></div>
     <div class="plate"><b>AO VIVO</b><span id="juncao-placa">LEFT JOIN</span></div>
   </div>
-
   <div class="picker" id="picker-juncao">
     <button class="pick p-inner" data-j="inner" aria-pressed="false">INNER</button>
     <button class="pick p-left"  data-j="left"  aria-pressed="true">LEFT</button>
     <button class="pick p-right" data-j="right" aria-pressed="false">RIGHT</button>
     <button class="pick p-full"  data-j="full"  aria-pressed="false">FULL OUTER</button>
   </div>
-
   <div class="cols c-res">
     <div class="tbox">
       <div class="cap"><span>Veiculo ⋈ Reserva</span><span id="juncao-cap">4 linhas</span></div>
@@ -208,79 +145,417 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     08 · GROUP BY
-     ═══════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════ 08 · GROUP BY ═══════════════ -->
 <section class="slide" id="group-by" data-titulo="GROUP BY">
-  <div class="top">
-    <div>
-      <span class="eyebrow">Fundamentação</span>
-      <h2>GROUP BY: de linhas para grupos</h2>
-    </div>
-  </div>
-
+  <div class="top"><div><span class="eyebrow">Fundamentação</span><h2>GROUP BY</h2></div></div>
   <div class="cols c-2">
-    <div class="tbox">
-      <div class="cap"><span>Antes</span><span>6 linhas</span></div>
-      <div class="tscroll"><table id="t-multas-cru"></table></div>
-    </div>
-    <div class="tbox">
-      <div class="cap"><span>Depois · GROUP BY cliente</span><span>3 grupos</span></div>
-      <div class="tscroll"><table id="t-multas-agrupado"></table></div>
-    </div>
+    <div class="tbox"><div class="cap"><span>Antes</span><span>6 linhas</span></div>
+      <div class="tscroll"><table id="t-multas-cru"></table></div></div>
+    <div class="tbox"><div class="cap"><span>Depois · GROUP BY cliente</span><span>3 grupos</span></div>
+      <div class="tscroll"><table id="t-multas-agrupado"></table></div></div>
   </div>
-
   <p class="lede wide" style="font-size:1.8rem">
-    As três multas do Carlos viraram <b>uma linha</b>. O que era detalhe virou
-    <b>número</b> — e número é o que se leva para uma reunião.
-  </p>
+    As três multas de Carlos viraram uma linha. O <code>GROUP BY</code> reduz várias linhas
+    a um grupo, e as funções de agregação calculam um valor para cada grupo.</p>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     09 · WHERE × HAVING
-     ═══════════════════════════════════════════════════════════════════ -->
-<section class="slide center" id="having" data-titulo="WHERE × HAVING" style="gap:3rem">
+<!-- ═══════════════ 09 · WHERE E HAVING ═══════════════ -->
+<section class="slide center" id="having" data-titulo="WHERE e HAVING" style="gap:3rem">
   <span class="eyebrow">Fundamentação</span>
-  <h2>O erro clássico: WHERE não filtra grupo</h2>
-
+  <h2>WHERE e HAVING</h2>
   <div class="track">
     <div class="step now" style="--brand:var(--ink-3); opacity:1">
-      <span class="sn">1 · FROM + JOIN</span>
-      <span class="st">As linhas</span>
-      <span class="sd">As tabelas se encontram. Ainda é tudo linha solta.</span>
-    </div>
+      <span class="sn">1 · FROM + JOIN</span><span class="st">As linhas</span>
+      <span class="sd">As tabelas se encontram. Ainda é tudo linha solta.</span></div>
     <div class="step now" style="--brand:var(--inner); opacity:1">
-      <span class="sn">2 · WHERE</span>
-      <span class="st">Filtra linhas</span>
-      <span class="sd">Age <b>antes</b> do agrupamento. Aqui COUNT e SUM ainda não existem.</span>
-    </div>
+      <span class="sn">2 · WHERE</span><span class="st">Filtra linhas</span>
+      <span class="sd">Age antes do agrupamento. Aqui COUNT e SUM ainda não existem.</span></div>
     <div class="step now" style="--brand:var(--ink-3); opacity:1">
-      <span class="sn">3 · GROUP BY</span>
-      <span class="st">Forma os grupos</span>
-      <span class="sd">Agora sim: as funções de agregação são calculadas.</span>
-    </div>
+      <span class="sn">3 · GROUP BY</span><span class="st">Forma os grupos</span>
+      <span class="sd">As funções de agregação são calculadas.</span></div>
     <div class="step now" style="--brand:var(--full); opacity:1">
-      <span class="sn">4 · HAVING</span>
-      <span class="st">Filtra grupos</span>
-      <span class="sd">Age <b>depois</b>. É o único lugar onde cabe <code>COUNT(*) >= 2</code>.</span>
+      <span class="sn">4 · HAVING</span><span class="st">Filtra grupos</span>
+      <span class="sd">Age depois. É onde cabe <code>COUNT(*) >= 2</code>.</span></div>
+  </div>
+  <p class="lede wide" style="font-size:1.8rem">
+    <code>WHERE COUNT(*) >= 2</code> dá erro porque, na hora em que o WHERE roda,
+    o COUNT ainda não foi calculado.</p>
+</section>
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗
+     ║  AUGUSTO · MULTA · INNER JOIN · COUNT      slides 10 a 14      ║
+     ╚═══════════════════════════════════════════════════════════════╝ -->
+
+<section class="slide center" id="aug-pergunta" data-titulo="Augusto · Pergunta"
+         data-dono="inner" data-quem="Augusto" style="--ac:var(--inner); gap:3.4rem">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--inner)">Augusto · Evento Multa</span></div>
+    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+  </div>
+  <span class="eyebrow">Pergunta de negócio</span>
+  <p class="ask">Quais clientes acumulam <em>duas ou mais multas</em>?</p>
+  <span class="eyebrow">Função de agregação · COUNT</span>
+</section>
+
+<section class="slide" id="aug-dados" data-titulo="Augusto · Dados originais"
+         data-dono="inner" data-quem="Augusto" style="--ac:var(--inner)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--inner)">Augusto · Dados originais</span>
+      <h2>Três tabelas</h2></div>
+    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+  </div>
+  <div class="cols c-3">
+    <div class="tbox"><div class="cap"><span>Multa</span><span>10 linhas</span></div>
+      <div class="tscroll"><table id="t-aug-multa"></table></div></div>
+    <div class="tbox"><div class="cap"><span>Reserva</span><span>20 linhas</span></div>
+      <div class="tscroll"><table id="t-aug-reserva"></table></div></div>
+    <div class="tbox"><div class="cap"><span>Cliente</span><span>12 linhas</span></div>
+      <div class="tscroll"><table id="t-aug-cliente"></table></div></div>
+  </div>
+  <p class="lede wide" style="font-size:1.7rem">
+    A multa não guarda o CPF. <b>Reserva é a ponte</b>: liga cada multa ao cliente que
+    estava com o carro.</p>
+</section>
+
+<section class="slide" id="aug-sql" data-titulo="Augusto · A consulta" data-steps="6"
+         data-dono="inner" data-quem="Augusto" style="--ac:var(--inner); --ac-t:var(--inner-t)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--inner)">Augusto · A consulta</span></div>
+    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+  </div>
+  <div class="cols c-sql">
+    <div class="sql">
+<div class="cl" data-s="1"><span class="kw">SELECT</span> c.nome, c.contato,
+       <span class="kw">COUNT</span>(m.id)          <span class="kw">AS</span> total_multas,
+       <span class="kw">COUNT</span>(<span class="kw">DISTINCT</span> r.id) <span class="kw">AS</span> reservas</div><div class="cl" data-s="2"><span class="kw">FROM</span> Multa m</div><div class="cl" data-s="3"><span class="kw">INNER JOIN</span> Reserva r <span class="kw">ON</span> m.fk_Reserva_id  = r.id
+<span class="kw">INNER JOIN</span> Cliente c <span class="kw">ON</span> r.fk_Cliente_cpf = c.cpf</div><div class="cl" data-s="4"><span class="kw">GROUP BY</span> c.cpf, c.nome, c.contato</div><div class="cl" data-s="5"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(m.id) &gt;= <span class="st">2</span></div><div class="cl" data-s="6"><span class="kw">ORDER BY</span> total_multas <span class="kw">DESC</span>;</div>
+    </div>
+    <div class="note">
+      <div data-nota="0"><span class="nt">Passo a passo</span>Aperte <b>→</b> para acender uma cláusula por vez.</div>
+      <div data-nota="1"><span class="nt">SELECT</span><code>COUNT(m.id)</code> conta as multas. <code>COUNT(DISTINCT r.id)</code> conta em quantas reservas diferentes elas aconteceram.</div>
+      <div data-nota="2"><span class="nt">FROM Multa</span>A consulta parte da multa, não do cliente. O relatório é sobre quem tem multa.</div>
+      <div data-nota="3"><span class="nt">INNER JOIN</span>Duas junções encadeadas. Cliente sem multa não aparece nem zerado — é a interseção das três tabelas.</div>
+      <div data-nota="4"><span class="nt">GROUP BY</span>Um grupo por cliente. As três multas de Carlos passam a ser uma linha.</div>
+      <div data-nota="5"><span class="nt">HAVING</span>Filtra os grupos já calculados. Quem tem uma multa só sai do relatório.</div>
+      <div data-nota="6"><span class="nt">ORDER BY</span>Do maior número de multas para o menor.</div>
     </div>
   </div>
+</section>
 
-  <p class="lede wide" style="font-size:1.8rem">
-    Por isso <code>WHERE COUNT(*) >= 2</code> dá erro: na hora em que o WHERE roda,
-    <b>o COUNT ainda não foi calculado</b>.
-  </p>
+<section class="slide" id="aug-resultado" data-titulo="Augusto · Resultado"
+         data-dono="inner" data-quem="Augusto" style="--ac:var(--inner)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--inner)">Augusto · Resultado</span>
+      <h2>Resultado da execução</h2></div>
+    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+  </div>
+  <div class="cols c-res">
+    <div class="tbox"><div class="cap"><span>Reincidentes</span><span id="aug-cap">3 linhas</span></div>
+      <div class="tscroll"><table id="t-aug-res"></table></div></div>
+    <div style="display:flex; flex-direction:column; gap:1.4rem; min-width:0">
+      <div class="ctrl" style="--ac:var(--inner)">
+        <span class="eyebrow">Corte do HAVING</span>
+        <span class="big" id="aug-val" style="font-size:3.6rem; --ac:var(--inner)">2 multas</span>
+        <input type="range" id="aug-rng" min="1" max="4" step="1" value="2" aria-label="Mínimo de multas">
+        <code style="font-size:1.15rem; color:var(--ink-2)">HAVING COUNT(m.id) &gt;= <b id="aug-num" style="color:var(--inner)">2</b></code>
+      </div>
+      <p class="lede" style="font-size:1.6rem">Arraste e veja o filtro agir sobre os grupos.
+        Em <b>1</b>, todo cliente com multa aparece e o relatório perde a utilidade.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide center" id="aug-leitura" data-titulo="Augusto · Leitura"
+         data-dono="inner" data-quem="Augusto" style="--ac:var(--inner); gap:2.4rem">
+  <span class="eyebrow" style="color:var(--inner)">Augusto · Leitura do resultado</span>
+  <div class="big" style="font-size:13rem; --ac:var(--inner)">7 de 10</div>
+  <p class="lede" style="font-size:2.1rem; max-width:34ch">
+    multas registradas vêm de <b>três clientes</b>. Os outros sete clientes somam três.</p>
+  <p class="eyebrow">Uso: revisar caução e cobertura antes de aprovar nova reserva</p>
+</section>
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗
+     ║  ANDRÉ · MANUTENÇÃO · LEFT JOIN · SUM      slides 15 a 19      ║
+     ╚═══════════════════════════════════════════════════════════════╝ -->
+
+<section class="slide center" id="and-pergunta" data-titulo="André · Pergunta"
+         data-dono="left" data-quem="André" style="--ac:var(--left); gap:3.4rem">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--left)">André · Evento Manutenção</span></div>
+    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+  </div>
+  <span class="eyebrow">Pergunta de negócio</span>
+  <p class="ask">Quais veículos custaram <em>R$ 2.000 ou mais</em> em manutenção, e quais <em>nunca foram à oficina</em>?</p>
+  <span class="eyebrow">Função de agregação · SUM</span>
+</section>
+
+<section class="slide" id="and-dados" data-titulo="André · Dados originais"
+         data-dono="left" data-quem="André" style="--ac:var(--left)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--left)">André · Dados originais</span>
+      <h2>Duas tabelas</h2></div>
+    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+  </div>
+  <div class="cols c-2">
+    <div class="tbox"><div class="cap"><span>Veiculo</span><span>12 linhas</span></div>
+      <div class="tscroll"><table id="t-and-veiculo"></table></div></div>
+    <div class="tbox"><div class="cap"><span>Manutencao</span><span>13 linhas</span></div>
+      <div class="tscroll"><table id="t-and-manut"></table></div></div>
+  </div>
+  <p class="lede wide" style="font-size:1.7rem">
+    <b>Quatro veículos não aparecem nenhuma vez em Manutencao.</b> São eles que decidem
+    qual junção usar.</p>
+</section>
+
+<section class="slide" id="and-sql" data-titulo="André · A consulta" data-steps="6"
+         data-dono="left" data-quem="André" style="--ac:var(--left); --ac-t:var(--left-t)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--left)">André · A consulta</span></div>
+    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+  </div>
+  <div class="cols c-sql">
+    <div class="sql">
+<div class="cl" data-s="1"><span class="kw">SELECT</span> v.placa, v.marca, v.modelo,
+       <span class="kw">COUNT</span>(m.id)               <span class="kw">AS</span> qtd_manutencoes,
+       <span class="kw">COALESCE</span>(<span class="kw">SUM</span>(m.valor), 0) <span class="kw">AS</span> custo_total</div><div class="cl" data-s="2"><span class="kw">FROM</span> Veiculo v</div><div class="cl" data-s="3"><span class="kw">LEFT JOIN</span> Manutencao m <span class="kw">ON</span> v.placa = m.fk_Veiculo_placa</div><div class="cl" data-s="4"><span class="kw">GROUP BY</span> v.placa, v.marca, v.modelo</div><div class="cl" data-s="5"><span class="kw">HAVING</span> <span class="kw">COALESCE</span>(<span class="kw">SUM</span>(m.valor),0) &gt;= <span class="st">2000</span>
+    <span class="kw">OR</span> <span class="kw">SUM</span>(m.valor) <span class="kw">IS NULL</span></div><div class="cl" data-s="6"><span class="kw">ORDER BY</span> custo_total <span class="kw">DESC</span>;</div>
+    </div>
+    <div class="note">
+      <div data-nota="0"><span class="nt">Passo a passo</span>Aperte <b>→</b> para acender uma cláusula por vez.</div>
+      <div data-nota="1"><span class="nt">SELECT</span><code>COALESCE</code> troca o NULL do <code>SUM</code> por <b>0</b>, para o relatório não mostrar campo vazio.</div>
+      <div data-nota="2"><span class="nt">FROM Veiculo</span>Veiculo é a tabela da esquerda. É ela que será preservada inteira.</div>
+      <div data-nota="3"><span class="nt">LEFT JOIN</span>Sem manutenção, o veículo continua na lista e o lado direito vira NULL. Com <code>INNER JOIN</code>, quatro veículos sumiriam.</div>
+      <div data-nota="4"><span class="nt">GROUP BY</span>Um grupo por veículo. As três manutenções do Corolla viram uma linha.</div>
+      <div data-nota="5"><span class="nt">HAVING</span>A primeira condição pega os caros. A segunda mantém os que nunca foram à oficina, que sem ela seriam eliminados.</div>
+      <div data-nota="6"><span class="nt">ORDER BY</span>Do maior custo para o menor.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="and-resultado" data-titulo="André · Resultado"
+         data-dono="left" data-quem="André" style="--ac:var(--left)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--left)">André · Resultado</span>
+      <h2>Resultado da execução</h2></div>
+    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+  </div>
+  <div class="cols c-res">
+    <div class="tbox"><div class="cap"><span>Custo por veículo</span><span id="and-cap">8 linhas</span></div>
+      <div class="tscroll"><table id="t-and-res"></table></div></div>
+    <div style="display:flex; flex-direction:column; gap:1.4rem; min-width:0">
+      <div class="ctrl" style="--ac:var(--left)">
+        <span class="eyebrow">Corte do HAVING</span>
+        <span class="big" id="and-val" style="font-size:3.6rem; --ac:var(--left)">R$ 2.000</span>
+        <input type="range" id="and-rng" min="0" max="6000" step="250" value="2000" aria-label="Corte do HAVING">
+      </div>
+      <button class="swap" id="and-inner" aria-pressed="false">trocar por INNER JOIN</button>
+      <p class="lede" id="and-warn" style="margin:0; font-size:1.6rem; color:var(--inner)"></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide center" id="and-leitura" data-titulo="André · Leitura"
+         data-dono="left" data-quem="André" style="--ac:var(--left); gap:2.4rem">
+  <span class="eyebrow" style="color:var(--left)">André · Leitura do resultado</span>
+  <div class="big" style="font-size:12rem; --ac:var(--left)">R$ 15.490</div>
+  <p class="lede" style="font-size:2.1rem; max-width:38ch">
+    saíram em <b>quatro dos doze veículos</b> — 82% de tudo que a frota gastou em oficina.
+    Outros quatro nunca entraram.</p>
+  <p class="eyebrow">Uso: priorizar a renovação pelos quatro mais caros</p>
+</section>
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗
+     ║  DANIEL · AVALIAÇÃO · RIGHT JOIN · AVG     slides 20 a 24      ║
+     ╚═══════════════════════════════════════════════════════════════╝ -->
+
+<section class="slide center" id="dan-pergunta" data-titulo="Daniel · Pergunta"
+         data-dono="right" data-quem="Daniel" style="--ac:var(--right); gap:3.4rem">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--right)">Daniel · Evento Avaliação</span></div>
+    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+  </div>
+  <span class="eyebrow">Pergunta de negócio</span>
+  <p class="ask">Qual a <em>nota média por canal</em>, e quantas reservas <em>não foram avaliadas</em>?</p>
+  <span class="eyebrow">Função de agregação · AVG</span>
+</section>
+
+<section class="slide" id="dan-dados" data-titulo="Daniel · Dados originais"
+         data-dono="right" data-quem="Daniel" style="--ac:var(--right)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--right)">Daniel · Dados originais</span>
+      <h2>Duas tabelas</h2></div>
+    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+  </div>
+  <div class="cols c-2">
+    <div class="tbox"><div class="cap"><span>Avaliacao</span><span>12 linhas</span></div>
+      <div class="tscroll"><table id="t-dan-aval"></table></div></div>
+    <div class="tbox"><div class="cap"><span>Reserva</span><span>20 linhas</span></div>
+      <div class="tscroll"><table id="t-dan-reserva"></table></div></div>
+  </div>
+  <p class="lede wide" style="font-size:1.7rem">
+    São 20 reservas para 12 avaliações. <b>Oito reservas não têm avaliação nenhuma</b> —
+    as de id 15, 18 e 20, entre outras.</p>
+</section>
+
+<section class="slide" id="dan-sql" data-titulo="Daniel · A consulta" data-steps="6"
+         data-dono="right" data-quem="Daniel" style="--ac:var(--right); --ac-t:var(--right-t)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--right)">Daniel · A consulta</span></div>
+    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+  </div>
+  <div class="cols c-sql">
+    <div class="sql">
+<div class="cl" data-s="1"><span class="kw">SELECT</span> <span class="kw">COALESCE</span>(a.plataforma, <span class="st">'(sem avaliacao)'</span>) <span class="kw">AS</span> canal,
+       <span class="kw">COUNT</span>(r.id)           <span class="kw">AS</span> reservas,
+       <span class="kw">ROUND</span>(<span class="kw">AVG</span>(a.nota), 2) <span class="kw">AS</span> nota_media</div><div class="cl" data-s="2"><span class="kw">FROM</span> Avaliacao a</div><div class="cl" data-s="3"><span class="kw">RIGHT JOIN</span> Reserva r <span class="kw">ON</span> a.fk_Reserva_id = r.id</div><div class="cl" data-s="4"><span class="kw">GROUP BY</span> a.plataforma</div><div class="cl" data-s="5"><span class="kw">HAVING</span> <span class="kw">AVG</span>(a.nota) &lt; <span class="st">8.5</span>
+    <span class="kw">OR</span> <span class="kw">AVG</span>(a.nota) <span class="kw">IS NULL</span></div><div class="cl" data-s="6"><span class="kw">ORDER BY</span> nota_media <span class="kw">NULLS LAST</span>;</div>
+    </div>
+    <div class="note">
+      <div data-nota="0"><span class="nt">Passo a passo</span>Aperte <b>→</b> para acender uma cláusula por vez.</div>
+      <div data-nota="1"><span class="nt">SELECT</span>Quando não há avaliação, <code>plataforma</code> é NULL. O <code>COALESCE</code> dá nome a esse grupo.</div>
+      <div data-nota="2"><span class="nt">FROM Avaliacao</span>A avaliação está à esquerda, mas não é ela que precisa ser preservada.</div>
+      <div data-nota="3"><span class="nt">RIGHT JOIN</span>Preserva <b>Reserva</b>, que está à direita. Toda reserva conta, mesmo sem avaliação. É o espelho do LEFT JOIN: bastaria inverter a ordem das tabelas.</div>
+      <div data-nota="4"><span class="nt">GROUP BY</span>Um grupo por plataforma. As reservas sem avaliação caem todas no grupo NULL.</div>
+      <div data-nota="5"><span class="nt">HAVING</span>Canais abaixo de 8,5. A segunda condição mantém o grupo sem avaliação, cujo AVG é NULL.</div>
+      <div data-nota="6"><span class="nt">ORDER BY</span><code>NULLS LAST</code> joga o grupo sem nota para o fim.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="dan-resultado" data-titulo="Daniel · Resultado"
+         data-dono="right" data-quem="Daniel" style="--ac:var(--right)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--right)">Daniel · Resultado</span>
+      <h2>Resultado da execução</h2></div>
+    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+  </div>
+  <div class="cols c-res">
+    <div class="tbox"><div class="cap"><span>Satisfação por canal</span><span id="dan-cap">4 linhas</span></div>
+      <div class="tscroll"><table id="t-dan-res"></table></div></div>
+    <div style="display:flex; flex-direction:column; gap:1.4rem; min-width:0">
+      <div class="ctrl" style="--ac:var(--right)">
+        <span class="eyebrow">Corte do HAVING</span>
+        <span class="big" id="dan-val" style="font-size:3.6rem; --ac:var(--right)">8,5</span>
+        <input type="range" id="dan-rng" min="5" max="10" step="0.5" value="8.5" aria-label="Nota de corte">
+      </div>
+      <p class="lede" style="font-size:1.6rem">
+        O grupo <b>(sem avaliacao)</b> nunca sai, em nenhuma posição do controle:
+        o AVG dele é NULL e quem o segura é o <code>OR AVG(a.nota) IS NULL</code>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide center" id="dan-leitura" data-titulo="Daniel · Leitura"
+         data-dono="right" data-quem="Daniel" style="--ac:var(--right); gap:2.4rem">
+  <span class="eyebrow" style="color:var(--right)">Daniel · Leitura do resultado</span>
+  <div class="big" style="font-size:13rem; --ac:var(--right)">8 de 20</div>
+  <p class="lede" style="font-size:2.1rem; max-width:36ch">
+    reservas não geraram avaliação nenhuma. Nenhum ranking de nota mostra esse grupo —
+    só o RIGHT JOIN.</p>
+  <p class="eyebrow">Uso: pedir avaliação ativamente na devolução do veículo</p>
+</section>
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗
+     ║  GUILHERME · RESERVA · FULL OUTER · MAX e MIN  slides 25 a 29  ║
+     ╚═══════════════════════════════════════════════════════════════╝ -->
+
+<section class="slide center" id="gui-pergunta" data-titulo="Guilherme · Pergunta"
+         data-dono="full" data-quem="Guilherme" style="--ac:var(--full); gap:3.4rem">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--full)">Guilherme · Evento Reserva</span></div>
+    <div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div>
+  </div>
+  <span class="eyebrow">Pergunta de negócio</span>
+  <p class="ask">Quais veículos estão <em>parados</em>, e quais reservas estão <em>sem veículo alocado</em>?</p>
+  <span class="eyebrow">Funções de agregação · MAX e MIN</span>
+</section>
+
+<section class="slide" id="gui-dados" data-titulo="Guilherme · Dados originais"
+         data-dono="full" data-quem="Guilherme" style="--ac:var(--full)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--full)">Guilherme · Dados originais</span>
+      <h2>Duas tabelas</h2></div>
+    <div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div>
+  </div>
+  <div class="cols c-2">
+    <div class="tbox"><div class="cap"><span>Veiculo</span><span>12 linhas</span></div>
+      <div class="tscroll"><table id="t-gui-veiculo"></table></div></div>
+    <div class="tbox"><div class="cap"><span>Reserva</span><span>20 linhas</span></div>
+      <div class="tscroll"><table id="t-gui-reserva"></table></div></div>
+  </div>
+  <p class="lede wide" style="font-size:1.7rem">
+    Os dois lados têm sobra: veículos que ninguém reservou, e reservas com
+    <code>fk_Veiculo_placa</code> em NULL, ainda sem carro designado.</p>
+</section>
+
+<section class="slide" id="gui-sql" data-titulo="Guilherme · A consulta" data-steps="6"
+         data-dono="full" data-quem="Guilherme" style="--ac:var(--full); --ac-t:var(--full-t)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--full)">Guilherme · A consulta</span></div>
+    <div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div>
+  </div>
+  <div class="cols c-sql">
+    <div class="sql">
+<div class="cl" data-s="1"><span class="kw">SELECT</span> <span class="kw">COALESCE</span>(v.placa, <span class="st">'(sem veiculo alocado)'</span>) <span class="kw">AS</span> veiculo,
+       <span class="kw">COUNT</span>(r.id) <span class="kw">AS</span> reservas,
+       <span class="kw">MIN</span>(r.inicio) <span class="kw">AS</span> primeira,
+       <span class="kw">MAX</span>(r.fim)    <span class="kw">AS</span> ultima</div><div class="cl" data-s="2"><span class="kw">FROM</span> Veiculo v</div><div class="cl" data-s="3"><span class="kw">FULL OUTER JOIN</span> Reserva r <span class="kw">ON</span> v.placa = r.fk_Veiculo_placa</div><div class="cl" data-s="4"><span class="kw">GROUP BY</span> v.placa, v.modelo</div><div class="cl" data-s="5"><span class="kw">HAVING</span> <span class="kw">MAX</span>(r.fim) <span class="kw">IS NULL</span>              <span class="cm">-- nunca reservado</span>
+    <span class="kw">OR</span> v.placa <span class="kw">IS NULL</span>                 <span class="cm">-- reserva sem carro</span>
+    <span class="kw">OR</span> <span class="kw">MAX</span>(r.fim) &lt; <span class="st">DATE '2026-01-01'</span>  <span class="cm">-- parado</span></div><div class="cl" data-s="6"><span class="kw">ORDER BY</span> ultima <span class="kw">NULLS FIRST</span>;</div>
+    </div>
+    <div class="note">
+      <div data-nota="0"><span class="nt">Passo a passo</span>Aperte <b>→</b> para acender uma cláusula por vez.</div>
+      <div data-nota="1"><span class="nt">SELECT</span><code>MIN(inicio)</code> e <code>MAX(fim)</code> dão o primeiro e o último dia em que o carro rodou.</div>
+      <div data-nota="2"><span class="nt">FROM Veiculo</span>Aqui a ordem das tabelas não importa: o FULL OUTER preserva os dois lados.</div>
+      <div data-nota="3"><span class="nt">FULL OUTER JOIN</span>Único que traz as duas sobras juntas. O PostgreSQL suporta direto; no MySQL seria preciso simular com UNION.</div>
+      <div data-nota="4"><span class="nt">GROUP BY</span>Um grupo por veículo. As reservas sem carro caem todas no grupo NULL.</div>
+      <div data-nota="5"><span class="nt">HAVING</span>Três condições, um problema cada. <b>Sem a segunda linha</b> o HAVING eliminaria as reservas sem carro — elas têm data recente, não são NULL nem antigas — e o FULL OUTER perderia metade da função.</div>
+      <div data-nota="6"><span class="nt">ORDER BY</span><code>NULLS FIRST</code> põe os nunca reservados no topo.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="gui-resultado" data-titulo="Guilherme · Resultado"
+         data-dono="full" data-quem="Guilherme" style="--ac:var(--full)">
+  <div class="top">
+    <div><span class="eyebrow" style="color:var(--full)">Guilherme · Resultado</span>
+      <h2>A mesma consulta com cada junção</h2></div>
+    <div class="plate"><b>AO VIVO</b><span id="gui-placa">FULL OUTER</span></div>
+  </div>
+  <div class="picker" id="gui-picker">
+    <button class="pick p-inner" data-j="inner" aria-pressed="false">INNER</button>
+    <button class="pick p-left"  data-j="left"  aria-pressed="false">LEFT</button>
+    <button class="pick p-right" data-j="right" aria-pressed="false">RIGHT</button>
+    <button class="pick p-full"  data-j="full"  aria-pressed="true">FULL OUTER</button>
+  </div>
+  <div class="cols c-res">
+    <div class="tbox"><div class="cap"><span>Resultado</span><span id="gui-cap">5 linhas</span></div>
+      <div class="tscroll"><table id="t-gui-res"></table></div></div>
+    <div style="display:flex; flex-direction:column; gap:1.4rem; min-width:0">
+      <div class="big" id="gui-n" style="font-size:8rem">5</div>
+      <p class="lede" id="gui-txt" style="font-size:1.7rem"></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide center" id="gui-leitura" data-titulo="Guilherme · Leitura"
+         data-dono="full" data-quem="Guilherme" style="--ac:var(--full); gap:2.4rem">
+  <span class="eyebrow" style="color:var(--full)">Guilherme · Leitura do resultado</span>
+  <div class="big" style="font-size:12rem; --ac:var(--full)">2 · 2 · 3</div>
+  <p class="lede" style="font-size:2.1rem; max-width:40ch">
+    <b>dois</b> veículos nunca foram reservados, <b>dois</b> estão parados desde 2025 e
+    <b>três</b> reservas seguem sem carro alocado — a primeira começa em 06/07.</p>
+  <p class="eyebrow">Uso: alocar os parados nas três reservas pendentes</p>
 </section>
 
 </div><!-- /.stage -->
 
 <div class="zone l" id="zona-esq" aria-hidden="true"></div>
 <div class="zone r" id="zona-dir" aria-hidden="true"></div>
-
 <div class="grid" id="grade"></div>
 
 <div class="chrome">
-  <span class="count"><b id="contador">1</b> / <span id="total">9</span></span>
+  <span class="count"><b id="contador">1</b> / <span id="total">29</span></span>
   <span class="who-now" id="dono-atual"></span>
   <div class="road" id="estrada"></div>
   <button class="btn" id="btn-grade" title="Visão geral (O)">Slides</button>
