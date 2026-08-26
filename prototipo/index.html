@@ -1,0 +1,653 @@
+<title>Quatro Junções</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>
+/* ==========================================================
+   TOKENS
+   Claro = aço pálido (viés azul). Escuro = asfalto noturno.
+   Cores das junções vindas da sinalização automotiva:
+   autuação / oficina / avaliação / disponibilidade.
+   ========================================================== */
+:root{
+  --ground:#EDF0F5; --surface:#FFFFFF; --surface-2:#F5F8FC; --surface-3:#E5EAF2;
+  --line:#D2DAE5;   --line-2:#B4C0CF;
+  --ink:#0E141B;    --ink-2:#525F6E;   --ink-3:#828FA0;
+  --brand:#0F3555;  --brand-ink:#FFFFFF; --brand-soft:#E4EBF3;
+  --inner:#BC3320;  --left:#1259BC;    --right:#8F6104;   --full:#0A6F4C;
+  --inner-t:#FAEAE7; --left-t:#E7EFFC;  --right-t:#FAF1DD; --full-t:#E1F4EC;
+  --null:#8D9BAC;   --nullbg:#EEF1F5;
+  --shadow:0 1px 2px rgba(15,32,52,.07), 0 10px 28px -14px rgba(15,32,52,.22);
+  --r:5px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1319; --surface:#181D25; --surface-2:#1E242D; --surface-3:#262D38;
+    --line:#2B323D;   --line-2:#3B4450;
+    --ink:#E8EDF4;    --ink-2:#98A5B4;  --ink-3:#6B7889;
+    --brand:#7FB0DE;  --brand-ink:#0F1319; --brand-soft:#1C2836;
+    --inner:#F2795F;  --left:#6BA9FF;   --right:#DEA945;  --full:#3EC894;
+    --inner-t:#2B1A16; --left-t:#13233A; --right-t:#2A2113; --full-t:#12291F;
+    --null:#6B7889;   --nullbg:#20262F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1319; --surface:#181D25; --surface-2:#1E242D; --surface-3:#262D38;
+  --line:#2B323D;   --line-2:#3B4450;
+  --ink:#E8EDF4;    --ink-2:#98A5B4;  --ink-3:#6B7889;
+  --brand:#7FB0DE;  --brand-ink:#0F1319; --brand-soft:#1C2836;
+  --inner:#F2795F;  --left:#6BA9FF;   --right:#DEA945;  --full:#3EC894;
+  --inner-t:#2B1A16; --left-t:#13233A; --right-t:#2A2113; --full-t:#12291F;
+  --null:#6B7889;   --nullbg:#20262F;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:17px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif; margin:0; text-wrap:balance; letter-spacing:-.025em}
+code,.mono,table,input[type=range]{font-family:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace}
+
+/* ---------- palco ---------- */
+.stage{position:relative; height:100dvh; min-height:560px; overflow:hidden}
+.slide{
+  position:absolute; inset:0; padding:clamp(24px,3.4vw,56px) clamp(24px,4.5vw,80px) 74px;
+  display:flex; flex-direction:column; overflow-y:auto;
+  opacity:0; visibility:hidden; transform:translateY(14px);
+  transition:opacity .3s ease, transform .3s cubic-bezier(.22,.8,.3,1), visibility .3s;
+}
+.slide.on{opacity:1; visibility:visible; transform:none}
+.slide.before{transform:translateY(-14px)}
+
+/* ---------- rótulos e placa ---------- */
+.eyebrow{
+  font-family:"JetBrains Mono",monospace; font-size:.7rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.2em; color:var(--ink-3);
+}
+.plate{
+  display:inline-flex; flex-direction:column; align-items:stretch;
+  border:1.5px solid var(--ink); border-radius:4px; overflow:hidden;
+  background:var(--surface); min-width:132px; box-shadow:var(--shadow);
+}
+.plate b{
+  background:var(--brand); color:var(--brand-ink);
+  font-family:"JetBrains Mono",monospace; font-size:.5rem; font-weight:700;
+  letter-spacing:.24em; text-align:center; padding:2px 8px 1.5px;
+}
+.plate span{
+  font-family:"JetBrains Mono",monospace; font-weight:700; color:var(--ink);
+  font-size:.92rem; letter-spacing:.09em; text-align:center; padding:4px 12px 5px;
+}
+
+/* ---------- capa ---------- */
+.cover{justify-content:center; gap:clamp(20px,2.6vw,34px)}
+.cover-top{display:flex; align-items:baseline; gap:16px; flex-wrap:wrap}
+.cover h1{font-size:clamp(2.6rem,6.6vw,5.4rem); line-height:.95; font-weight:700}
+.cover h1 em{font-style:normal; color:var(--brand); display:block}
+.cover .lede{font-size:clamp(1rem,1.5vw,1.22rem); color:var(--ink-2); max-width:56ch}
+.rule{height:1px; background:var(--line); border:0; margin:0}
+
+.crew{display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:12px}
+.member{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  padding:14px 16px 16px; display:flex; flex-direction:column; gap:9px;
+  border-top:3px solid var(--mc,var(--line-2));
+}
+.member .who{font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:1.06rem; letter-spacing:-.01em}
+.member .ev{font-size:.85rem; color:var(--ink-2)}
+.member .fn{
+  font-family:"JetBrains Mono",monospace; font-size:.7rem; font-weight:700;
+  letter-spacing:.1em; color:var(--mc); text-transform:uppercase;
+}
+.m-inner{--mc:var(--inner)} .m-left{--mc:var(--left)}
+.m-right{--mc:var(--right)} .m-full{--mc:var(--full)}
+
+.meta{display:flex; gap:26px; flex-wrap:wrap; color:var(--ink-3); font-size:.82rem}
+.meta b{color:var(--ink-2); font-weight:500}
+
+/* ---------- cabeçalho de slide ---------- */
+.head{display:flex; align-items:flex-start; gap:20px; justify-content:space-between; margin-bottom:clamp(14px,2vw,24px)}
+.head h2{font-size:clamp(1.5rem,3.1vw,2.35rem); line-height:1.1; max-width:22ch}
+.head .sub{color:var(--ink-2); font-size:.95rem; margin-top:7px; max-width:64ch}
+
+/* ---------- pergunta de negócio ---------- */
+.ask{
+  background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--ac,var(--brand));
+  border-radius:var(--r); padding:14px 18px; font-family:"Space Grotesk",sans-serif;
+  font-size:clamp(1.02rem,1.7vw,1.3rem); font-weight:500; letter-spacing:-.015em;
+}
+
+/* ---------- tabelas de dados ---------- */
+.tbox{border:1px solid var(--line); border-radius:var(--r); background:var(--surface); overflow:hidden; box-shadow:var(--shadow)}
+.tbox > .cap{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:8px 12px; background:var(--surface-3); border-bottom:1px solid var(--line);
+  font-family:"JetBrains Mono",monospace; font-size:.7rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.14em; color:var(--ink-2);
+}
+.tscroll{overflow-x:auto}
+table{border-collapse:collapse; width:100%; font-size:.83rem; font-variant-numeric:tabular-nums}
+th{
+  text-align:left; padding:7px 12px; background:var(--surface-2); color:var(--ink-3);
+  font-weight:700; font-size:.68rem; text-transform:uppercase; letter-spacing:.1em;
+  border-bottom:1px solid var(--line); white-space:nowrap;
+}
+td{padding:6px 12px; border-bottom:1px solid var(--line); color:var(--ink); white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.num{text-align:right}
+.nul{
+  display:inline-block; padding:0 6px; border-radius:3px; background:var(--nullbg);
+  color:var(--null); border:1px dashed var(--line-2); font-size:.72rem; letter-spacing:.06em;
+}
+tbody tr.fresh{animation:pop .34s cubic-bezier(.22,.9,.3,1) both}
+tbody tr.gone td{color:var(--ink-3); text-decoration:line-through; opacity:.5}
+@keyframes pop{from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:none}}
+
+/* ---------- slide 2: junção ao vivo ---------- */
+.live{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.25fr); gap:clamp(16px,2.4vw,32px); flex:1; min-height:0}
+.sources{display:flex; flex-direction:column; gap:14px; min-width:0}
+.picker{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px}
+.pick{
+  font-family:"JetBrains Mono",monospace; font-size:.75rem; font-weight:700; letter-spacing:.06em;
+  padding:8px 13px; border-radius:var(--r); cursor:pointer;
+  background:var(--surface); color:var(--ink-2); border:1px solid var(--line);
+  transition:background .16s, color .16s, border-color .16s;
+}
+.pick:hover{border-color:var(--line-2); color:var(--ink)}
+.pick[aria-pressed="true"]{background:var(--pc); border-color:var(--pc); color:#fff}
+:root[data-theme="dark"] .pick[aria-pressed="true"],
+:root:not([data-theme="light"]) .pick[aria-pressed="true"]{color:#0F1319}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .pick[aria-pressed="true"]{color:#fff}}
+.p-inner{--pc:var(--inner)} .p-left{--pc:var(--left)}
+.p-right{--pc:var(--right)} .p-full{--pc:var(--full)}
+
+.venn{display:flex; align-items:center; gap:14px; margin-bottom:12px}
+.venn svg{flex:none}
+.venn .vt{font-size:.85rem; color:var(--ink-2); max-width:46ch}
+.venn .vt strong{color:var(--ink); font-weight:600}
+.vc{fill:none; stroke:var(--line-2); stroke-width:1.5}
+.vf{fill:var(--vfill,transparent); transition:fill .25s}
+
+.readout{
+  display:flex; gap:20px; align-items:baseline; margin-top:12px;
+  font-family:"JetBrains Mono",monospace; font-size:.76rem; color:var(--ink-3);
+  letter-spacing:.06em; text-transform:uppercase; font-weight:700;
+}
+.readout b{font-size:1.5rem; color:var(--ink); letter-spacing:-.02em}
+
+/* ---------- SQL ---------- */
+.sql{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  padding:14px 4px; font-size:.9rem; line-height:1.75; box-shadow:var(--shadow); overflow-x:auto;
+}
+.cl{padding:2px 16px; border-left:3px solid transparent; transition:background .22s, border-color .22s, opacity .22s; opacity:.45}
+.cl.on{background:var(--ac-t); border-left-color:var(--ac); opacity:1}
+.cl.seen{opacity:.9}
+.kw{color:var(--ac); font-weight:700}
+.cm{color:var(--ink-3)}
+.st{color:var(--full)}
+
+.note{
+  background:var(--ac-t); border:1px solid var(--line); border-radius:var(--r);
+  padding:14px 16px; font-size:.92rem; color:var(--ink); min-height:120px;
+}
+.note .nt{
+  font-family:"JetBrains Mono",monospace; font-size:.68rem; font-weight:700;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--ac); display:block; margin-bottom:6px;
+}
+.two{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:clamp(16px,2.2vw,28px); flex:1; min-height:0}
+
+/* ---------- slide 4: HAVING ao vivo ---------- */
+.dial{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  padding:16px 18px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow);
+}
+.dial .val{font-family:"Space Grotesk",sans-serif; font-size:2.1rem; font-weight:700; letter-spacing:-.03em; color:var(--left)}
+input[type=range]{width:100%; accent-color:var(--left); height:22px; cursor:pointer}
+.switch{
+  display:inline-flex; align-items:center; gap:9px; cursor:pointer; user-select:none;
+  font-size:.85rem; color:var(--ink-2);
+}
+.switch input{width:15px; height:15px; accent-color:var(--inner); cursor:pointer}
+.warn{font-size:.83rem; color:var(--inner); min-height:2.6em}
+
+/* ---------- cromo inferior ---------- */
+.chrome{
+  position:fixed; left:0; right:0; bottom:0; height:54px; padding:0 clamp(16px,3vw,32px);
+  display:flex; align-items:center; gap:18px; background:var(--surface);
+  border-top:1px solid var(--line); z-index:20;
+}
+.road{flex:1; height:3px; background:var(--surface-3); border-radius:2px; position:relative; overflow:hidden}
+.road::after{
+  content:""; position:absolute; inset:0; width:var(--p,0%);
+  background:repeating-linear-gradient(90deg,var(--brand) 0 14px,transparent 14px 22px);
+  transition:width .3s cubic-bezier(.22,.8,.3,1);
+}
+.count{font-family:"JetBrains Mono",monospace; font-size:.76rem; font-weight:700; letter-spacing:.1em; color:var(--ink-3); font-variant-numeric:tabular-nums}
+.count b{color:var(--ink)}
+.btn{
+  background:transparent; border:1px solid var(--line); border-radius:var(--r);
+  color:var(--ink-2); font-family:"JetBrains Mono",monospace; font-size:.68rem; font-weight:700;
+  letter-spacing:.12em; padding:6px 11px; cursor:pointer; text-transform:uppercase;
+}
+.btn:hover{border-color:var(--line-2); color:var(--ink)}
+.hint{font-size:.72rem; color:var(--ink-3); font-family:"JetBrains Mono",monospace; letter-spacing:.06em}
+
+.zone{position:fixed; top:0; bottom:54px; width:11%; z-index:10; cursor:pointer}
+.zone.l{left:0} .zone.r{right:0}
+:focus-visible{outline:2px solid var(--brand); outline-offset:2px; border-radius:3px}
+
+@media (max-width:900px){
+  .live,.two{grid-template-columns:1fr}
+  .zone{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::after,*::before{animation-duration:.01ms !important; transition-duration:.01ms !important}
+}
+</style>
+
+<div class="stage">
+
+  <!-- ============ 1 · CAPA ============ -->
+  <section class="slide cover on">
+    <div class="cover-top">
+      <span class="eyebrow">Etapa 05 · Consultas Avançadas</span>
+      <span class="eyebrow" style="color:var(--brand)">PostgreSQL 16</span>
+    </div>
+    <h1>Quatro junções,<em>um pátio só.</em></h1>
+    <p class="lede">Como <code>INNER</code>, <code>LEFT</code>, <code>RIGHT</code> e <code>FULL OUTER JOIN</code> respondem
+      quatro perguntas diferentes sobre a mesma concessionária — e por que trocar a junção troca a resposta.</p>
+    <hr class="rule">
+    <div class="crew">
+      <div class="member m-inner">
+        <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+        <div><div class="who">Augusto</div><div class="ev">Evento: Multa</div></div>
+        <div class="fn">count</div>
+      </div>
+      <div class="member m-left">
+        <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+        <div><div class="who">André</div><div class="ev">Evento: Manutenção</div></div>
+        <div class="fn">sum</div>
+      </div>
+      <div class="member m-right">
+        <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+        <div><div class="who">Daniel</div><div class="ev">Evento: Avaliação</div></div>
+        <div class="fn">avg</div>
+      </div>
+      <div class="member m-full">
+        <div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div>
+        <div><div class="who">Guilherme</div><div class="ev">Evento: Reserva</div></div>
+        <div class="fn">max · min</div>
+      </div>
+    </div>
+    <hr class="rule">
+    <div class="meta">
+      <span><b>Banco de Dados</b> · Modelagem e Consultas</span>
+      <span><b>7 tabelas</b> · 91 registros</span>
+      <span><b>Protótipo</b> · 4 de 28 slides</span>
+    </div>
+  </section>
+
+  <!-- ============ 2 · JUNÇÃO AO VIVO ============ -->
+  <section class="slide" data-steps="0">
+    <div class="head">
+      <div>
+        <span class="eyebrow">Fundamentação</span>
+        <h2>O mesmo dado, quatro junções</h2>
+        <p class="sub">Quatro veículos do pátio à esquerda, quatro reservas à direita. Escolha a junção e veja
+          a tabela de resultado ser reconstruída — nada aqui é imagem.</p>
+      </div>
+      <div class="plate"><b>AO VIVO</b><span id="p2plate">LEFT JOIN</span></div>
+    </div>
+
+    <div class="live">
+      <div class="sources">
+        <div class="tbox">
+          <div class="cap"><span>Veiculo</span><span>4 linhas</span></div>
+          <div class="tscroll"><table id="t-vei"></table></div>
+        </div>
+        <div class="tbox">
+          <div class="cap"><span>Reserva</span><span>4 linhas</span></div>
+          <div class="tscroll"><table id="t-res"></table></div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; min-width:0">
+        <div class="picker">
+          <button class="pick p-inner" data-j="inner" aria-pressed="false">INNER JOIN</button>
+          <button class="pick p-left"  data-j="left"  aria-pressed="true">LEFT JOIN</button>
+          <button class="pick p-right" data-j="right" aria-pressed="false">RIGHT JOIN</button>
+          <button class="pick p-full"  data-j="full"  aria-pressed="false">FULL OUTER</button>
+        </div>
+
+        <div class="venn">
+          <svg width="96" height="56" viewBox="0 0 96 56" aria-hidden="true">
+            <defs>
+              <clipPath id="cl"><circle cx="36" cy="28" r="22"/></clipPath>
+              <clipPath id="cr"><circle cx="60" cy="28" r="22"/></clipPath>
+            </defs>
+            <g id="vg">
+              <circle class="vf" id="vL" cx="36" cy="28" r="22"/>
+              <circle class="vf" id="vR" cx="60" cy="28" r="22"/>
+              <g clip-path="url(#cl)"><circle class="vf" id="vM" cx="60" cy="28" r="22"/></g>
+              <circle class="vc" cx="36" cy="28" r="22"/>
+              <circle class="vc" cx="60" cy="28" r="22"/>
+            </g>
+          </svg>
+          <p class="vt" id="vtext"></p>
+        </div>
+
+        <div class="tbox" style="flex:1; min-height:0; display:flex; flex-direction:column">
+          <div class="cap"><span>Resultado</span><span id="rcap">— linhas</span></div>
+          <div class="tscroll" style="flex:1"><table id="t-out"></table></div>
+        </div>
+
+        <div class="readout">
+          <span>linhas <b id="n-rows">0</b></span>
+          <span>veículos sem reserva <b id="n-lo">0</b></span>
+          <span>reservas sem veículo <b id="n-ro">0</b></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3 · SQL DO ANDRÉ ============ -->
+  <section class="slide" data-steps="6" style="--ac:var(--left); --ac-t:var(--left-t)">
+    <div class="head">
+      <div>
+        <span class="eyebrow" style="color:var(--left)">André · Evento Manutenção</span>
+        <h2>Quanto cada carro já custou de oficina</h2>
+      </div>
+      <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+    </div>
+
+    <div class="ask" style="--ac:var(--left); margin-bottom:18px">
+      Quais veículos já consumiram R$&nbsp;2.000 ou mais em manutenção — e quais nunca precisaram de oficina?
+    </div>
+
+    <div class="two">
+      <div class="sql">
+<div class="cl" data-s="1"><span class="kw">SELECT</span> v.placa, v.marca, v.modelo,
+       <span class="kw">COUNT</span>(m.id)               <span class="kw">AS</span> qtd_manutencoes,
+       <span class="kw">COALESCE</span>(<span class="kw">SUM</span>(m.valor), 0) <span class="kw">AS</span> custo_total_manutencao</div><div class="cl" data-s="2"><span class="kw">FROM</span> Veiculo v</div><div class="cl" data-s="3"><span class="kw">LEFT JOIN</span> Manutencao m <span class="kw">ON</span> v.placa = m.fk_Veiculo_placa</div><div class="cl" data-s="4"><span class="kw">GROUP BY</span> v.placa, v.marca, v.modelo</div><div class="cl" data-s="5"><span class="kw">HAVING</span> <span class="kw">COALESCE</span>(<span class="kw">SUM</span>(m.valor), 0) &gt;= <span class="st">2000</span>   <span class="cm">-- caros de manter</span>
+    <span class="kw">OR</span> <span class="kw">SUM</span>(m.valor) <span class="kw">IS NULL</span>                <span class="cm">-- nunca foram à oficina</span></div><div class="cl" data-s="6"><span class="kw">ORDER BY</span> custo_total_manutencao <span class="kw">DESC</span>, v.placa;</div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:14px; min-width:0">
+        <div class="note"><span class="nt" id="s3t">Passo a passo</span><span id="s3b">Aperte <b>→</b> para percorrer a consulta cláusula por cláusula.</span></div>
+        <div class="tbox">
+          <div class="cap"><span>Veiculo · amostra</span><span>12 no total</span></div>
+          <div class="tscroll"><table id="t-s3v"></table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4 · RESULTADO + HAVING AO VIVO ============ -->
+  <section class="slide" style="--ac:var(--left); --ac-t:var(--left-t)">
+    <div class="head">
+      <div>
+        <span class="eyebrow" style="color:var(--left)">André · Resultado</span>
+        <h2>O <code>HAVING</code> no controle deslizante</h2>
+        <p class="sub">Arraste o corte e veja o filtro agir sobre os grupos já calculados. Os quatro veículos
+          sem manutenção nenhuma continuam ali: quem os segura é o <code>OR SUM(...) IS NULL</code>.</p>
+      </div>
+      <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+    </div>
+
+    <div class="two">
+      <div class="tbox" style="min-height:0; display:flex; flex-direction:column">
+        <div class="cap"><span>Resultado da execução</span><span id="s4cap">8 linhas</span></div>
+        <div class="tscroll" style="flex:1"><table id="t-s4"></table></div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:14px; min-width:0">
+        <div class="dial">
+          <span class="eyebrow">Corte do HAVING</span>
+          <span class="val" id="s4val">R$ 2.000</span>
+          <input type="range" id="s4rng" min="0" max="6000" step="250" value="2000" aria-label="Valor de corte do HAVING">
+          <code style="font-size:.78rem; color:var(--ink-2)">HAVING COALESCE(SUM(m.valor),0) &gt;= <b id="s4num" style="color:var(--left)">2000</b></code>
+        </div>
+
+        <div class="dial">
+          <label class="switch"><input type="checkbox" id="s4inner">
+            <span>Trocar <b>LEFT JOIN</b> por <b>INNER JOIN</b></span></label>
+          <p class="warn" id="s4warn"></p>
+        </div>
+
+        <div class="note" style="--ac-t:var(--full-t)">
+          <span class="nt" style="color:var(--full)">Decisão de negócio</span>
+          Corolla, Renegade e Ranger somam <b>R$ 12.740</b> em oficina. Quatro carros nunca entraram.
+          A comparação sustenta a proposta de renovação da frota.
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="zone l" id="zl" aria-hidden="true"></div>
+<div class="zone r" id="zr" aria-hidden="true"></div>
+
+<div class="chrome">
+  <span class="count"><b id="cnow">1</b> / <span id="ctot">4</span></span>
+  <div class="road" id="road"></div>
+  <span class="hint">← →&nbsp; navegar</span>
+  <button class="btn" id="theme">Tema</button>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- dados reais do banco ---------- */
+var VEI = [
+  {placa:"ABC1D23", modelo:"Nivus"},
+  {placa:"HIJ8K90", modelo:"Kwid"},
+  {placa:"KLM1N23", modelo:"208"},
+  {placa:"LMN2O34", modelo:"C3"}
+];
+var RES = [
+  {id:1,  inicio:"2025-09-05", placa:"ABC1D23"},
+  {id:5,  inicio:"2025-11-13", placa:"HIJ8K90"},
+  {id:18, inicio:"2026-07-06", placa:null},
+  {id:20, inicio:"2026-08-10", placa:null}
+];
+var ANDRE = [
+  {placa:"DEF4G56", marca:"Toyota",     modelo:"Corolla",  q:3, v:5100},
+  {placa:"GHI7J89", marca:"Jeep",       modelo:"Renegade", q:2, v:4090},
+  {placa:"JKL0M12", marca:"Ford",       modelo:"Ranger",   q:2, v:3550},
+  {placa:"ABC1D23", marca:"Volkswagen", modelo:"Nivus",    q:2, v:2750},
+  {placa:"IJK9L01", marca:"Nissan",     modelo:"Kicks",    q:1, v:1750},
+  {placa:"FGH6I78", marca:"Hyundai",    modelo:"HB20",     q:1, v:680},
+  {placa:"KLM1N23", marca:"Peugeot",    modelo:"208",      q:1, v:520},
+  {placa:"BRA2E19", marca:"Chevrolet",  modelo:"Onix",     q:1, v:450},
+  {placa:"CDE3F45", marca:"Fiat",       modelo:"Pulse",    q:0, v:null},
+  {placa:"EFG5H67", marca:"Honda",      modelo:"Civic",    q:0, v:null},
+  {placa:"HIJ8K90", marca:"Renault",    modelo:"Kwid",     q:0, v:null},
+  {placa:"LMN2O34", marca:"Citroën",    modelo:"C3",       q:0, v:null}
+];
+
+/* ---------- utilitários de tabela ---------- */
+function nul(){ return '<span class="nul">NULL</span>'; }
+function build(el, cols, rows, fresh){
+  var h = "<thead><tr>";
+  cols.forEach(function(c){ h += "<th>" + c.h + "</th>"; });
+  h += "</tr></thead><tbody>";
+  rows.forEach(function(r){
+    h += '<tr class="' + (fresh ? "fresh" : "") + '" style="animation-delay:' + (fresh ? r.__i * 38 : 0) + 'ms">';
+    cols.forEach(function(c){
+      var v = c.f(r);
+      h += '<td class="' + (c.num ? "num" : "") + '">' + (v === null || v === undefined ? nul() : v) + "</td>";
+    });
+    h += "</tr>";
+  });
+  el.innerHTML = h + "</tbody>";
+}
+
+/* ---------- slide 2 ---------- */
+var VENN = {
+  inner:{t:"<strong>Só a interseção.</strong> Linha sem par dos dois lados é descartada. É o join que assume que os dois lados existem.", L:0,R:0,M:1},
+  left: {t:"<strong>Tudo da esquerda.</strong> Todo veículo do pátio aparece; sem reserva, o lado direito vira NULL.", L:1,R:0,M:1},
+  right:{t:"<strong>Tudo da direita.</strong> Toda reserva aparece; sem veículo alocado, o lado esquerdo vira NULL.", L:0,R:1,M:1},
+  full: {t:"<strong>Tudo dos dois lados.</strong> Veículo encalhado e reserva sem carro na mesma tabela — só o FULL OUTER faz isso.", L:1,R:1,M:1}
+};
+function joinRows(kind){
+  var out = [], i = 0;
+  VEI.forEach(function(v){
+    var hits = RES.filter(function(r){ return r.placa === v.placa; });
+    if (hits.length) hits.forEach(function(r){ out.push({v:v, r:r}); });
+    else if (kind === "left" || kind === "full") out.push({v:v, r:null});
+  });
+  if (kind === "right" || kind === "full")
+    RES.filter(function(r){ return r.placa === null; }).forEach(function(r){ out.push({v:null, r:r}); });
+  out.forEach(function(o){ o.__i = i++; });
+  return out;
+}
+var COLS2 = [
+  {h:"v.placa",  f:function(o){ return o.v ? o.v.placa : null; }},
+  {h:"v.modelo", f:function(o){ return o.v ? o.v.modelo : null; }},
+  {h:"r.id",     f:function(o){ return o.r ? o.r.id : null; }, num:true},
+  {h:"r.inicio", f:function(o){ return o.r ? o.r.inicio : null; }}
+];
+var kind = "left";
+function drawJoin(){
+  var rows = joinRows(kind);
+  build(document.getElementById("t-out"), COLS2, rows, true);
+  document.getElementById("rcap").textContent = rows.length + " linhas";
+  document.getElementById("n-rows").textContent = rows.length;
+  document.getElementById("n-lo").textContent = rows.filter(function(o){ return !o.r; }).length;
+  document.getElementById("n-ro").textContent = rows.filter(function(o){ return !o.v; }).length;
+  document.getElementById("p2plate").textContent = kind === "full" ? "FULL OUTER" : kind.toUpperCase() + " JOIN";
+  var cfg = VENN[kind], c = "var(--" + kind + ")";
+  document.getElementById("vtext").innerHTML = cfg.t;
+  document.getElementById("vL").style.setProperty("--vfill", cfg.L ? c : "transparent");
+  document.getElementById("vR").style.setProperty("--vfill", cfg.R ? c : "transparent");
+  document.getElementById("vM").style.setProperty("--vfill", cfg.M ? c : "transparent");
+  [].forEach.call(document.querySelectorAll(".pick"), function(b){
+    b.setAttribute("aria-pressed", b.dataset.j === kind ? "true" : "false");
+  });
+}
+[].forEach.call(document.querySelectorAll(".pick"), function(b){
+  b.addEventListener("click", function(){ kind = b.dataset.j; drawJoin(); });
+});
+build(document.getElementById("t-vei"),
+  [{h:"placa", f:function(r){ return r.placa; }}, {h:"modelo", f:function(r){ return r.modelo; }}], VEI);
+build(document.getElementById("t-res"),
+  [{h:"id", f:function(r){ return r.id; }, num:true},
+   {h:"inicio", f:function(r){ return r.inicio; }},
+   {h:"fk_Veiculo_placa", f:function(r){ return r.placa; }}], RES);
+drawJoin();
+
+/* ---------- slide 3 ---------- */
+var STEPS = [
+  ["Passo a passo", "Aperte <b>→</b> para percorrer a consulta cláusula por cláusula."],
+  ["SELECT", "Escolhe as colunas do relatório. <code>COALESCE</code> traduz o NULL de <code>SUM</code> em <b>0</b> — gerente não lê NULL, lê zero."],
+  ["FROM Veiculo", "<b>Veiculo é a tabela da esquerda.</b> Essa escolha decide tudo: é ela que será preservada inteira."],
+  ["LEFT JOIN", "Traz a manutenção quando existe. Quando não existe, mantém o veículo e preenche o lado direito com NULL. Com <code>INNER JOIN</code>, quatro carros do pátio sumiriam do relatório."],
+  ["GROUP BY", "Colapsa as linhas em um grupo por veículo. As três manutenções do Corolla viram uma única linha."],
+  ["HAVING", "Filtra os <b>grupos já calculados</b> — por isso não dá para usar WHERE aqui. A segunda condição é o que salva os carros sem manutenção da eliminação."],
+  ["ORDER BY", "Ordena do mais caro para o mais barato. O problema aparece na primeira linha."]
+];
+build(document.getElementById("t-s3v"),
+  [{h:"placa", f:function(r){ return r.placa; }},
+   {h:"marca", f:function(r){ return r.marca; }},
+   {h:"modelo", f:function(r){ return r.modelo; }}], ANDRE.slice(0, 5));
+
+function paintStep(n){
+  [].forEach.call(document.querySelectorAll(".cl"), function(c){
+    var s = +c.dataset.s;
+    c.classList.toggle("on", s === n);
+    c.classList.toggle("seen", s < n);
+  });
+  document.getElementById("s3t").textContent = STEPS[n][0];
+  document.getElementById("s3b").innerHTML = STEPS[n][1];
+}
+
+/* ---------- slide 4 ---------- */
+var COLS4 = [
+  {h:"placa",  f:function(r){ return r.placa; }},
+  {h:"marca",  f:function(r){ return r.marca; }},
+  {h:"modelo", f:function(r){ return r.modelo; }},
+  {h:"qtd",    f:function(r){ return r.q; }, num:true},
+  {h:"custo_total", f:function(r){ return r.v === null ? 0 : r.v; }, num:true}
+];
+function drawS4(){
+  var cut = +document.getElementById("s4rng").value;
+  var innerMode = document.getElementById("s4inner").checked;
+  var rows = ANDRE.filter(function(r){
+    if (r.v === null) return !innerMode;
+    return r.v >= cut;
+  });
+  rows.forEach(function(r, i){ r.__i = i; });
+  build(document.getElementById("t-s4"), COLS4, rows, true);
+  document.getElementById("s4cap").textContent = rows.length + " linha" + (rows.length === 1 ? "" : "s");
+  document.getElementById("s4val").textContent = "R$ " + cut.toLocaleString("pt-BR");
+  document.getElementById("s4num").textContent = cut;
+  document.getElementById("s4warn").innerHTML = innerMode
+    ? "Quatro veículos desapareceram do relatório — <b>Pulse, Civic, Kwid e C3</b>. Continuam no pátio, mas o INNER JOIN não os enxerga: eles não têm par na tabela Manutencao."
+    : "";
+}
+document.getElementById("s4rng").addEventListener("input", drawS4);
+document.getElementById("s4inner").addEventListener("change", drawS4);
+drawS4();
+
+/* ---------- navegação ---------- */
+var slides = [].slice.call(document.querySelectorAll(".slide"));
+var st = {i:0, s:0};
+document.getElementById("ctot").textContent = slides.length;
+
+function steps(i){ return +(slides[i].dataset.steps || 0); }
+function render(){
+  slides.forEach(function(s, n){
+    s.classList.toggle("on", n === st.i);
+    s.classList.toggle("before", n < st.i);
+  });
+  document.getElementById("cnow").textContent = st.i + 1;
+  document.getElementById("road").style.setProperty("--p", ((st.i + 1) / slides.length * 100) + "%");
+  if (slides[st.i].querySelector(".cl")) paintStep(st.s);
+  if (st.i === 1) drawJoin();
+}
+function next(){
+  if (st.s < steps(st.i)) { st.s++; render(); return; }
+  if (st.i < slides.length - 1) { st.i++; st.s = 0; render(); }
+}
+function prev(){
+  if (st.s > 0) { st.s--; render(); return; }
+  if (st.i > 0) { st.i--; st.s = steps(st.i); render(); }
+}
+document.addEventListener("keydown", function(e){
+  if (e.target.tagName === "INPUT") return;
+  var k = e.key;
+  if (k === "ArrowRight" || k === " " || k === "PageDown") { e.preventDefault(); next(); }
+  else if (k === "ArrowLeft" || k === "PageUp") { e.preventDefault(); prev(); }
+  else if (k === "Home") { st.i = 0; st.s = 0; render(); }
+  else if (k === "End") { st.i = slides.length - 1; st.s = 0; render(); }
+  else if (k === "t" || k === "T") { toggleTheme(); }
+});
+document.getElementById("zr").addEventListener("click", next);
+document.getElementById("zl").addEventListener("click", prev);
+
+var tx = 0;
+document.addEventListener("touchstart", function(e){ tx = e.changedTouches[0].clientX; }, {passive:true});
+document.addEventListener("touchend", function(e){
+  var d = e.changedTouches[0].clientX - tx;
+  if (Math.abs(d) > 60) { d < 0 ? next() : prev(); }
+}, {passive:true});
+
+function toggleTheme(){
+  var cur = document.documentElement.getAttribute("data-theme");
+  if (!cur) cur = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
+}
+document.getElementById("theme").addEventListener("click", toggleTheme);
+
+render();
+})();
+</script>
