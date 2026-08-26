@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quatro Junções · Consultas Avançadas</title>
+<meta name="description" content="Deck da Etapa 05 — Consultas Avançadas sobre o banco de dados de uma concessionária. IFES · Banco de Dados · Prof. Rafael Vargas.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
+<link rel="stylesheet" href="assets/fontes.css">
+<link rel="stylesheet" href="styles/deck.css">
+</head>
+<body>
+
+<div class="stage">
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     01 · CAPA
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide center on" id="capa" data-titulo="Capa" style="gap:4rem">
+  <span class="eyebrow">Etapa 05 · Consultas Avançadas · PostgreSQL</span>
+  <h1>Quatro junções,<br><span style="color:var(--brand)">um pátio só.</span></h1>
+
+  <div class="crew">
+    <div class="mem"><div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div><div class="who">Augusto</div></div>
+    <div class="mem"><div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div><div class="who">André</div></div>
+    <div class="mem"><div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div><div class="who">Daniel</div></div>
+    <div class="mem"><div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div><div class="who">Guilherme</div></div>
+  </div>
+
+  <div class="credits">
+    <span><b>IFES</b></span>
+    <span><b>Banco de Dados</b></span>
+    <span>Prof. <b>Rafael Vargas</b></span>
+    <span><b>2026</b> · 2º semestre</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     02 · CONTEXTUALIZAÇÃO — O ESTABELECIMENTO
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide center" id="contexto" data-titulo="O estabelecimento" style="gap:3rem">
+  <span class="eyebrow">Contextualização</span>
+  <h2 style="max-width:24ch">Uma concessionária não termina na venda.</h2>
+  <p class="lede wide" style="font-size:1.9rem">
+    O carro é <b>reservado</b>, sai para a rua, volta para a <b>oficina</b>,
+    às vezes traz uma <b>multa</b> — e o cliente deixa uma <b>avaliação</b>.
+    São esses quatro eventos que o nosso banco registra.
+  </p>
+
+  <div class="chips">
+    <div class="chip" style="--ac:var(--full)">
+      <span class="k">Reserva</span><span class="v">20</span><span class="n">registros</span></div>
+    <div class="chip" style="--ac:var(--left)">
+      <span class="k">Manutenção</span><span class="v">13</span><span class="n">registros</span></div>
+    <div class="chip" style="--ac:var(--inner)">
+      <span class="k">Multa</span><span class="v">10</span><span class="n">registros</span></div>
+    <div class="chip" style="--ac:var(--right)">
+      <span class="k">Avaliação</span><span class="v">12</span><span class="n">registros</span></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     03 · A TRILHA DO SEMESTRE
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide center" id="trilha" data-titulo="A trilha do semestre" style="gap:3rem">
+  <span class="eyebrow">Onde estamos</span>
+  <h2>Quatro etapas até aqui</h2>
+
+  <div class="track">
+    <div class="step done">
+      <span class="sn">ETAPA 02</span>
+      <span class="st">Modelo Conceitual</span>
+      <span class="sd">Entidades, relacionamentos e cardinalidades no ER.</span>
+    </div>
+    <div class="step done">
+      <span class="sn">ETAPA 03</span>
+      <span class="st">Modelo Lógico</span>
+      <span class="sd">Tabelas, chaves primárias e estrangeiras.</span>
+    </div>
+    <div class="step done">
+      <span class="sn">ETAPA 04</span>
+      <span class="st">Implementação SQL</span>
+      <span class="sd">DDL e DML no PostgreSQL. O banco saiu do papel.</span>
+    </div>
+    <div class="step now">
+      <span class="sn">ETAPA 05</span>
+      <span class="st">Consultas Avançadas</span>
+      <span class="sd">Perguntar ao banco o que a concessionária precisa decidir.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     04 · O MODELO LÓGICO
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="modelo" data-titulo="O modelo lógico">
+  <div class="top">
+    <div>
+      <span class="eyebrow">Modelo Lógico · Etapa 03</span>
+      <h2>Sete tabelas, seis ligações</h2>
+    </div>
+    <div class="plate"><b>CLIQUE</b><span>NAS TABELAS</span></div>
+  </div>
+
+  <div class="cols c-diag">
+    <div class="diagram" id="diagrama-estrutura"></div>
+    <div class="fields" id="campos-tabela"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     05 · QUEM CUIDA DE QUÊ
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="donos" data-titulo="Quem cuida de quê">
+  <div class="top">
+    <div>
+      <span class="eyebrow">Divisão do grupo</span>
+      <h2>Um evento para cada um</h2>
+    </div>
+  </div>
+
+  <div class="diagram" id="diagrama-donos" style="flex:1"></div>
+
+  <div class="crew" style="gap:2.4rem">
+    <div class="mem" style="--ac:var(--inner)">
+      <span class="eyebrow" style="color:var(--inner)">Multa · INNER JOIN</span>
+      <span class="who">Augusto</span></div>
+    <div class="mem" style="--ac:var(--left)">
+      <span class="eyebrow" style="color:var(--left)">Manutenção · LEFT JOIN</span>
+      <span class="who">André</span></div>
+    <div class="mem" style="--ac:var(--right)">
+      <span class="eyebrow" style="color:var(--right)">Avaliação · RIGHT JOIN</span>
+      <span class="who">Daniel</span></div>
+    <div class="mem" style="--ac:var(--full)">
+      <span class="eyebrow" style="color:var(--full)">Reserva · FULL OUTER</span>
+      <span class="who">Guilherme</span></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     06 · POR QUE PRECISAMOS DE JOIN
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="por-que-join" data-titulo="Por que precisamos de JOIN">
+  <div class="top">
+    <div>
+      <span class="eyebrow">Fundamentação</span>
+      <h2>Nenhuma tabela responde sozinha</h2>
+    </div>
+  </div>
+
+  <div class="cols c-2">
+    <div class="tbox">
+      <div class="cap"><span>Multa</span><span>sabe o valor</span></div>
+      <div class="tscroll"><table>
+        <thead><tr><th>id</th><th>valor</th><th>fk_Reserva_id</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="num">293</td><td class="num">2</td></tr>
+          <tr><td class="num">2</td><td class="num">195</td><td class="num">4</td></tr>
+          <tr><td class="num">3</td><td class="num">880</td><td class="num">12</td></tr>
+        </tbody></table></div>
+    </div>
+    <div class="tbox">
+      <div class="cap"><span>Cliente</span><span>sabe o nome</span></div>
+      <div class="tscroll"><table>
+        <thead><tr><th>cpf</th><th>nome</th></tr></thead>
+        <tbody>
+          <tr><td class="num">22233344455</td><td>Carlos Eduardo Lima</td></tr>
+          <tr><td class="num">66677788899</td><td>Gabriel Fonseca</td></tr>
+          <tr><td class="num">11122233344</td><td>Ana Beatriz Moraes</td></tr>
+        </tbody></table></div>
+    </div>
+  </div>
+
+  <p class="lede wide" style="font-size:1.8rem">
+    <b>“Quem são os clientes reincidentes em multas?”</b> não tem resposta em nenhuma
+    das duas. A pergunta mora no <b>encontro</b> delas — e é isso que o JOIN faz.
+  </p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     07 · AS QUATRO JUNÇÕES AO VIVO
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="juncoes" data-titulo="As quatro junções ao vivo">
+  <div class="top">
+    <div>
+      <span class="eyebrow">Fundamentação</span>
+      <h2>Troque a junção. A resposta muda.</h2>
+    </div>
+    <div class="plate"><b>AO VIVO</b><span id="juncao-placa">LEFT JOIN</span></div>
+  </div>
+
+  <div class="picker" id="picker-juncao">
+    <button class="pick p-inner" data-j="inner" aria-pressed="false">INNER</button>
+    <button class="pick p-left"  data-j="left"  aria-pressed="true">LEFT</button>
+    <button class="pick p-right" data-j="right" aria-pressed="false">RIGHT</button>
+    <button class="pick p-full"  data-j="full"  aria-pressed="false">FULL OUTER</button>
+  </div>
+
+  <div class="cols c-res">
+    <div class="tbox">
+      <div class="cap"><span>Veiculo ⋈ Reserva</span><span id="juncao-cap">4 linhas</span></div>
+      <div class="tscroll"><table id="t-juncao"></table></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:1.6rem; min-width:0">
+      <div class="big" id="juncao-n" style="font-size:9rem">4</div>
+      <p class="lede" id="juncao-txt" style="font-size:1.7rem"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     08 · GROUP BY
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="group-by" data-titulo="GROUP BY">
+  <div class="top">
+    <div>
+      <span class="eyebrow">Fundamentação</span>
+      <h2>GROUP BY: de linhas para grupos</h2>
+    </div>
+  </div>
+
+  <div class="cols c-2">
+    <div class="tbox">
+      <div class="cap"><span>Antes</span><span>6 linhas</span></div>
+      <div class="tscroll"><table id="t-multas-cru"></table></div>
+    </div>
+    <div class="tbox">
+      <div class="cap"><span>Depois · GROUP BY cliente</span><span>3 grupos</span></div>
+      <div class="tscroll"><table id="t-multas-agrupado"></table></div>
+    </div>
+  </div>
+
+  <p class="lede wide" style="font-size:1.8rem">
+    As três multas do Carlos viraram <b>uma linha</b>. O que era detalhe virou
+    <b>número</b> — e número é o que se leva para uma reunião.
+  </p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     09 · WHERE × HAVING
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide center" id="having" data-titulo="WHERE × HAVING" style="gap:3rem">
+  <span class="eyebrow">Fundamentação</span>
+  <h2>O erro clássico: WHERE não filtra grupo</h2>
+
+  <div class="track">
+    <div class="step now" style="--brand:var(--ink-3); opacity:1">
+      <span class="sn">1 · FROM + JOIN</span>
+      <span class="st">As linhas</span>
+      <span class="sd">As tabelas se encontram. Ainda é tudo linha solta.</span>
+    </div>
+    <div class="step now" style="--brand:var(--inner); opacity:1">
+      <span class="sn">2 · WHERE</span>
+      <span class="st">Filtra linhas</span>
+      <span class="sd">Age <b>antes</b> do agrupamento. Aqui COUNT e SUM ainda não existem.</span>
+    </div>
+    <div class="step now" style="--brand:var(--ink-3); opacity:1">
+      <span class="sn">3 · GROUP BY</span>
+      <span class="st">Forma os grupos</span>
+      <span class="sd">Agora sim: as funções de agregação são calculadas.</span>
+    </div>
+    <div class="step now" style="--brand:var(--full); opacity:1">
+      <span class="sn">4 · HAVING</span>
+      <span class="st">Filtra grupos</span>
+      <span class="sd">Age <b>depois</b>. É o único lugar onde cabe <code>COUNT(*) >= 2</code>.</span>
+    </div>
+  </div>
+
+  <p class="lede wide" style="font-size:1.8rem">
+    Por isso <code>WHERE COUNT(*) >= 2</code> dá erro: na hora em que o WHERE roda,
+    <b>o COUNT ainda não foi calculado</b>.
+  </p>
+</section>
+
+</div><!-- /.stage -->
+
+<div class="zone l" id="zona-esq" aria-hidden="true"></div>
+<div class="zone r" id="zona-dir" aria-hidden="true"></div>
+
+<div class="grid" id="grade"></div>
+
+<div class="chrome">
+  <span class="count"><b id="contador">1</b> / <span id="total">9</span></span>
+  <span class="who-now" id="dono-atual"></span>
+  <div class="road" id="estrada"></div>
+  <button class="btn" id="btn-grade" title="Visão geral (O)">Slides</button>
+  <button class="btn" id="btn-tema" title="Claro / escuro (T)">Tema</button>
+</div>
+
+<script src="scripts/dados.js"></script>
+<script src="scripts/deck.js"></script>
+</body>
+</html>
