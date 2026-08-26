@@ -1,0 +1,369 @@
+<title>Auditoria e Próximos Passos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --ground:#EDF0F5; --surface:#FFFFFF; --surface-2:#F4F7FB; --surface-3:#E3E9F1;
+  --line:#C9D3E0;   --line-2:#A6B4C6;
+  --ink:#0B1017;    --ink-2:#3B4854;  --ink-3:#5D6B7C;
+  --brand:#0F3555;  --brand-ink:#FFFFFF;
+  --alto:#B22D1A;   --alto-t:#FAE9E6;
+  --medio:#8F6104;  --medio-t:#FAF0D9;
+  --baixo:#0F52B0;  --baixo-t:#E6EEFC;
+  --ok:#046443;     --ok-t:#DDF3EA;
+  --shadow:0 1px 2px rgba(11,16,23,.06), 0 14px 30px -18px rgba(11,16,23,.3);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1117; --surface:#161C24; --surface-2:#1D242E; --surface-3:#252D39;
+    --line:#2E3742;   --line-2:#414C5A;
+    --ink:#EEF3F9;    --ink-2:#AEBAC7;  --ink-3:#8894A3;
+    --brand:#8CBAE6;  --brand-ink:#0D1117;
+    --alto:#FF8A6F;   --alto-t:#2E1B16;
+    --medio:#EAB84E;  --medio-t:#2C2212;
+    --baixo:#7DB4FF;  --baixo-t:#12243D;
+    --ok:#45D69C;     --ok-t:#102B20;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 14px 30px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1117; --surface:#161C24; --surface-2:#1D242E; --surface-3:#252D39;
+  --line:#2E3742;   --line-2:#414C5A;
+  --ink:#EEF3F9;    --ink-2:#AEBAC7;  --ink-3:#8894A3;
+  --brand:#8CBAE6;  --brand-ink:#0D1117;
+  --alto:#FF8A6F;   --alto-t:#2E1B16;
+  --medio:#EAB84E;  --medio-t:#2C2212;
+  --baixo:#7DB4FF;  --baixo-t:#12243D;
+  --ok:#45D69C;     --ok-t:#102B20;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 14px 30px -18px rgba(0,0,0,.9);
+}
+
+*{ box-sizing:border-box }
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:17px; line-height:1.62; -webkit-font-smoothing:antialiased;
+}
+.wrap{ max-width:960px; margin:0 auto; padding:56px 24px 110px;
+       display:flex; flex-direction:column; gap:52px }
+h1,h2,h3{ font-family:"Space Grotesk",Inter,sans-serif; margin:0;
+          letter-spacing:-.03em; text-wrap:balance }
+p{ margin:0 }
+code{ font-family:"JetBrains Mono",ui-monospace,Menlo,monospace; font-size:.87em;
+      background:var(--surface-3); padding:1px 6px; border-radius:3px; color:var(--ink) }
+.eyebrow{ font-family:"JetBrains Mono",monospace; font-size:.72rem; font-weight:700;
+          text-transform:uppercase; letter-spacing:.2em; color:var(--ink-3) }
+hr{ height:1px; background:var(--line); border:0; margin:0 }
+
+header{ display:flex; flex-direction:column; gap:14px }
+header h1{ font-size:clamp(2.2rem,5vw,3.2rem); line-height:1.02 }
+header p{ font-size:1.12rem; color:var(--ink-2); max-width:64ch }
+
+section{ display:flex; flex-direction:column; gap:22px }
+section > h2{ font-size:1.6rem }
+.sub{ color:var(--ink-2); max-width:68ch }
+
+/* --- achados --- */
+.item{
+  background:var(--surface); border:1px solid var(--line); border-radius:6px;
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.item-h{
+  display:flex; align-items:center; gap:14px; padding:15px 20px;
+  border-bottom:1px solid var(--line); background:var(--surface-2); flex-wrap:wrap;
+}
+.sev{
+  font-family:"JetBrains Mono",monospace; font-size:.66rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.14em; padding:4px 10px; border-radius:3px;
+  background:var(--st); color:var(--sc); white-space:nowrap;
+}
+.s-alto{ --st:var(--alto-t); --sc:var(--alto) }
+.s-medio{ --st:var(--medio-t); --sc:var(--medio) }
+.s-baixo{ --st:var(--baixo-t); --sc:var(--baixo) }
+.item-h h3{ font-size:1.14rem; flex:1; min-width:16ch }
+.item-b{ padding:17px 20px 20px; display:flex; flex-direction:column; gap:11px }
+.item-b p{ color:var(--ink-2) }
+.medida{
+  font-family:"JetBrains Mono",monospace; font-size:.85rem; color:var(--ink-2);
+  background:var(--surface-2); border-left:3px solid var(--line-2);
+  padding:9px 14px; border-radius:0 4px 4px 0; white-space:pre-wrap;
+}
+.fix{ color:var(--ink); font-size:.97rem }
+.fix b{ color:var(--ok) }
+
+/* --- ideias --- */
+.ideia{
+  background:var(--surface); border:1px solid var(--line); border-radius:6px;
+  box-shadow:var(--shadow); padding:22px 24px 24px;
+  display:flex; flex-direction:column; gap:12px; border-top:4px solid var(--ac,var(--line-2));
+}
+.ideia .n{ font-family:"JetBrains Mono",monospace; font-size:.7rem; font-weight:700;
+           letter-spacing:.16em; color:var(--ac) }
+.ideia h3{ font-size:1.42rem; line-height:1.15 }
+.ideia p{ color:var(--ink-2) }
+.ideia .peso{
+  display:flex; gap:16px; flex-wrap:wrap; margin-top:4px; padding-top:14px;
+  border-top:1px dashed var(--line); font-size:.85rem; color:var(--ink-3);
+  font-family:"JetBrains Mono",monospace;
+}
+.ideia .peso b{ color:var(--ink-2); font-weight:700 }
+.destaque{ --ac:var(--ok) }
+.forte{ --ac:var(--brand) }
+.medio{ --ac:var(--medio) }
+
+.pilha{ display:flex; flex-direction:column; gap:16px }
+.duplo{ display:grid; grid-template-columns:1fr 1fr; gap:16px }
+
+/* --- tabela --- */
+.tbox{ border:1px solid var(--line); border-radius:6px; overflow:hidden; box-shadow:var(--shadow) }
+.tscroll{ overflow-x:auto }
+table{ border-collapse:collapse; width:100%; font-size:.92rem; background:var(--surface);
+       font-variant-numeric:tabular-nums }
+th{ text-align:left; padding:11px 16px; background:var(--surface-3); color:var(--ink-2);
+    font-family:"JetBrains Mono",monospace; font-weight:700; font-size:.67rem;
+    text-transform:uppercase; letter-spacing:.12em; border-bottom:1px solid var(--line);
+    white-space:nowrap }
+td{ padding:11px 16px; border-bottom:1px solid var(--line); color:var(--ink-2) }
+tr:last-child td{ border-bottom:0 }
+td b{ color:var(--ink); font-weight:600 }
+td.num{ text-align:right; font-family:"JetBrains Mono",monospace }
+.reprova{ color:var(--alto); font-weight:700 }
+.aprova{ color:var(--ok); font-weight:700 }
+
+.fecho{
+  background:var(--ok-t); border:1px solid var(--ok); border-radius:6px;
+  padding:24px 26px; display:flex; flex-direction:column; gap:14px;
+}
+.fecho .eyebrow{ color:var(--ok) }
+.fecho h3{ font-size:1.3rem }
+.fecho ol{ margin:0; padding-left:22px; display:flex; flex-direction:column; gap:9px }
+.fecho li{ color:var(--ink-2) }
+.fecho li b{ color:var(--ink) }
+
+@media (max-width:760px){ .duplo{ grid-template-columns:1fr } }
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Deck da Etapa 05 · 32 slides · auditoria de 26/08</span>
+  <h1>Auditoria e próximos passos</h1>
+  <p>Rodei o deck no Chromium em três resoluções, medi contraste, testei cada controle
+     interativo e verifiquei a experiência no celular. Três defeitos reais, seis melhorias
+     e quatro ideias ambiciosas — uma delas muda o que o trabalho é.</p>
+</header>
+
+<hr>
+
+<!-- ══════════════ DEFEITOS ══════════════ -->
+<section>
+  <h2>O que a auditoria encontrou</h2>
+  <p class="sub">Nada quebra a apresentação hoje. Mas dois destes vão incomodar no dia,
+     e um já quebrou uma promessa que eu tinha feito no plano.</p>
+
+  <div class="pilha">
+
+    <div class="item">
+      <div class="item-h">
+        <span class="sev s-alto">Alto</span>
+        <h3>O celular está ilegível</h3>
+      </div>
+      <div class="item-b">
+        <p>No plano eu disse que o link entregue ao professor viraria uma leitura por rolagem
+           no celular. Não construí isso. O que existe é o mesmo deck, um slide por vez,
+           com a letra encolhida para caber.</p>
+        <div class="medida">iPhone 13 (390 × 844)
+1rem   →  9,3 px
+corpo  → 13,5 px
+tabela → 12,1 px   (o piso que estabelecemos é ~22 px no projetor)</div>
+        <p class="fix"><b>Correção:</b> modo leitura abaixo de 820 px — os slides deixam de ser
+           absolutos e viram seções empilhadas, com letra em tamanho de leitura e as tabelas
+           rolando na horizontal dentro da própria caixa.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-h">
+        <span class="sev s-medio">Médio</span>
+        <h3>As zonas de clique passam a 11 px dos botões</h3>
+      </div>
+      <div class="item-b">
+        <p>As faixas laterais que avançam o slide ao clique cobrem 9% da tela de cada lado.
+           O controle mais à esquerda de cada slide interativo fica logo depois. Funciona
+           hoje, por pouco: qualquer ajuste de espaçamento faz o clique no botão
+           <code>INNER</code> virar "próximo slide" no meio da apresentação.</p>
+        <div class="medida">zona esquerda  →  0 a 172 px
+centro do botao INNER →  183 px
+folga → 11 px  (0,5% da largura da tela)</div>
+        <p class="fix"><b>Correção:</b> tirar as faixas sobrepostas e passar a decidir no clique —
+           se o alvo for botão, campo ou link, não navega. Deixa de existir margem para dar errado.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-h">
+        <span class="sev s-medio">Médio</span>
+        <h3>Dois tons reprovam em contraste no tema claro</h3>
+      </div>
+      <div class="item-b">
+        <p>O tema escuro passa em tudo. O claro — que é o padrão, e o que vai para o
+           projetor — tem duas falhas. E projetor lava cor: na sala fica pior que na medição.</p>
+        <div class="tbox"><div class="tscroll">
+          <table>
+            <thead><tr><th>token</th><th>onde aparece</th><th>sobre superfície</th><th>sobre fundo</th><th>WCAG AA</th></tr></thead>
+            <tbody>
+              <tr><td><code>--ink-3</code></td><td>rótulos e cabeçalhos de tabela</td>
+                  <td class="num">4,39</td><td class="num">3,84</td><td class="reprova">reprova</td></tr>
+              <tr><td><code>--null</code></td><td>as etiquetas NULL</td>
+                  <td class="num">3,52</td><td class="num">3,08</td><td class="reprova">reprova</td></tr>
+              <tr><td><code>--ink-2</code></td><td>texto de apoio</td>
+                  <td class="num">8,23</td><td class="num">7,21</td><td class="aprova">passa</td></tr>
+              <tr><td>cores das junções</td><td>etiquetas e destaques</td>
+                  <td class="num">6,19 – 7,36</td><td class="num">5,42 – 6,44</td><td class="aprova">passa</td></tr>
+            </tbody>
+          </table>
+        </div></div>
+        <p class="fix"><b>Correção:</b> escurecer os dois tokens até passar de 4,5. É uma linha de CSS
+           cada, e a etiqueta NULL fica mais visível — ela é justamente o que o público precisa
+           enxergar nos slides de LEFT e FULL OUTER.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr>
+
+<!-- ══════════════ MELHORIAS ══════════════ -->
+<section>
+  <h2>Melhorias diretas</h2>
+  <p class="sub">Coisas que o deck deveria ter e não tem. Nenhuma delas muda o conceito.</p>
+
+  <div class="tbox"><div class="tscroll">
+    <table>
+      <thead><tr><th>melhoria</th><th>por quê</th><th>peso</th></tr></thead>
+      <tbody>
+        <tr><td><b>Modo apresentador</b></td>
+            <td>Segunda janela com as notas de cada slide, cronômetro e o próximo slide.
+                Hoje quem apresenta depende de decorar. Com quatro pessoas se revezando,
+                isso conta.</td><td>meia rodada</td></tr>
+        <tr><td><b>Exportar em PDF</b></td>
+            <td>Folha de estilo de impressão: um slide por página. Vira anexo caso o
+                professor peça arquivo em vez de link.</td><td>pequena</td></tr>
+        <tr><td><b>Junção animada linha a linha</b></td>
+            <td>Propus na primeira conversa e nunca construí. Duas tabelas lado a lado
+                onde as linhas com chave igual se aproximam e se fundem, e as sem par
+                ou somem ou ganham célula NULL tracejada. É o slide 7 ganhando o que
+                falta para ensinar de verdade.</td><td>uma rodada</td></tr>
+        <tr><td><b>Palpite antes do resultado</b></td>
+            <td>Antes de revelar a tabela, quem apresenta pergunta quantas linhas o
+                público acha que vão sair. Um clique revela. Transforma o slide de
+                resultado em participação.</td><td>pequena</td></tr>
+        <tr><td><b>Marcar o que a junção descarta</b></td>
+            <td>Nos slides de dados originais, as linhas que não sobrevivem à junção
+                ficam esmaecidas. Mostra a causa antes do efeito, na mesma tela.</td>
+            <td>meia rodada</td></tr>
+        <tr><td><b>Nome da concessionária e data</b></td>
+            <td>A capa ainda diz "a concessionária" e "2º semestre". Duas linhas.</td>
+            <td>minutos</td></tr>
+      </tbody>
+    </table>
+  </div></div>
+</section>
+
+<hr>
+
+<!-- ══════════════ AMBIÇÃO ══════════════ -->
+<section>
+  <h2>As ideias ambiciosas</h2>
+  <p class="sub">A primeira muda a natureza do trabalho. As outras três dependem dela ou
+     ampliam o que ela abre.</p>
+
+  <div class="pilha">
+
+    <div class="ideia destaque">
+      <span class="n">01 · A ideia principal</span>
+      <h3>PostgreSQL de verdade rodando dentro do slide</h3>
+      <p>Existe uma versão do PostgreSQL compilada para o navegador — o <b>PGlite</b>.
+         Ela roda o Postgres inteiro na página, sem servidor, sem internet. Dá para
+         carregar o <code>etapa05_completo.sql</code> de vocês nela e ter o banco real
+         dentro do deck.</p>
+      <p>O que isso permite na hora da apresentação: um console de SQL no slide, onde
+         <b>o professor digita a consulta que ele quiser</b> e vê o resultado sair na hora,
+         contra os dados de vocês. Não é simulação, não é tabela pré-calculada — é o
+         Postgres executando.</p>
+      <p>Para um trabalho de banco de dados, isso é a diferença entre mostrar um relatório
+         e entregar o banco funcionando. E responde de antemão a pergunta mais provável do
+         professor, que é "e se fosse assim?".</p>
+      <div class="peso">
+        <span>peso: <b>16 MB</b> (≈5 MB comprimidos)</span>
+        <span>esforço: <b>uma a duas rodadas</b></span>
+        <span>funciona <b>offline</b></span>
+      </div>
+    </div>
+
+    <div class="duplo">
+      <div class="ideia forte">
+        <span class="n">02 · Depende da 01</span>
+        <h3>Mexer nos dados e ver a consulta reagir</h3>
+        <p>Com o banco rodando na página, o slide pode ter um botão que insere uma multa
+           nova, apaga uma manutenção ou aloca um veículo numa reserva pendente — e as
+           quatro consultas se refazem na frente de todo mundo.</p>
+        <p>Aloque um carro na reserva 18 e o resultado do Guilherme perde uma linha ao vivo.
+           É a prova de que a consulta responde à pergunta, não aos dados que a gente
+           escolheu.</p>
+        <div class="peso"><span>esforço: <b>meia rodada</b> depois da 01</span></div>
+      </div>
+
+      <div class="ideia forte">
+        <span class="n">03 · Depende da 01</span>
+        <h3>Mostrar o plano de execução</h3>
+        <p>Um <code>EXPLAIN ANALYZE</code> real ao lado de cada consulta: como o Postgres
+           decidiu executar a junção, qual algoritmo escolheu, quanto tempo levou.</p>
+        <p>É conteúdo de capítulo seguinte, aparecendo naturalmente. Mostra que o grupo foi
+           além do que foi pedido sem precisar dizer isso em nenhum slide.</p>
+        <div class="peso"><span>esforço: <b>meia rodada</b> depois da 01</span></div>
+      </div>
+    </div>
+
+    <div class="ideia medio">
+      <span class="n">04 · O trabalho vira ferramenta</span>
+      <h3>Modo estudo para a turma inteira</h3>
+      <p>Depois da apresentação o link continua no ar. Com o banco rodando no navegador,
+         cada slide de consulta pode ganhar um "tente você": o enunciado da pergunta de
+         negócio, um campo em branco, e o site conferindo se o resultado da consulta escrita
+         bate com o esperado.</p>
+      <p>Aí o trabalho deixa de ser um slide entregue e vira o lugar onde a turma treina
+         junção antes da prova. É o tipo de coisa que um professor guarda para o semestre
+         seguinte.</p>
+      <div class="peso">
+        <span>esforço: <b>uma rodada</b> depois da 01</span>
+        <span>fora do que foi pedido</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr>
+
+<!-- ══════════════ RECOMENDAÇÃO ══════════════ -->
+<div class="fecho">
+  <span class="eyebrow">Minha recomendação</span>
+  <h3>Nesta ordem</h3>
+  <ol>
+    <li><b>Os três defeitos primeiro.</b> Celular, zonas de clique e contraste. São correções,
+        não novidades, e as duas últimas protegem vocês no dia da apresentação.</li>
+    <li><b>Modo apresentador e exportar PDF.</b> Baratos e úteis para quem vai falar.</li>
+    <li><b>O PostgreSQL no navegador.</b> Se der tempo de fazer uma coisa ambiciosa, que seja
+        essa. As ideias 02 e 03 saem quase de graça depois dela.</li>
+  </ol>
+  <p style="color:var(--ink-2); font-size:.95rem">
+    Uma ressalva honesta sobre a ideia 01: os 16 MB não cabem no link de pré-visualização,
+    que é um arquivo único. Ela funciona no site publicado na Vercel e na pasta baixada —
+    que são justamente onde a apresentação vai acontecer.</p>
+</div>
+
+</div>
