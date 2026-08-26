@@ -1,0 +1,299 @@
+<title>Plano de Construção</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --ground:#EDF0F5; --surface:#FFFFFF; --surface-2:#F4F7FB; --surface-3:#E3E9F1;
+  --line:#C9D3E0;   --line-2:#A6B4C6;
+  --ink:#0B1017;    --ink-2:#43505F;  --ink-3:#6B7A8C;
+  --brand:#0F3555;  --brand-ink:#FFFFFF;
+  --inner:#B22D1A;  --left:#0F52B0;   --right:#855800;  --full:#046443;
+  --done:#046443;   --done-bg:#DDF3EA; --block:#B22D1A;  --block-bg:#FAE9E6;
+  --shadow:0 1px 2px rgba(11,16,23,.05), 0 12px 28px -16px rgba(11,16,23,.28);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1117; --surface:#161C24; --surface-2:#1D242E; --surface-3:#252D39;
+    --line:#2E3742;   --line-2:#414C5A;
+    --ink:#EEF3F9;    --ink-2:#A3B0BF;  --ink-3:#788595;
+    --brand:#8CBAE6;  --brand-ink:#0D1117;
+    --inner:#FF8A6F;  --left:#7DB4FF;   --right:#EAB84E;  --full:#45D69C;
+    --done:#45D69C;   --done-bg:#102B20; --block:#FF8A6F;  --block-bg:#2E1B16;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 12px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1117; --surface:#161C24; --surface-2:#1D242E; --surface-3:#252D39;
+  --line:#2E3742;   --line-2:#414C5A;
+  --ink:#EEF3F9;    --ink-2:#A3B0BF;  --ink-3:#788595;
+  --brand:#8CBAE6;  --brand-ink:#0D1117;
+  --inner:#FF8A6F;  --left:#7DB4FF;   --right:#EAB84E;  --full:#45D69C;
+  --done:#45D69C;   --done-bg:#102B20; --block:#FF8A6F;  --block-bg:#2E1B16;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 12px 28px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:940px; margin:0 auto; padding:56px 24px 96px; display:flex; flex-direction:column; gap:44px}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif; margin:0; letter-spacing:-.03em; text-wrap:balance}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace}
+p{margin:0}
+a{color:var(--brand)}
+
+.eyebrow{
+  font-family:"JetBrains Mono",monospace; font-size:.72rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.2em; color:var(--ink-3);
+}
+
+/* cabeçalho */
+header{display:flex; flex-direction:column; gap:14px}
+header h1{font-size:clamp(2.3rem,5.4vw,3.4rem); line-height:1}
+header .sub{font-size:1.12rem; color:var(--ink-2); max-width:62ch}
+.status{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px}
+.chip{
+  display:inline-flex; align-items:center; gap:7px; padding:5px 12px; border-radius:4px;
+  background:var(--done-bg); color:var(--done); border:1px solid transparent;
+  font-family:"JetBrains Mono",monospace; font-size:.74rem; font-weight:700; letter-spacing:.05em;
+}
+.chip.todo{background:var(--surface); color:var(--ink-3); border-color:var(--line)}
+
+/* seções */
+section{display:flex; flex-direction:column; gap:18px}
+section > h2{font-size:1.55rem}
+.rule{height:1px; background:var(--line); border:0; margin:0}
+
+/* etapas */
+.stage{
+  background:var(--surface); border:1px solid var(--line); border-radius:5px;
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.stage-head{
+  display:flex; align-items:baseline; gap:16px; padding:18px 22px 14px;
+  border-bottom:1px solid var(--line); background:var(--surface-2);
+}
+.stage-n{
+  font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:1.9rem;
+  letter-spacing:-.04em; color:var(--ac); line-height:1; font-variant-numeric:tabular-nums;
+}
+.stage-head h3{font-size:1.24rem; flex:1}
+.stage-head .when{font-family:"JetBrains Mono",monospace; font-size:.72rem; font-weight:700; color:var(--ink-3); letter-spacing:.1em; white-space:nowrap}
+.stage-body{display:grid; grid-template-columns:1fr 1fr; gap:0}
+.lane{padding:18px 22px 22px; display:flex; flex-direction:column; gap:10px}
+.lane + .lane{border-left:1px solid var(--line); background:var(--surface-2)}
+.lane .who{
+  font-family:"JetBrains Mono",monospace; font-size:.7rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.16em; color:var(--ac);
+}
+.lane.them .who{color:var(--ink-3)}
+ul{margin:0; padding-left:19px; display:flex; flex-direction:column; gap:7px}
+li{font-size:.97rem; color:var(--ink-2)}
+li b{color:var(--ink); font-weight:600}
+li code{font-size:.86em; background:var(--surface-3); padding:1px 5px; border-radius:3px; color:var(--ink)}
+.e1{--ac:var(--left)} .e2{--ac:var(--right)} .e3{--ac:var(--inner)} .e4{--ac:var(--full)}
+
+/* bloqueio */
+.block{
+  background:var(--block-bg); border:1px solid var(--block); border-radius:5px;
+  padding:20px 24px; display:flex; flex-direction:column; gap:12px;
+}
+.block .eyebrow{color:var(--block)}
+.block h3{font-size:1.18rem}
+.fields{display:flex; gap:8px; flex-wrap:wrap; margin-top:4px}
+.field{
+  font-family:"JetBrains Mono",monospace; font-size:.8rem; padding:6px 12px;
+  background:var(--surface); border:1px solid var(--line); border-radius:4px; color:var(--ink);
+}
+
+/* tabela do grupo */
+.tbox{border:1px solid var(--line); border-radius:5px; overflow:hidden; box-shadow:var(--shadow)}
+.tscroll{overflow-x:auto}
+table{border-collapse:collapse; width:100%; font-size:.93rem; background:var(--surface)}
+th{
+  text-align:left; padding:11px 16px; background:var(--surface-3); color:var(--ink-2);
+  font-family:"JetBrains Mono",monospace; font-weight:700; font-size:.7rem;
+  text-transform:uppercase; letter-spacing:.12em; border-bottom:1px solid var(--line); white-space:nowrap;
+}
+td{padding:11px 16px; border-bottom:1px solid var(--line); color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td b{color:var(--ink); font-weight:600}
+td .j{font-family:"JetBrains Mono",monospace; font-size:.82rem; font-weight:700; color:var(--jc)}
+.j-inner{--jc:var(--inner)} .j-left{--jc:var(--left)}
+.j-right{--jc:var(--right)} .j-full{--jc:var(--full)}
+
+.foot{font-size:.92rem; color:var(--ink-3); display:flex; flex-direction:column; gap:8px}
+
+@media (max-width:720px){
+  .stage-body{grid-template-columns:1fr}
+  .lane + .lane{border-left:0; border-top:1px solid var(--line)}
+}
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Etapa 05 · Consultas Avançadas · Concessionária</span>
+  <h1>Plano de construção do site</h1>
+  <p class="sub">Quatro entregas até o deck rodando na Vercel. Cada uma fecha sozinha —
+     se o tempo apertar, dá para apresentar a partir da Entrega&nbsp;3.</p>
+  <div class="status">
+    <span class="chip">✓ SQL validado no PostgreSQL 16</span>
+    <span class="chip">✓ Identidade visual definida</span>
+    <span class="chip">✓ Protótipo de 7 slides aprovado</span>
+    <span class="chip todo">31 slides a montar</span>
+  </div>
+</header>
+
+<hr class="rule">
+
+<section>
+  <h2>As quatro entregas</h2>
+
+  <div class="stage e1">
+    <div class="stage-head">
+      <span class="stage-n">1</span>
+      <h3>Fundação do site e os 8 primeiros slides</h3>
+      <span class="when">próxima rodada</span>
+    </div>
+    <div class="stage-body">
+      <div class="lane">
+        <span class="who">Eu faço</span>
+        <ul>
+          <li>Estrutura para a Vercel: <code>index.html</code>, <code>styles/</code>, <code>scripts/</code>, <code>data/</code>, <code>vercel.json</code></li>
+          <li>Fontes <b>auto-hospedadas</b> — o deck abre mesmo sem internet na sala</li>
+          <li>Motor de navegação: teclado, apresentador remoto, swipe, <code>O</code> para a grade de slides, endereço que guarda o slide atual</li>
+          <li>Slides <b>1 a 8</b>: capa, contexto, trilha do semestre, modelo lógico interativo, o que é JOIN, os 4 tipos ao vivo, GROUP BY, WHERE&nbsp;×&nbsp;HAVING</li>
+        </ul>
+      </div>
+      <div class="lane them">
+        <span class="who">Vocês fazem</span>
+        <ul>
+          <li>Me mandar os <b>dados da capa</b> (ver abaixo)</li>
+          <li>Rodar <code>sql/01_ddl.sql</code> e <code>02_dml.sql</code> no pgAdmin ou DBeaver de vocês, só para confirmar que sobe limpo</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage e2">
+    <div class="stage-head">
+      <span class="stage-n">2</span>
+      <h3>Os quatro blocos de vocês — 20 slides</h3>
+      <span class="when">a rodada seguinte</span>
+    </div>
+    <div class="stage-body">
+      <div class="lane">
+        <span class="who">Eu faço</span>
+        <ul>
+          <li>Cinco slides por integrante, no molde já aprovado: <b>pergunta → dados → SQL → resultado → decisão</b></li>
+          <li>André primeiro (já validado no protótipo), depois Augusto, Daniel e Guilherme</li>
+          <li>Um controle interativo por bloco, específico da consulta: o corte do HAVING, o número de multas, a nota mínima, a data de corte</li>
+        </ul>
+      </div>
+      <div class="lane them">
+        <span class="who">Vocês fazem</span>
+        <ul>
+          <li>Cada um <b>lê a própria pergunta de negócio</b> e me diz se a defenderia na frente do professor</li>
+          <li>Se alguém quiser trocar a pergunta, me avisa <b>antes</b> desta entrega — depois mexe em 5 slides</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage e3">
+    <div class="stage-head">
+      <span class="stage-n">3</span>
+      <h3>Fechamento e os arquivos do professor</h3>
+      <span class="when">deck completo aqui</span>
+    </div>
+    <div class="stage-body">
+      <div class="lane">
+        <span class="who">Eu faço</span>
+        <ul>
+          <li>Slides <b>29 a 31</b>: matriz de cobertura (4 junções ✓ 5 funções ✓), aprendizados, encerramento</li>
+          <li>O <code>.sql</code> consolidado num arquivo só, comentado, pronto para anexar</li>
+          <li>Botão de download do script dentro do próprio site</li>
+        </ul>
+      </div>
+      <div class="lane them">
+        <span class="who">Vocês fazem</span>
+        <ul>
+          <li><b>Os prints do SGBD</b> — cada um roda a própria consulta e printa a tela. Só vocês podem fazer isso, é a tela de vocês que o professor pediu</li>
+          <li>Conferir se o print bate com a tabela do site (vai bater — é o mesmo script)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage e4">
+    <div class="stage-head">
+      <span class="stage-n">4</span>
+      <h3>Publicação e ensaio</h3>
+      <span class="when">antes de apresentar</span>
+    </div>
+    <div class="stage-body">
+      <div class="lane">
+        <span class="who">Eu faço</span>
+        <ul>
+          <li>Deixar o repositório pronto para importar na Vercel sem nenhuma configuração</li>
+          <li>Ajustes finais de legibilidade depois do teste no projetor</li>
+        </ul>
+      </div>
+      <div class="lane them">
+        <span class="who">Vocês fazem</span>
+        <ul>
+          <li>Conectar o repositório na Vercel — <b>não consigo entrar na conta de vocês</b>. É importar e clicar em deploy</li>
+          <li><b>Testar no projetor da sala antes do dia.</b> É o único teste que vale</li>
+          <li>Baixar a pasta num pendrive como plano B se a internet cair</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="block">
+  <span class="eyebrow">Trava a Entrega 1</span>
+  <h3>Só falta isso para eu começar</h3>
+  <p style="color:var(--ink-2); font-size:.98rem">A capa está com texto provisório. Me manda estes cinco campos e destravo:</p>
+  <div class="fields">
+    <span class="field">nome da concessionária</span>
+    <span class="field">disciplina</span>
+    <span class="field">professor</span>
+    <span class="field">instituição / curso</span>
+    <span class="field">data da apresentação</span>
+  </div>
+</div>
+
+<section>
+  <h2>Quem apresenta o quê</h2>
+  <div class="tbox"><div class="tscroll">
+    <table>
+      <thead><tr><th>Integrante</th><th>Evento</th><th>Junção</th><th>Função</th><th>Slides</th></tr></thead>
+      <tbody>
+        <tr><td><b>Augusto</b></td><td>Multa</td><td><span class="j j-inner">INNER JOIN</span></td><td class="mono">COUNT</td><td>14 – 18</td></tr>
+        <tr><td><b>André</b></td><td>Manutenção</td><td><span class="j j-left">LEFT JOIN</span></td><td class="mono">SUM</td><td>9 – 13</td></tr>
+        <tr><td><b>Daniel</b></td><td>Avaliação</td><td><span class="j j-right">RIGHT JOIN</span></td><td class="mono">AVG</td><td>19 – 23</td></tr>
+        <tr><td><b>Guilherme</b></td><td>Reserva</td><td><span class="j j-full">FULL OUTER</span></td><td class="mono">MAX · MIN</td><td>24 – 28</td></tr>
+      </tbody>
+    </table>
+  </div></div>
+  <p style="font-size:.92rem; color:var(--ink-3)">
+    Cinco slides cada, na mesma ordem que o enunciado pede: pergunta de negócio, dados originais,
+    script comentado, resultado da execução, decisão de negócio.</p>
+</section>
+
+<hr class="rule">
+
+<div class="foot">
+  <p><b>Se o tempo apertar:</b> ao fim da Entrega 3 o deck já está completo e apresentável.
+     A Entrega 4 é publicação e polimento.</p>
+  <p><b>Ordem de prioridade se algo ficar de fora:</b> os prints do SGBD são obrigatórios na nota;
+     a hospedagem na Vercel não — o site roda de um pendrive do mesmo jeito.</p>
+</div>
+
+</div>
