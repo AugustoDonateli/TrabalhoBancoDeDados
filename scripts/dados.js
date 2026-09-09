@@ -135,11 +135,15 @@ const AUG_RESERVA = [
   { id: 12, cpf: 22233344455 },
   { id: 7,  cpf: 66677788899 }
 ];
+/* Helena e Fernanda entram no lugar de Igor e Ana de proposito: elas nao tem
+   NENHUMA multa no banco inteiro. Igor tem duas e Ana tem uma — apareciam
+   riscadas como descartadas aqui e voltavam no resultado dois slides depois,
+   uma contradicao que o professor pegaria na hora. */
 const AUG_CLIENTE = [
   { cpf: 22233344455, nome: "Carlos Eduardo Lima" },
   { cpf: 66677788899, nome: "Gabriel Fonseca" },
-  { cpf: 88899900011, nome: "Igor Salgado" },
-  { cpf: 11122233344, nome: "Ana Beatriz Moraes" }
+  { cpf: 77788899900, nome: "Helena Vasconcelos" },
+  { cpf: 55566677788, nome: "Fernanda Rocha" }
 ];
 /* agregado completo, antes do HAVING */
 const AUG_RESULTADO = [
