@@ -42,6 +42,9 @@ html{ font-size:min(1vw, 1.7778vh); }
   --inner:#B22D1A;  --left:#0F52B0;   --right:#855800;  --full:#046443;
   --inner-t:#FAE9E6; --left-t:#E6EEFC; --right-t:#FAF0D9; --full-t:#DDF3EA;
   --null:#606E80;   --nullbg:#EBEFF5;
+  /* versoes vivas, para os paineis escuros — valem nos dois temas */
+  --inner-b:#FF8A6F; --left-b:#7DB4FF; --right-b:#EAB84E; --full-b:#45D69C;
+  --escuro:#0F141B;  --escuro-2:#1B2430; --escuro-ink:#EEF3F9; --escuro-ink2:#9FADBD;
   --shadow:0 .1rem .2rem rgba(11,16,23,.05), 0 1rem 3rem -1.4rem rgba(11,16,23,.2);
   --r:.4rem;
 }
@@ -90,8 +93,10 @@ code,.mono,table{ font-family:"JetBrains Mono",ui-monospace,Menlo,monospace }
   opacity:0; visibility:hidden; transform:translateX(3rem);
   transition:opacity .3s ease, transform .34s cubic-bezier(.22,.9,.28,1), visibility .34s;
 }
-/* voltando, o slide entra pelo outro lado: a navegacao ganha sentido fisico */
-.stage[data-dir="tras"] .slide{ transform:translateX(-3rem) }
+/* voltando, o slide entra pelo outro lado: a navegacao ganha sentido fisico.
+   O :not(.on) e obrigatorio — sem ele esta regra tem especificidade maior que
+   .slide.on e desloca tambem o slide visivel, que fica torto na tela. */
+.stage[data-dir="tras"] .slide:not(.on){ transform:translateX(-3rem) }
 .slide.on{ opacity:1; visibility:visible; transform:none }
 
 /* o conteudo do slide assenta em cascata, de cima para baixo */
@@ -121,6 +126,47 @@ h2{ font-size:3.4rem; line-height:1.05; max-width:20ch }
   font-family:"Space Grotesk",sans-serif; font-weight:700; letter-spacing:-.045em;
   line-height:.85; font-variant-numeric:tabular-nums; color:var(--ac,var(--ink));
 }
+
+/* ---------- RITMO: DIVISOR E PAINEL ESCURO -------------------------------
+   Vinte e nove slides com a mesma textura nao tem respiro. A pergunta de
+   cada integrante abre em cheio na cor dele e a leitura fecha no escuro:
+   o publico sente a troca de apresentador sem ninguem anunciar.
+   -------------------------------------------------------------------------- */
+.slide.divisor{ background:var(--ac); color:#fff }
+/* .72 reprovava em contraste sobre o vermelho e o ambar (3,99 e 4,06) */
+.slide.divisor .eyebrow{ color:rgba(255,255,255,.86) }
+.slide.divisor .ask{ color:#fff }
+.slide.divisor .ask em{ color:rgba(255,255,255,.80) }
+
+.slide.inverso{ background:var(--escuro); color:var(--escuro-ink) }
+.slide.inverso .eyebrow{ color:var(--escuro-ink2) }
+.slide.inverso .lede{ color:var(--escuro-ink2) }
+.slide.inverso .lede b{ color:var(--escuro-ink) }
+.slide.inverso[data-dono="inner"]{ --ac:var(--inner-b) }
+.slide.inverso[data-dono="left"] { --ac:var(--left-b) }
+.slide.inverso[data-dono="right"]{ --ac:var(--right-b) }
+.slide.inverso[data-dono="full"] { --ac:var(--full-b) }
+
+/* ---------- GRADE DE UNIDADES -------------------------------------------
+   Um quadrado por registro: doze veiculos sao doze quadrados. Quem quiser
+   conferir, conta. Destaque na cor do integrante, contexto em cinza — a
+   forma de enfase, nao uma paleta categorica.
+   -------------------------------------------------------------------------- */
+.grade-un{ display:flex; flex-direction:column; gap:.75rem; align-items:flex-start }
+.grade-un .quadros{ display:flex; flex-wrap:wrap; gap:.42rem; max-width:34rem }
+.grade-un i{
+  width:1.7rem; height:1.7rem; border-radius:.22rem; display:block;
+  background:var(--ctx,#3A4552); transform:scale(.4); opacity:0;
+  transition:transform .3s cubic-bezier(.2,1.3,.4,1), opacity .3s, background .3s;
+}
+.grade-un.acesa i{ transform:none; opacity:1 }
+.grade-un i.on{ background:var(--ac) }
+.grade-un .rot{
+  font-family:"JetBrains Mono",monospace; font-size:1.15rem; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--escuro-ink2);
+}
+.grade-un .rot b{ color:var(--ac) }
+.grades{ display:flex; gap:3.4rem; flex-wrap:wrap }
 
 /* ---------- MARCA -------------------------------------------------------- */
 .marca{ display:inline-flex; align-items:center; gap:.75em; line-height:1 }
@@ -573,10 +619,10 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
      ║  AUGUSTO · MULTA · INNER JOIN · COUNT      slides 6 a 10      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
-<section class="slide center" id="aug-pergunta" data-titulo="Augusto · Pergunta"
+<section class="slide center divisor" id="aug-pergunta" data-titulo="Augusto · Pergunta"
          data-dono="inner" data-quem="Augusto" style="--ac:var(--inner); gap:3.4rem">
   <div class="top">
-    <div><span class="eyebrow" style="color:var(--inner)">Augusto · Evento Multa</span></div>
+    <div><span class="eyebrow">Augusto · Evento Multa</span></div>
     <div class="plate"><b>LIMAS</b><span>INNER JOIN</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
@@ -642,23 +688,23 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
   </div>
 </section>
 
-<section class="slide center" id="aug-leitura" data-titulo="Augusto · Leitura"
-         data-dono="inner" data-quem="Augusto" style="--ac:var(--inner); gap:2.4rem">
-  <span class="eyebrow" style="color:var(--inner)">Augusto · Leitura do resultado</span>
-  <div class="big" style="font-size:13rem; --ac:var(--inner)">7 de 10</div>
-  <p class="lede" style="font-size:2.1rem; max-width:34ch">
-    multas registradas vêm de <b>três clientes</b>. Os outros sete clientes somam três.</p>
-  <p class="eyebrow">Uso: revisar caução e cobertura antes de aprovar nova reserva</p>
+<section class="slide center inverso" id="aug-leitura" data-titulo="Augusto · Leitura"
+         data-dono="inner" data-quem="Augusto" style="gap:2.2rem">
+  <span class="eyebrow">Augusto · Leitura do resultado</span>
+  <div class="big" style="font-size:11rem"><span class="conta" data-valor="7">0</span> de 10</div>
+  <p class="lede" style="font-size:2rem; max-width:40ch">multas registradas vêm de <b>três clientes</b>. Os outros sete clientes, juntos, somam três.</p>
+  <div class="grades"><div class="grade-un" data-total="10" data-marcadas="7" data-rot="<b>7</b> das 10 multas"></div><div class="grade-un" data-total="12" data-marcadas="3" data-rot="<b>3</b> dos 12 clientes"></div></div>
+  <p class="eyebrow">Uso: revisar caução antes de aprovar nova reserva</p>
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
      ║  ANDRÉ · MANUTENÇÃO · LEFT JOIN · SUM      slides 11 a 15      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
-<section class="slide center" id="and-pergunta" data-titulo="André · Pergunta"
+<section class="slide center divisor" id="and-pergunta" data-titulo="André · Pergunta"
          data-dono="left" data-quem="André" style="--ac:var(--left); gap:3.4rem">
   <div class="top">
-    <div><span class="eyebrow" style="color:var(--left)">André · Evento Manutenção</span></div>
+    <div><span class="eyebrow">André · Evento Manutenção</span></div>
     <div class="plate"><b>LIMAS</b><span>LEFT JOIN</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
@@ -723,13 +769,12 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
   </div>
 </section>
 
-<section class="slide center" id="and-leitura" data-titulo="André · Leitura"
-         data-dono="left" data-quem="André" style="--ac:var(--left); gap:2.4rem">
-  <span class="eyebrow" style="color:var(--left)">André · Leitura do resultado</span>
-  <div class="big" style="font-size:12rem; --ac:var(--left)">R$ 15.490</div>
-  <p class="lede" style="font-size:2.1rem; max-width:38ch">
-    saíram em <b>quatro dos doze veículos</b> — 82% de tudo que a frota gastou em oficina.
-    Outros quatro nunca entraram.</p>
+<section class="slide center inverso" id="and-leitura" data-titulo="André · Leitura"
+         data-dono="left" data-quem="André" style="gap:2.2rem">
+  <span class="eyebrow">André · Leitura do resultado</span>
+  <div class="big" style="font-size:11rem">R$ <span class="conta" data-valor="15490">0</span></div>
+  <p class="lede" style="font-size:2rem; max-width:40ch">saíram em <b>quatro dos doze veículos</b> — 82% de tudo que a frota gastou em oficina.</p>
+  <div class="grades"><div class="grade-un" data-total="12" data-marcadas="4" data-rot="<b>4</b> concentram 82% do gasto"></div><div class="grade-un" data-total="12" data-marcadas="4" data-rot="<b>4</b> nunca foram à oficina"></div></div>
   <p class="eyebrow">Uso: priorizar a renovação pelos quatro mais caros</p>
 </section>
 
@@ -737,10 +782,10 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
      ║  DANIEL · AVALIAÇÃO · RIGHT JOIN · AVG     slides 16 a 20      ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
-<section class="slide center" id="dan-pergunta" data-titulo="Daniel · Pergunta"
+<section class="slide center divisor" id="dan-pergunta" data-titulo="Daniel · Pergunta"
          data-dono="right" data-quem="Daniel" style="--ac:var(--right); gap:3.4rem">
   <div class="top">
-    <div><span class="eyebrow" style="color:var(--right)">Daniel · Evento Avaliação</span></div>
+    <div><span class="eyebrow">Daniel · Evento Avaliação</span></div>
     <div class="plate"><b>LIMAS</b><span>RIGHT JOIN</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
@@ -806,24 +851,23 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
   </div>
 </section>
 
-<section class="slide center" id="dan-leitura" data-titulo="Daniel · Leitura"
-         data-dono="right" data-quem="Daniel" style="--ac:var(--right); gap:2.4rem">
-  <span class="eyebrow" style="color:var(--right)">Daniel · Leitura do resultado</span>
-  <div class="big" style="font-size:13rem; --ac:var(--right)">8 de 20</div>
-  <p class="lede" style="font-size:2.1rem; max-width:36ch">
-    reservas não geraram avaliação nenhuma. Nenhum ranking de nota mostra esse grupo —
-    só o RIGHT JOIN.</p>
-  <p class="eyebrow">Uso: pedir avaliação ativamente na devolução do veículo</p>
+<section class="slide center inverso" id="dan-leitura" data-titulo="Daniel · Leitura"
+         data-dono="right" data-quem="Daniel" style="gap:2.2rem">
+  <span class="eyebrow">Daniel · Leitura do resultado</span>
+  <div class="big" style="font-size:11rem"><span class="conta" data-valor="8">0</span> de 20</div>
+  <p class="lede" style="font-size:2rem; max-width:40ch">reservas não geraram avaliação nenhuma. Nenhum ranking de nota mostra esse grupo — só o RIGHT JOIN.</p>
+  <div class="grades"><div class="grade-un" data-total="20" data-marcadas="8" data-rot="<b>8</b> das 20 reservas sem avaliação"></div></div>
+  <p class="eyebrow">Uso: pedir avaliação na devolução do veículo</p>
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
      ║  GUILHERME · RESERVA · FULL OUTER · MAX e MIN  slides 21 a 25  ║
      ╚═══════════════════════════════════════════════════════════════╝ -->
 
-<section class="slide center" id="gui-pergunta" data-titulo="Guilherme · Pergunta"
+<section class="slide center divisor" id="gui-pergunta" data-titulo="Guilherme · Pergunta"
          data-dono="full" data-quem="Guilherme" style="--ac:var(--full); gap:3.4rem">
   <div class="top">
-    <div><span class="eyebrow" style="color:var(--full)">Guilherme · Evento Reserva</span></div>
+    <div><span class="eyebrow">Guilherme · Evento Reserva</span></div>
     <div class="plate"><b>LIMAS</b><span>FULL OUTER</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
@@ -891,14 +935,13 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
   </div>
 </section>
 
-<section class="slide center" id="gui-leitura" data-titulo="Guilherme · Leitura"
-         data-dono="full" data-quem="Guilherme" style="--ac:var(--full); gap:2.4rem">
-  <span class="eyebrow" style="color:var(--full)">Guilherme · Leitura do resultado</span>
-  <div class="big" style="font-size:12rem; --ac:var(--full)">2 · 2 · 3</div>
-  <p class="lede" style="font-size:2.1rem; max-width:40ch">
-    <b>dois</b> veículos nunca foram reservados, <b>dois</b> estão parados desde 2025 e
-    <b>três</b> reservas seguem sem carro alocado — a primeira começa em 06/07.</p>
-  <p class="eyebrow">Uso: alocar os parados nas três reservas pendentes</p>
+<section class="slide center inverso" id="gui-leitura" data-titulo="Guilherme · Leitura"
+         data-dono="full" data-quem="Guilherme" style="gap:2.2rem">
+  <span class="eyebrow">Guilherme · Leitura do resultado</span>
+  <div class="big" style="font-size:11rem"><span class="conta" data-valor="3">0</span></div>
+  <p class="lede" style="font-size:2rem; max-width:40ch">reservas seguem <b>sem veículo alocado</b>, e a primeira começa em 06/07. Ao mesmo tempo, quatro carros do pátio estão parados — dois nunca foram reservados.</p>
+  <div class="grades"><div class="grade-un" data-total="20" data-marcadas="3" data-rot="<b>3</b> das 20 reservas sem carro"></div><div class="grade-un" data-total="12" data-marcadas="4" data-rot="<b>4</b> dos 12 carros parados"></div></div>
+  <p class="eyebrow">Uso: alocar os parados nas reservas pendentes</p>
 </section>
 
 <!-- ╔═══════════════════════════════════════════════════════════════╗
@@ -1660,6 +1703,8 @@ const JUNCOES = {
     rot.textContent = slides[pos.i].dataset.quem || "";
     rot.style.setProperty("--ac", dono ? "var(--" + dono + ")" : "var(--ink-3)");
 
+    animarLeitura(slides[pos.i]);
+
     var jx = slides[pos.i].querySelector(".jx");
     if (jx && window.Juncao) window.Juncao.entrar(jx);
 
@@ -1692,6 +1737,45 @@ const JUNCOES = {
     pos.i = n;
     pos.passo = 0;
     desenhar();
+  }
+
+  /* =========================================================================
+     O PAINEL DE LEITURA
+     O numero conta de zero e a grade acende quadrado a quadrado. Cada quadrado
+     e um registro de verdade: doze veiculos sao doze quadrados, e quem quiser
+     conferir, conta. Destaque na cor do integrante, contexto em cinza.
+     ========================================================================= */
+  function animarLeitura(slide) {
+    slide.querySelectorAll(".grade-un").forEach(function (g) {
+      if (!g.dataset.pronta) {
+        var total = +g.dataset.total, marcadas = +g.dataset.marcadas, h = '<div class="quadros">';
+        for (var k = 0; k < total; k++) {
+          h += '<i class="' + (k < marcadas ? "on" : "") +
+               '" style="transition-delay:' + (k * 26) + 'ms"></i>';
+        }
+        g.innerHTML = h + '</div><span class="rot">' + g.dataset.rot + "</span>";
+        g.dataset.pronta = "1";
+      }
+      g.classList.remove("acesa");
+    });
+
+    if (!slide.classList.contains("inverso")) return;
+    setTimeout(function () {
+      if (!slide.classList.contains("on")) return;
+      slide.querySelectorAll(".grade-un").forEach(function (g) { g.classList.add("acesa"); });
+      slide.querySelectorAll(".conta").forEach(contar);
+    }, 260);
+  }
+
+  function contar(el) {
+    var alvo = +el.dataset.valor, ini = performance.now(), dur = 780;
+    function passo(t) {
+      var f = Math.min(1, (t - ini) / dur);
+      var suave = 1 - Math.pow(1 - f, 3);
+      el.textContent = Math.round(alvo * suave).toLocaleString("pt-BR");
+      if (f < 1 && el.isConnected) requestAnimationFrame(passo);
+    }
+    requestAnimationFrame(passo);
   }
 
   /* ---- visão geral (tecla O) ---------------------------------------------- */

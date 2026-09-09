@@ -221,6 +221,8 @@
     rot.textContent = slides[pos.i].dataset.quem || "";
     rot.style.setProperty("--ac", dono ? "var(--" + dono + ")" : "var(--ink-3)");
 
+    animarLeitura(slides[pos.i]);
+
     var jx = slides[pos.i].querySelector(".jx");
     if (jx && window.Juncao) window.Juncao.entrar(jx);
 
@@ -253,6 +255,45 @@
     pos.i = n;
     pos.passo = 0;
     desenhar();
+  }
+
+  /* =========================================================================
+     O PAINEL DE LEITURA
+     O numero conta de zero e a grade acende quadrado a quadrado. Cada quadrado
+     e um registro de verdade: doze veiculos sao doze quadrados, e quem quiser
+     conferir, conta. Destaque na cor do integrante, contexto em cinza.
+     ========================================================================= */
+  function animarLeitura(slide) {
+    slide.querySelectorAll(".grade-un").forEach(function (g) {
+      if (!g.dataset.pronta) {
+        var total = +g.dataset.total, marcadas = +g.dataset.marcadas, h = '<div class="quadros">';
+        for (var k = 0; k < total; k++) {
+          h += '<i class="' + (k < marcadas ? "on" : "") +
+               '" style="transition-delay:' + (k * 26) + 'ms"></i>';
+        }
+        g.innerHTML = h + '</div><span class="rot">' + g.dataset.rot + "</span>";
+        g.dataset.pronta = "1";
+      }
+      g.classList.remove("acesa");
+    });
+
+    if (!slide.classList.contains("inverso")) return;
+    setTimeout(function () {
+      if (!slide.classList.contains("on")) return;
+      slide.querySelectorAll(".grade-un").forEach(function (g) { g.classList.add("acesa"); });
+      slide.querySelectorAll(".conta").forEach(contar);
+    }, 260);
+  }
+
+  function contar(el) {
+    var alvo = +el.dataset.valor, ini = performance.now(), dur = 780;
+    function passo(t) {
+      var f = Math.min(1, (t - ini) / dur);
+      var suave = 1 - Math.pow(1 - f, 3);
+      el.textContent = Math.round(alvo * suave).toLocaleString("pt-BR");
+      if (f < 1 && el.isConnected) requestAnimationFrame(passo);
+    }
+    requestAnimationFrame(passo);
   }
 
   /* ---- visão geral (tecla O) ---------------------------------------------- */
