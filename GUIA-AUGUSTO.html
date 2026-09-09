@@ -1,0 +1,525 @@
+<title>Multa, INNER JOIN e COUNT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>
+/* Herda o sistema do deck: mesmas tres fontes, mesmo vermelho do INNER JOIN.
+   O guia e companheiro dos slides, entao veste a mesma identidade. */
+:root{
+  --ground:#F5F2F0;  --surface:#FFFFFF;  --surface-2:#EFEAE7;
+  --line:#DED5D0;    --line-2:#B8A9A2;
+  --ink:#1A1310;     --ink-2:#574741;    --ink-3:#7C6A63;
+  --cor:#B22D1A;     --cor-t:#FAE9E6;    --cor-linha:#E8C4BB;
+  --ok:#046443;      --ok-t:#E1F2EA;
+  --aviso:#8A5A00;   --aviso-t:#FAF0DC;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#14100E;  --surface:#1E1815;  --surface-2:#282018;
+    --line:#3A2F2A;    --line-2:#584942;
+    --ink:#F4EFEC;     --ink-2:#C0B0A8;    --ink-3:#9A8880;
+    --cor:#FF8A6F;     --cor-t:#331C16;    --cor-linha:#5C332A;
+    --ok:#45D69C;      --ok-t:#122C21;
+    --aviso:#EAB84E;   --aviso-t:#2E2412;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#14100E;  --surface:#1E1815;  --surface-2:#282018;
+  --line:#3A2F2A;    --line-2:#584942;
+  --ink:#F4EFEC;     --ink-2:#C0B0A8;    --ink-3:#9A8880;
+  --cor:#FF8A6F;     --cor-t:#331C16;    --cor-linha:#5C332A;
+  --ok:#45D69C;      --ok-t:#122C21;
+  --aviso:#EAB84E;   --aviso-t:#2E2412;
+}
+
+*{ box-sizing:border-box }
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{ font-family:"Space Grotesk",Inter,sans-serif; margin:0;
+          letter-spacing:-.03em; text-wrap:balance; font-weight:700 }
+p{ margin:0 }
+b{ font-weight:600; color:var(--ink) }
+code{ font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;
+      font-size:.86em; color:var(--ink); white-space:nowrap }
+:focus-visible{ outline:2px solid var(--cor); outline-offset:3px; border-radius:2px }
+@media (prefers-reduced-motion:reduce){ *{ transition:none !important } }
+
+.wrap{ max-width:820px; margin:0 auto; padding:56px 22px 120px;
+       display:flex; flex-direction:column; gap:52px }
+.mono{ font-family:"JetBrains Mono",monospace; font-weight:700; font-size:.68rem;
+       letter-spacing:.17em; text-transform:uppercase }
+
+/* ---------- abertura ---------- */
+header{ display:flex; flex-direction:column; gap:14px }
+header .mono{ color:var(--cor) }
+header h1{ font-size:clamp(2.2rem,6vw,3.2rem); line-height:1 }
+header .sub{ font-size:1.08rem; color:var(--ink-2); max-width:60ch }
+
+/* ---------- os quatro numeros ---------- */
+.decorar{ display:flex; flex-direction:column; gap:16px;
+          border-top:2px solid var(--cor); padding-top:18px }
+.decorar > .mono{ color:var(--cor) }
+.fatos{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:22px 26px }
+.fato{ display:flex; flex-direction:column; gap:1px }
+.fato b{ font-family:"Space Grotesk",sans-serif; font-size:2.1rem; line-height:1.05;
+         letter-spacing:-.04em; color:var(--cor); font-variant-numeric:tabular-nums }
+.fato span{ font-size:.9rem; color:var(--ink-2); line-height:1.35 }
+
+/* ---------- roteiro ---------- */
+.roteiro{ display:flex; flex-direction:column; gap:2px }
+.roteiro a{
+  display:grid; grid-template-columns:4.9rem 1fr auto; align-items:baseline; gap:16px;
+  padding:9px 12px; border-radius:4px; text-decoration:none; color:var(--ink);
+  transition:background .12s ease;
+}
+.roteiro a:hover{ background:var(--surface-2) }
+.roteiro .s{ font-family:"JetBrains Mono",monospace; font-weight:700; font-size:.74rem;
+             color:var(--cor); letter-spacing:.06em; white-space:nowrap }
+.roteiro .t{ font-family:"Space Grotesk",sans-serif; font-weight:500 }
+.roteiro .d{ font-family:"JetBrains Mono",monospace; font-size:.74rem; color:var(--ink-3) }
+
+/* ---------- um slide ---------- */
+.slide{ display:flex; flex-direction:column; gap:0;
+        border-left:3px solid var(--cor); padding-left:22px; scroll-margin-top:24px }
+.slide-h{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+          padding-bottom:16px; border-bottom:1px solid var(--cor-linha); margin-bottom:4px }
+.slide-h .s{ font-family:"JetBrains Mono",monospace; font-weight:700; font-size:.72rem;
+             letter-spacing:.14em; color:var(--cor) }
+.slide-h h3{ font-size:1.32rem; flex:1; min-width:12ch }
+.slide-h .d{ font-family:"JetBrains Mono",monospace; font-size:.74rem; color:var(--ink-3) }
+
+/* linhas rotuladas: o rotulo vive numa calha a esquerda, como as clausulas do slide 8 */
+.linha{ display:grid; grid-template-columns:8.5rem 1fr; gap:6px 22px;
+        padding:16px 0; border-bottom:1px solid var(--line) }
+.linha:last-child{ border-bottom:0; padding-bottom:0 }
+.linha > .mono{ color:var(--ink-3); padding-top:.28em }
+.linha .corpo{ display:flex; flex-direction:column; gap:12px; min-width:0 }
+.linha p{ color:var(--ink-2) }
+.linha.fala > .mono{ color:var(--cor) }
+.linha.fala p{ color:var(--ink); font-size:1.05rem }
+@media (max-width:620px){
+  .linha{ grid-template-columns:1fr; gap:7px }
+  .linha > .mono{ padding-top:0 }
+}
+
+/* acao no teclado / mouse */
+.acao{ background:var(--surface); border:1px solid var(--line);
+       border-left:2px solid var(--line-2); border-radius:0 4px 4px 0;
+       padding:11px 15px; font-size:.97rem; color:var(--ink-2) }
+kbd{ font-family:"JetBrains Mono",monospace; font-size:.8em; font-weight:700;
+     background:var(--surface-2); border:1px solid var(--line-2); border-bottom-width:2px;
+     border-radius:4px; padding:1px 7px; color:var(--ink); white-space:nowrap }
+
+/* so o que e o ponto do slide ganha preenchimento */
+.chave{ background:var(--ok-t); border-radius:5px; padding:14px 17px;
+        font-size:1.02rem; color:var(--ink) }
+.chave .mono{ color:var(--ok); display:block; margin-bottom:5px; font-size:.64rem }
+.aviso{ background:var(--aviso-t); border-radius:5px; padding:14px 17px;
+        font-size:.98rem; color:var(--ink) }
+.aviso .mono{ color:var(--aviso); display:block; margin-bottom:5px; font-size:.64rem }
+
+/* ---------- a esteira do medidor: o momento que ele tem que saber ---------- */
+.esteira{ display:flex; gap:0; overflow-x:auto; padding:2px 2px 8px;
+          background:var(--surface); border:1px solid var(--line); border-radius:5px }
+.passo{ flex:1 1 0; min-width:6.6rem; padding:13px 10px 12px; text-align:center;
+        display:flex; flex-direction:column; gap:3px; border-right:1px solid var(--line) }
+.passo:last-child{ border-right:0 }
+.passo .c{ font-family:"JetBrains Mono",monospace; font-size:.63rem; font-weight:700;
+           letter-spacing:.08em; color:var(--ink-3); text-transform:uppercase }
+.passo .v{ font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:1.7rem;
+           line-height:1; letter-spacing:-.03em; color:var(--ink-3);
+           font-variant-numeric:tabular-nums }
+.passo.marca{ background:var(--cor-t) }
+.passo.marca .c{ color:var(--cor) }
+.passo.marca .v{ color:var(--cor) }
+.legenda{ font-size:.88rem; color:var(--ink-3); font-style:italic }
+
+/* ---------- tabelas ---------- */
+.tbox{ border:1px solid var(--line); border-radius:5px; overflow:hidden }
+.tscroll{ overflow-x:auto }
+table{ border-collapse:collapse; width:100%; font-size:.93rem;
+       font-variant-numeric:tabular-nums; background:var(--surface) }
+th{ text-align:left; padding:9px 15px; background:var(--surface-2); color:var(--ink-3);
+    font-family:"JetBrains Mono",monospace; font-weight:700; font-size:.63rem;
+    text-transform:uppercase; letter-spacing:.12em;
+    border-bottom:1px solid var(--line); white-space:nowrap }
+td{ padding:10px 15px; border-bottom:1px solid var(--line); color:var(--ink-2) }
+tr:last-child td{ border-bottom:0 }
+td.num{ text-align:right; font-family:"JetBrains Mono",monospace; color:var(--ink) }
+
+/* ---------- perguntas e conselhos: sem cartao, so hierarquia ---------- */
+section.lista{ display:flex; flex-direction:column; gap:20px }
+section.lista > h2{ font-size:1.6rem }
+.item{ display:flex; flex-direction:column; gap:6px;
+       padding-bottom:20px; border-bottom:1px solid var(--line) }
+.item:last-child{ border-bottom:0; padding-bottom:0 }
+.item .q{ font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:1.06rem }
+.item .a{ color:var(--ink-2) }
+
+footer{ border-top:1px solid var(--line); padding-top:20px;
+        font-size:.9rem; color:var(--ink-3) }
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="mono">Limas Concessionária · Etapa 05 · slides 6 a 10</span>
+  <h1>Multa, <code style="font-size:.78em">INNER JOIN</code> e <code style="font-size:.78em">COUNT</code></h1>
+  <p class="sub">Guia de apresentação do Augusto. Cinco slides, cerca de cinco minutos.
+     Não é um texto para ler em voz alta — é o assunto de cada tela, o que fazer nela e
+     os números para saber de cor.</p>
+</header>
+
+<!-- ══════════ OS QUATRO NÚMEROS ══════════ -->
+<div class="decorar">
+  <span class="mono">Decore só isto</span>
+  <div class="fatos">
+    <div class="fato"><b>3</b><span>clientes reincidentes — é a sua resposta</span></div>
+    <div class="fato"><b>7 de 10</b><span>multas vêm desses três</span></div>
+    <div class="fato"><b>2</b><span>o corte do <code>HAVING</code></span></div>
+    <div class="fato"><b>3</b><span>tabelas: Multa → Reserva → Cliente</span></div>
+  </div>
+</div>
+
+<!-- ══════════ ROTEIRO ══════════ -->
+<nav class="roteiro">
+  <a href="#s6"><span class="s">SLIDE 6</span><span class="t">A pergunta de negócio</span><span class="d">30 s</span></a>
+  <a href="#s7"><span class="s">SLIDE 7</span><span class="t">A junção, linha a linha</span><span class="d">70 s</span></a>
+  <a href="#s8"><span class="s">SLIDE 8</span><span class="t">A consulta</span><span class="d">90 s</span></a>
+  <a href="#s9"><span class="s">SLIDE 9</span><span class="t">O resultado</span><span class="d">50 s</span></a>
+  <a href="#s10"><span class="s">SLIDE 10</span><span class="t">A leitura do resultado</span><span class="d">40 s</span></a>
+</nav>
+
+<!-- ══════════ SLIDE 6 ══════════ -->
+<section class="slide" id="s6">
+  <div class="slide-h"><span class="s">SLIDE 6</span><h3>A pergunta de negócio</h3><span class="d">~30 s</span></div>
+
+  <div class="linha">
+    <span class="mono">Na tela</span>
+    <div class="corpo"><p>Tela inteira no seu vermelho. A pergunta em letra grande —
+      <b>“Quais clientes acumulam duas ou mais multas?”</b> — e embaixo
+      <code>Função de agregação · COUNT</code>.</p></div>
+  </div>
+
+  <div class="linha fala">
+    <span class="mono">Você diz</span>
+    <div class="corpo">
+      <p>Se apresenta, diz que cuida do evento <b>Multa</b>, e lê a pergunta uma vez.
+         Depois explica <b>por que ela importa</b>: a Limas empresta carro para cliente,
+         e quem já foi multado várias vezes tem chance maior de ser multado de novo.
+         Isso muda como a loja trata a próxima reserva.</p>
+      <div class="chave">
+        <span class="mono">Frase para ter pronta</span>
+        A pergunta não é “quantas multas existem”. É <b>quem repete</b>. Isso muda a
+        resposta e muda a junção que eu preciso usar.
+      </div>
+    </div>
+  </div>
+
+  <div class="linha">
+    <span class="mono">Não faça</span>
+    <div class="corpo"><div class="aviso">
+      <span class="mono">Segure a explicação</span>
+      Não explique o <code>INNER JOIN</code> ainda. Este slide é só a pergunta — a junção
+      vem no próximo, com os dados na tela para você apontar.
+    </div></div>
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 7 ══════════ -->
+<section class="slide" id="s7">
+  <div class="slide-h"><span class="s">SLIDE 7</span><h3>A junção, linha a linha</h3><span class="d">~70 s · o mais importante</span></div>
+
+  <div class="linha">
+    <span class="mono">Na tela</span>
+    <div class="corpo"><p>Três tabelas de origem à esquerda — <b>Multa</b>, <b>Reserva</b> e
+      <b>Cliente</b> — e o resultado à direita, <b>vazio</b>.</p></div>
+  </div>
+
+  <div class="linha">
+    <span class="mono">Você faz</span>
+    <div class="corpo"><div class="acao">
+      Aperte <kbd>→</kbd> <b>uma vez</b> e deixe rodar. Cada linha do resultado nasce na
+      frente da turma: as linhas que a produziram acendem em vermelho nas tabelas de cima,
+      e só então a linha aparece embaixo. <b>Não fale por cima do começo</b> — deixe a
+      primeira linha nascer, depois narre.
+    </div></div>
+  </div>
+
+  <div class="linha fala">
+    <span class="mono">Você diz</span>
+    <div class="corpo"><p>Que a tabela Multa <b>não guarda o CPF</b> de ninguém — ela só sabe
+      de qual reserva veio. Então a <b>Reserva é a ponte</b>: é ela que liga a multa ao
+      cliente que estava com o carro. Por isso são três tabelas e não duas.</p></div>
+  </div>
+
+  <div class="linha">
+    <span class="mono">Você faz</span>
+    <div class="corpo"><div class="acao">
+      Quando terminar, <b>clique numa linha do resultado</b> — as três linhas que a geraram
+      acendem lá em cima. Depois <b>clique em “Helena Vasconcelos”</b> na tabela Cliente:
+      não acontece nada, porque ela não gerou linha nenhuma.
+    </div></div>
+  </div>
+
+  <div class="linha">
+    <span class="mono">O ponto</span>
+    <div class="corpo">
+      <div class="chave">
+        <span class="mono">É isto que o slide existe para mostrar</span>
+        Helena e Fernanda estão na tabela Cliente e <b>não aparecem no resultado</b>. Não é
+        erro — é o <code>INNER JOIN</code> fazendo o trabalho dele: só passa quem tem par
+        nos dois lados. Elas nunca foram multadas, então não são assunto deste relatório.
+      </div>
+      <div class="aviso">
+        <span class="mono">Se perguntarem da amostra</span>
+        A amostra mostra 4 das 10 multas, para caber na tela. Helena e Fernanda não têm
+        multa nenhuma <b>no banco inteiro</b> — pode afirmar isso com segurança.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 8 ══════════ -->
+<section class="slide" id="s8">
+  <div class="slide-h"><span class="s">SLIDE 8</span><h3>A consulta</h3><span class="d">~90 s</span></div>
+
+  <div class="linha">
+    <span class="mono">Na tela</span>
+    <div class="corpo"><p>O SQL à esquerda, apagado. À direita, o medidor
+      <b>“linhas neste ponto”</b> e o espaço da explicação.</p></div>
+  </div>
+
+  <div class="linha">
+    <span class="mono">Você faz</span>
+    <div class="corpo"><div class="acao">
+      Aperte <kbd>→</kbd> <b>seis vezes</b>, uma por cláusula. A cada toque uma cláusula
+      acende, a explicação troca e <b>o medidor muda</b>. Vá no seu ritmo — o slide espera.
+    </div></div>
+  </div>
+
+  <div class="linha">
+    <span class="mono">O medidor</span>
+    <div class="corpo">
+      <div class="esteira">
+        <div class="passo"><span class="c">FROM</span><span class="v">10</span></div>
+        <div class="passo marca"><span class="c">INNER JOIN</span><span class="v">10</span></div>
+        <div class="passo"><span class="c">GROUP BY</span><span class="v">6</span></div>
+        <div class="passo marca"><span class="c">HAVING</span><span class="v">3</span></div>
+        <div class="passo"><span class="c">ORDER BY</span><span class="v">3</span></div>
+      </div>
+      <p class="legenda">Os dois passos marcados são os que você comenta em voz alta.</p>
+    </div>
+  </div>
+
+  <div class="linha fala">
+    <span class="mono">Você diz</span>
+    <div class="corpo">
+      <div class="tbox"><div class="tscroll"><table>
+        <thead><tr><th>ao acender</th><th class="num">linhas</th><th>o que dizer</th></tr></thead>
+        <tbody>
+          <tr><td><code>SELECT</code></td><td class="num">—</td>
+              <td><code>COUNT(m.id)</code> conta as multas. <code>COUNT(DISTINCT r.id)</code> conta em quantas reservas <b>diferentes</b> elas aconteceram.</td></tr>
+          <tr><td><code>FROM Multa</code></td><td class="num">10</td>
+              <td>Parto da multa, não do cliente. O relatório é sobre quem tem multa.</td></tr>
+          <tr><td><code>INNER JOIN</code> ×2</td><td class="num">10</td>
+              <td><b>Continua 10.</b> Toda multa tem exatamente uma reserva e um cliente, então a junção não cria nem perde linha — aqui ela só <b>traz o nome</b>.</td></tr>
+          <tr><td><code>GROUP BY</code></td><td class="num">6</td>
+              <td>As dez multas viram <b>seis clientes</b>. As três do Carlos passam a ser uma linha só.</td></tr>
+          <tr><td><code>HAVING</code></td><td class="num">3</td>
+              <td>Filtra os grupos <b>já calculados</b>. Quem tem uma multa só sai do relatório.</td></tr>
+          <tr><td><code>ORDER BY</code></td><td class="num">3</td>
+              <td>Do maior número de multas para o menor.</td></tr>
+        </tbody>
+      </table></div></div>
+    </div>
+  </div>
+
+  <div class="linha">
+    <span class="mono">O ponto</span>
+    <div class="corpo">
+      <div class="chave">
+        <span class="mono">O melhor momento do seu bloco</span>
+        No <code>INNER JOIN</code> o número <b>não muda</b>: 10 entra, 10 sai. Diga isso em
+        voz alta — <i>“a junção aqui não filtrou nada, ela só foi buscar o nome”</i>. É o
+        contrário do que acontece com o Daniel, onde o <code>RIGHT JOIN</code> faz 12 virar
+        20. Se você fizer essa ligação, mostra que entendeu a diferença entre as quatro
+        junções, não só a sua.
+      </div>
+      <div class="chave">
+        <span class="mono">A pergunta clássica de prova</span>
+        Não dá para trocar o <code>HAVING</code> por <code>WHERE</code>. Quando o
+        <code>WHERE</code> roda, <b>o <code>COUNT</code> ainda não foi calculado</b> — ele
+        só existe depois do <code>GROUP BY</code>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 9 ══════════ -->
+<section class="slide" id="s9">
+  <div class="slide-h"><span class="s">SLIDE 9</span><h3>O resultado</h3><span class="d">~50 s</span></div>
+
+  <div class="linha">
+    <span class="mono">Na tela</span>
+    <div class="corpo">
+      <p>A resposta: <b>três linhas</b>. Ao lado, o controle deslizante do corte.</p>
+      <div class="tbox"><div class="tscroll"><table>
+        <thead><tr><th>cliente</th><th class="num">multas</th><th class="num">reservas</th></tr></thead>
+        <tbody>
+          <tr><td><b>Carlos Eduardo Lima</b></td><td class="num">3</td><td class="num">3</td></tr>
+          <tr><td><b>Gabriel Fonseca</b></td><td class="num">2</td><td class="num">2</td></tr>
+          <tr><td><b>Igor Salgado</b></td><td class="num">2</td><td class="num">2</td></tr>
+        </tbody>
+      </table></div></div>
+    </div>
+  </div>
+
+  <div class="linha">
+    <span class="mono">Você faz</span>
+    <div class="corpo"><div class="acao">
+      <b>Arraste o controle para 1.</b> Aparecem seis clientes — todo mundo que tem qualquer
+      multa. Volte para 2. Faça devagar: é o momento em que a turma entende o
+      <code>HAVING</code> de verdade.
+    </div></div>
+  </div>
+
+  <div class="linha fala">
+    <span class="mono">Você diz</span>
+    <div class="corpo">
+      <p>Que em <b>1</b> o relatório perde a utilidade: vira uma lista de todo mundo que já
+         foi multado uma vez, e isso não ajuda ninguém a decidir nada. O corte em <b>2</b> é
+         o que separa “aconteceu uma vez” de <b>“é um padrão”</b>.</p>
+      <div class="chave">
+        <span class="mono">Frase para ter pronta</span>
+        O número 2 não é técnico, é uma <b>decisão de negócio</b>. Quem define é a loja,
+        não o SQL. O SQL só obedece.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 10 ══════════ -->
+<section class="slide" id="s10">
+  <div class="slide-h"><span class="s">SLIDE 10</span><h3>A leitura do resultado</h3><span class="d">~40 s</span></div>
+
+  <div class="linha">
+    <span class="mono">Na tela</span>
+    <div class="corpo"><p>Fundo numa tinta clara da sua cor. <b>7 de 10</b> em letra enorme,
+      contando de zero. Embaixo, duas grades de quadradinhos: <b>7 das 10 multas</b> e
+      <b>3 dos 12 clientes</b>. Cada quadrado é um registro de verdade.</p></div>
+  </div>
+
+  <div class="linha fala">
+    <span class="mono">Você diz</span>
+    <div class="corpo">
+      <p>Que <b>três clientes</b>, de doze, concentram <b>sete das dez multas</b>. Outros
+         três têm uma multa cada, e <b>seis nunca foram multados</b>. A concentração é o
+         achado: não é que a loja tem um problema de multas, é que ela tem um problema com
+         <b>três pessoas específicas</b>.</p>
+      <div class="chave">
+        <span class="mono">Fecha assim</span>
+        O uso disso é revisar caução e cobertura antes de aprovar a próxima reserva desses
+        três. E aí você passa a palavra para o André.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PERGUNTAS ══════════ -->
+<section class="lista">
+  <h2>Se o professor perguntar</h2>
+
+  <div class="item">
+    <p class="q">Por que <code>INNER JOIN</code> e não <code>LEFT JOIN</code>?</p>
+    <p class="a">Porque a pergunta é sobre <b>quem tem multa</b>. Com <code>LEFT JOIN</code>
+      eu traria os doze clientes, seis deles com zero, e o relatório de risco viraria uma
+      lista da carteira inteira. O <code>INNER</code> é o único que devolve só a
+      interseção — quem tem par nos dois lados.</p>
+  </div>
+
+  <div class="item">
+    <p class="q">Por que <code>COUNT(DISTINCT r.id)</code> e não <code>COUNT(r.id)</code>?</p>
+    <p class="a">Porque o cliente pode levar <b>duas multas na mesma reserva</b>. Sem o
+      <code>DISTINCT</code>, essa reserva contaria duas vezes e eu diria que ele alugou mais
+      vezes do que alugou. As duas colunas juntas mostram se as multas estão espalhadas ou
+      concentradas numa locação só.</p>
+  </div>
+
+  <div class="item">
+    <p class="q">Podia usar <code>WHERE COUNT(*) &gt;= 2</code>?</p>
+    <p class="a">Não. O <code>WHERE</code> filtra <b>antes</b> do agrupamento, e nesse momento
+      o <code>COUNT</code> ainda não existe. Filtro sobre resultado de função de agregação é
+      sempre <code>HAVING</code>.</p>
+  </div>
+
+  <div class="item">
+    <p class="q">Por que o corte é 2 e não 3?</p>
+    <p class="a">É escolha de negócio. Em 3 sobraria só o Carlos, e a loja perderia dois casos
+      que já são padrão. Em 1 entraria todo mundo com qualquer multa, e o relatório não
+      ajudaria a decidir nada. O controle do slide 9 mostra os dois extremos ao vivo.</p>
+  </div>
+
+  <div class="item">
+    <p class="q">E se a reserva for apagada? A multa some do relatório?</p>
+    <p class="a">Some, e é intencional: a chave estrangeira de Multa para Reserva está com
+      <code>ON DELETE CASCADE</code>. Apagou a reserva, apaga as multas dela — senão ficaria
+      multa órfã sem dono no banco.</p>
+  </div>
+
+  <div class="item">
+    <p class="q">Esses números são de verdade?</p>
+    <p class="a">São. Rode você mesmo: o slide 26 tem um <b>PostgreSQL rodando dentro da
+      página</b>, com a mesma carga do nosso script, e um botão <b>Augusto</b> que executa
+      exatamente essa consulta na hora.</p>
+  </div>
+</section>
+
+<!-- ══════════ COMO APRESENTAR ══════════ -->
+<section class="lista">
+  <h2>Como apresentar</h2>
+
+  <div class="item">
+    <p class="q">Não leia a tela</p>
+    <p class="a">Tudo que está escrito lá, a turma já leu antes de você terminar a frase. Seu
+      papel é dizer <b>o que não está escrito</b>: por que aquilo importa e o que você faria
+      com o resultado.</p>
+  </div>
+
+  <div class="item">
+    <p class="q">Deixe a animação respirar</p>
+    <p class="a">No slide 7, depois de apertar <kbd>→</kbd>, fique dois segundos calado. As
+      pessoas estão olhando as linhas acenderem — se você falar por cima, elas perdem as
+      duas coisas.</p>
+  </div>
+
+  <div class="item">
+    <p class="q">Aponte quando a tela mudar</p>
+    <p class="a">Quando o medidor for de 10 para 6, aponte. Quando as duas linhas riscarem,
+      aponte. O gesto ancora o número na cabeça de quem assiste.</p>
+  </div>
+
+  <div class="item">
+    <p class="q">Se travar, use o teclado</p>
+    <p class="a"><kbd>←</kbd> volta um passo sem perder nada. <kbd>O</kbd> abre a grade com
+      todos os slides, para pular direto. Nenhuma animação quebra se você repetir.</p>
+  </div>
+
+  <div class="item">
+    <p class="q">Se não souber a resposta</p>
+    <p class="a">Diga que não sabe e ofereça testar — o console do slide 26 roda qualquer
+      consulta ao vivo. Isso vale mais que uma resposta inventada, e ainda mostra que o banco
+      é de verdade.</p>
+  </div>
+</section>
+
+<footer>
+  Números conferidos no PostgreSQL com a carga de <code>etapa05_completo.sql</code>.
+  Se os dados mudarem, o guia precisa mudar junto.
+</footer>
+
+</div>
