@@ -126,10 +126,12 @@
     <div class="sql">
 <div class="cl" data-s="1"><span class="kw">SELECT</span> c.nome, c.contato,
        <span class="kw">COUNT</span>(m.id)          <span class="kw">AS</span> total_multas,
-       <span class="kw">COUNT</span>(<span class="kw">DISTINCT</span> r.id) <span class="kw">AS</span> reservas</div><div class="cl" data-s="2"><span class="kw">FROM</span> Multa m</div><div class="cl" data-s="3"><span class="kw">INNER JOIN</span> Reserva r <span class="kw">ON</span> m.fk_Reserva_id  = r.id
-<span class="kw">INNER JOIN</span> Cliente c <span class="kw">ON</span> r.fk_Cliente_cpf = c.cpf</div><div class="cl" data-s="4"><span class="kw">GROUP BY</span> c.cpf, c.nome, c.contato</div><div class="cl" data-s="5"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(m.id) &gt;= <span class="st">2</span></div><div class="cl" data-s="6"><span class="kw">ORDER BY</span> total_multas <span class="kw">DESC</span>;</div>
+       <span class="kw">COUNT</span>(<span class="kw">DISTINCT</span> r.id) <span class="kw">AS</span> reservas</div><div class="cl" data-s="2" data-linhas="10"><span class="kw">FROM</span> Multa m</div><div class="cl" data-s="3" data-linhas="10"><span class="kw">INNER JOIN</span> Reserva r <span class="kw">ON</span> m.fk_Reserva_id  = r.id
+<span class="kw">INNER JOIN</span> Cliente c <span class="kw">ON</span> r.fk_Cliente_cpf = c.cpf</div><div class="cl" data-s="4" data-linhas="6"><span class="kw">GROUP BY</span> c.cpf, c.nome, c.contato</div><div class="cl" data-s="5" data-linhas="3"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(m.id) &gt;= <span class="st">2</span></div><div class="cl" data-s="6" data-linhas="3"><span class="kw">ORDER BY</span> total_multas <span class="kw">DESC</span>;</div>
     </div>
-    <div class="note">
+    <div class="lado" data-max="10">
+      <div class="medidor"><span class="eyebrow">linhas neste ponto</span><div class="mv"><span class="num">—</span><span class="un">linhas</span><span class="delta"></span></div><div class="barra"><i></i></div></div>
+      <div class="note">
       <div data-nota="0"><span class="nt">Passo a passo</span>Aperte <b>→</b> para acender uma cláusula por vez.</div>
       <div data-nota="1"><span class="nt">SELECT</span><code>COUNT(m.id)</code> conta as multas. <code>COUNT(DISTINCT r.id)</code> conta em quantas reservas diferentes elas aconteceram.</div>
       <div data-nota="2"><span class="nt">FROM Multa</span>A consulta parte da multa, não do cliente. O relatório é sobre quem tem multa.</div>
@@ -137,6 +139,7 @@
       <div data-nota="4"><span class="nt">GROUP BY</span>Um grupo por cliente. As três multas de Carlos passam a ser uma linha.</div>
       <div data-nota="5"><span class="nt">HAVING</span>Filtra os <b>grupos já calculados</b> — quem tem uma multa só sai do relatório. Não dá para usar <code>WHERE</code> aqui: quando ele roda, o <code>COUNT</code> ainda nem foi calculado.</div>
       <div data-nota="6"><span class="nt">ORDER BY</span>Do maior número de multas para o menor.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -208,10 +211,12 @@
     <div class="sql">
 <div class="cl" data-s="1"><span class="kw">SELECT</span> v.placa, v.marca, v.modelo,
        <span class="kw">COUNT</span>(m.id)               <span class="kw">AS</span> qtd_manutencoes,
-       <span class="kw">COALESCE</span>(<span class="kw">SUM</span>(m.valor), 0) <span class="kw">AS</span> custo_total</div><div class="cl" data-s="2"><span class="kw">FROM</span> Veiculo v</div><div class="cl" data-s="3"><span class="kw">LEFT JOIN</span> Manutencao m <span class="kw">ON</span> v.placa = m.fk_Veiculo_placa</div><div class="cl" data-s="4"><span class="kw">GROUP BY</span> v.placa, v.marca, v.modelo</div><div class="cl" data-s="5"><span class="kw">HAVING</span> <span class="kw">COALESCE</span>(<span class="kw">SUM</span>(m.valor),0) &gt;= <span class="st">2000</span>
-    <span class="kw">OR</span> <span class="kw">SUM</span>(m.valor) <span class="kw">IS NULL</span></div><div class="cl" data-s="6"><span class="kw">ORDER BY</span> custo_total <span class="kw">DESC</span>;</div>
+       <span class="kw">COALESCE</span>(<span class="kw">SUM</span>(m.valor), 0) <span class="kw">AS</span> custo_total</div><div class="cl" data-s="2" data-linhas="12"><span class="kw">FROM</span> Veiculo v</div><div class="cl" data-s="3" data-linhas="17"><span class="kw">LEFT JOIN</span> Manutencao m <span class="kw">ON</span> v.placa = m.fk_Veiculo_placa</div><div class="cl" data-s="4" data-linhas="12"><span class="kw">GROUP BY</span> v.placa, v.marca, v.modelo</div><div class="cl" data-s="5" data-linhas="8"><span class="kw">HAVING</span> <span class="kw">COALESCE</span>(<span class="kw">SUM</span>(m.valor),0) &gt;= <span class="st">2000</span>
+    <span class="kw">OR</span> <span class="kw">SUM</span>(m.valor) <span class="kw">IS NULL</span></div><div class="cl" data-s="6" data-linhas="8"><span class="kw">ORDER BY</span> custo_total <span class="kw">DESC</span>;</div>
     </div>
-    <div class="note">
+    <div class="lado" data-max="17">
+      <div class="medidor"><span class="eyebrow">linhas neste ponto</span><div class="mv"><span class="num">—</span><span class="un">linhas</span><span class="delta"></span></div><div class="barra"><i></i></div></div>
+      <div class="note">
       <div data-nota="0"><span class="nt">Passo a passo</span>Aperte <b>→</b> para acender uma cláusula por vez.</div>
       <div data-nota="1"><span class="nt">SELECT</span><code>COALESCE</code> troca o NULL do <code>SUM</code> por <b>0</b>, para o relatório não mostrar campo vazio.</div>
       <div data-nota="2"><span class="nt">FROM Veiculo</span>Veiculo é a tabela da esquerda. É ela que será preservada inteira.</div>
@@ -219,6 +224,7 @@
       <div data-nota="4"><span class="nt">GROUP BY</span>Um grupo por veículo. As três manutenções do Corolla viram uma linha.</div>
       <div data-nota="5"><span class="nt">HAVING</span>A primeira condição pega os caros. A segunda mantém os que nunca foram à oficina, que sem ela seriam eliminados.</div>
       <div data-nota="6"><span class="nt">ORDER BY</span>Do maior custo para o menor.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -289,10 +295,12 @@
     <div class="sql">
 <div class="cl" data-s="1"><span class="kw">SELECT</span> <span class="kw">COALESCE</span>(a.plataforma, <span class="st">'(sem avaliacao)'</span>) <span class="kw">AS</span> canal,
        <span class="kw">COUNT</span>(r.id)           <span class="kw">AS</span> reservas,
-       <span class="kw">ROUND</span>(<span class="kw">AVG</span>(a.nota), 2) <span class="kw">AS</span> nota_media</div><div class="cl" data-s="2"><span class="kw">FROM</span> Avaliacao a</div><div class="cl" data-s="3"><span class="kw">RIGHT JOIN</span> Reserva r <span class="kw">ON</span> a.fk_Reserva_id = r.id</div><div class="cl" data-s="4"><span class="kw">GROUP BY</span> a.plataforma</div><div class="cl" data-s="5"><span class="kw">HAVING</span> <span class="kw">AVG</span>(a.nota) &lt; <span class="st">8.5</span>
-    <span class="kw">OR</span> <span class="kw">AVG</span>(a.nota) <span class="kw">IS NULL</span></div><div class="cl" data-s="6"><span class="kw">ORDER BY</span> nota_media <span class="kw">NULLS LAST</span>;</div>
+       <span class="kw">ROUND</span>(<span class="kw">AVG</span>(a.nota), 2) <span class="kw">AS</span> nota_media</div><div class="cl" data-s="2" data-linhas="12"><span class="kw">FROM</span> Avaliacao a</div><div class="cl" data-s="3" data-linhas="20"><span class="kw">RIGHT JOIN</span> Reserva r <span class="kw">ON</span> a.fk_Reserva_id = r.id</div><div class="cl" data-s="4" data-linhas="5"><span class="kw">GROUP BY</span> a.plataforma</div><div class="cl" data-s="5" data-linhas="4"><span class="kw">HAVING</span> <span class="kw">AVG</span>(a.nota) &lt; <span class="st">8.5</span>
+    <span class="kw">OR</span> <span class="kw">AVG</span>(a.nota) <span class="kw">IS NULL</span></div><div class="cl" data-s="6" data-linhas="4"><span class="kw">ORDER BY</span> nota_media <span class="kw">NULLS LAST</span>;</div>
     </div>
-    <div class="note">
+    <div class="lado" data-max="20">
+      <div class="medidor"><span class="eyebrow">linhas neste ponto</span><div class="mv"><span class="num">—</span><span class="un">linhas</span><span class="delta"></span></div><div class="barra"><i></i></div></div>
+      <div class="note">
       <div data-nota="0"><span class="nt">Passo a passo</span>Aperte <b>→</b> para acender uma cláusula por vez.</div>
       <div data-nota="1"><span class="nt">SELECT</span>Quando não há avaliação, <code>plataforma</code> é NULL. O <code>COALESCE</code> dá nome a esse grupo.</div>
       <div data-nota="2"><span class="nt">FROM Avaliacao</span>A avaliação está à esquerda, mas não é ela que precisa ser preservada.</div>
@@ -300,6 +308,7 @@
       <div data-nota="4"><span class="nt">GROUP BY</span>Um grupo por plataforma. As reservas sem avaliação caem todas no grupo NULL.</div>
       <div data-nota="5"><span class="nt">HAVING</span>Canais abaixo de 8,5. A segunda condição mantém o grupo sem avaliação, cujo AVG é NULL.</div>
       <div data-nota="6"><span class="nt">ORDER BY</span><code>NULLS LAST</code> joga o grupo sem nota para o fim.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -372,11 +381,13 @@
 <div class="cl" data-s="1"><span class="kw">SELECT</span> <span class="kw">COALESCE</span>(v.placa, <span class="st">'(sem veiculo alocado)'</span>) <span class="kw">AS</span> veiculo,
        <span class="kw">COUNT</span>(r.id) <span class="kw">AS</span> reservas,
        <span class="kw">MIN</span>(r.inicio) <span class="kw">AS</span> primeira,
-       <span class="kw">MAX</span>(r.fim)    <span class="kw">AS</span> ultima</div><div class="cl" data-s="2"><span class="kw">FROM</span> Veiculo v</div><div class="cl" data-s="3"><span class="kw">FULL OUTER JOIN</span> Reserva r <span class="kw">ON</span> v.placa = r.fk_Veiculo_placa</div><div class="cl" data-s="4"><span class="kw">GROUP BY</span> v.placa, v.modelo</div><div class="cl" data-s="5"><span class="kw">HAVING</span> <span class="kw">MAX</span>(r.fim) <span class="kw">IS NULL</span>              <span class="cm">-- nunca reservado</span>
+       <span class="kw">MAX</span>(r.fim)    <span class="kw">AS</span> ultima</div><div class="cl" data-s="2" data-linhas="12"><span class="kw">FROM</span> Veiculo v</div><div class="cl" data-s="3" data-linhas="22"><span class="kw">FULL OUTER JOIN</span> Reserva r <span class="kw">ON</span> v.placa = r.fk_Veiculo_placa</div><div class="cl" data-s="4" data-linhas="13"><span class="kw">GROUP BY</span> v.placa, v.modelo</div><div class="cl" data-s="5" data-linhas="5"><span class="kw">HAVING</span> <span class="kw">MAX</span>(r.fim) <span class="kw">IS NULL</span>              <span class="cm">-- nunca reservado</span>
     <span class="kw">OR</span> v.placa <span class="kw">IS NULL</span>                 <span class="cm">-- reserva sem carro</span>
-    <span class="kw">OR</span> <span class="kw">MAX</span>(r.fim) &lt; <span class="st">DATE '2026-01-01'</span>  <span class="cm">-- parado</span></div><div class="cl" data-s="6"><span class="kw">ORDER BY</span> ultima <span class="kw">NULLS FIRST</span>;</div>
+    <span class="kw">OR</span> <span class="kw">MAX</span>(r.fim) &lt; <span class="st">DATE '2026-01-01'</span>  <span class="cm">-- parado</span></div><div class="cl" data-s="6" data-linhas="5"><span class="kw">ORDER BY</span> ultima <span class="kw">NULLS FIRST</span>;</div>
     </div>
-    <div class="note">
+    <div class="lado" data-max="22">
+      <div class="medidor"><span class="eyebrow">linhas neste ponto</span><div class="mv"><span class="num">—</span><span class="un">linhas</span><span class="delta"></span></div><div class="barra"><i></i></div></div>
+      <div class="note">
       <div data-nota="0"><span class="nt">Passo a passo</span>Aperte <b>→</b> para acender uma cláusula por vez.</div>
       <div data-nota="1"><span class="nt">SELECT</span><code>MIN(inicio)</code> e <code>MAX(fim)</code> dão o primeiro e o último dia em que o carro rodou.</div>
       <div data-nota="2"><span class="nt">FROM Veiculo</span>Aqui a ordem das tabelas não importa: o FULL OUTER preserva os dois lados.</div>
@@ -384,6 +395,7 @@
       <div data-nota="4"><span class="nt">GROUP BY</span>Um grupo por veículo. As reservas sem carro caem todas no grupo NULL.</div>
       <div data-nota="5"><span class="nt">HAVING</span>Três condições, um problema cada. <b>Sem a segunda linha</b> o HAVING eliminaria as reservas sem carro — elas têm data recente, não são NULL nem antigas — e o FULL OUTER perderia metade da função.</div>
       <div data-nota="6"><span class="nt">ORDER BY</span><code>NULLS FIRST</code> põe os nunca reservados no topo.</div>
+      </div>
     </div>
   </div>
 </section>

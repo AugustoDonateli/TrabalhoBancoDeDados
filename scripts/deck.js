@@ -207,10 +207,19 @@
     [].forEach.call(notas, function (el) {
       el.hidden = +el.dataset.nota !== n;
     });
+
+    medir(atual, n);
   }
 
   function desenhar() {
     slides.forEach(function (s, n) { s.classList.toggle("on", n === pos.i); });
+
+    /* Os slides que ainda nao entraram ficam deslocados 3rem pela animacao, e
+       isso cria area rolavel dentro do palco. Abrir um link direto faz o
+       navegador rolar ate o alvo, e como o palco tem overflow:hidden ele nunca
+       volta — o slide fica 58px torto com uma faixa clara na borda. */
+    palco.scrollLeft = 0;
+    palco.scrollTop = 0;
 
     document.getElementById("contador").textContent = pos.i + 1;
     document.getElementById("estrada").style.setProperty(
@@ -283,6 +292,47 @@
       slide.querySelectorAll(".grade-un").forEach(function (g) { g.classList.add("acesa"); });
       slide.querySelectorAll(".conta").forEach(contar);
     }, 260);
+  }
+
+  /* Quantas linhas existem no ponto em que a consulta esta. E aqui que a
+     diferenca entre as juncoes vira numero na tela: no RIGHT JOIN do Daniel
+     o total sai de 12 e vai para 20, e essas oito a mais sao exatamente as
+     reservas que ninguem avaliou. */
+  function medir(slide, passo) {
+    var lado = slide.querySelector(".lado");
+    if (!lado) return;
+    var num = lado.querySelector(".num"),
+        barra = lado.querySelector(".barra i"),
+        delta = lado.querySelector(".delta"),
+        max = +lado.dataset.max;
+
+    var clausula = slide.querySelector('.cl[data-s="' + passo + '"]');
+    var valor = clausula && clausula.dataset.linhas ? +clausula.dataset.linhas : null;
+
+    if (valor === null) {
+      num.textContent = "—";
+      barra.style.width = "0%";
+      delta.className = "delta";
+      return;
+    }
+
+    var anterior = null;
+    for (var k = passo - 1; k >= 1; k--) {
+      var c = slide.querySelector('.cl[data-s="' + k + '"]');
+      if (c && c.dataset.linhas) { anterior = +c.dataset.linhas; break; }
+    }
+
+    num.textContent = valor;
+    barra.style.width = (valor / max * 100) + "%";
+
+    if (anterior === null || anterior === valor) {
+      delta.className = "delta";
+      delta.textContent = "";
+    } else {
+      var d = valor - anterior;
+      delta.textContent = (d > 0 ? "+" : "") + d;
+      delta.className = "delta ver " + (d > 0 ? "sobe" : "desce");
+    }
   }
 
   function contar(el) {
