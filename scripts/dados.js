@@ -154,9 +154,9 @@ const AUG_RESULTADO = [
 /* --- ANDRÉ · Manutenção · LEFT JOIN · SUM -------------------------------- */
 const AND_VEICULO = [
   { placa: "ABC1D23", marca: "Volkswagen", modelo: "Nivus" },
-  { placa: "BRA2E19", marca: "Chevrolet",  modelo: "Onix" },
+  { placa: "DEF4G56", marca: "Toyota",     modelo: "Corolla" },
   { placa: "CDE3F45", marca: "Fiat",       modelo: "Pulse" },
-  { placa: "DEF4G56", marca: "Toyota",     modelo: "Corolla" }
+  { placa: "EFG5H67", marca: "Honda",      modelo: "Civic" }
 ];
 const AND_MANUT = [
   { id: 1, placa: "ABC1D23", valor: 1800 },
@@ -183,15 +183,14 @@ const AND_RESULTADO = [
 
 /* --- DANIEL · Avaliação · RIGHT JOIN · AVG ------------------------------- */
 const DAN_AVAL = [
-  { id: 1, nota: 9,  plataforma: "Google Maps",  reserva: 1 },
-  { id: 3, nota: 7,  plataforma: "Instagram",    reserva: 3 },
-  { id: 5, nota: 5,  plataforma: "WhatsApp",     reserva: 5 },
-  { id: 8, nota: 9,  plataforma: "Site Proprio", reserva: 8 }
+  { id: 1, nota: 9, plataforma: "Google Maps", reserva: 1 },
+  { id: 3, nota: 7, plataforma: "Instagram",   reserva: 3 },
+  { id: 5, nota: 5, plataforma: "WhatsApp",    reserva: 5 }
 ];
 const DAN_RESERVA = [
   { id: 1,  status: "Concluida" },
   { id: 3,  status: "Concluida" },
-  { id: 15, status: "Concluida" },
+  { id: 5,  status: "Concluida" },
   { id: 18, status: "Pendente" },
   { id: 20, status: "Pendente" }
 ];
@@ -248,4 +247,135 @@ const GUI_PERDA = {
   left:  "Mostra os carros parados, mas nao ve as reservas sem veiculo alocado.",
   right: "Mostra as reservas sem carro, mas nao ve os carros que ninguem reservou.",
   full:  "Unico que mostra os dois problemas ao mesmo tempo."
+};
+
+/* ===========================================================================
+   AS JUNÇÕES, PASSO A PASSO
+   Alimenta a animação do slide de dados originais: quais linhas de origem
+   produziram cada linha do resultado. As amostras são subconjuntos fechados
+   da carga — nenhum registro aponta para fora do que está na tela.
+   =========================================================================== */
+
+/* Uma tabela de origem: nome, colunas visíveis e como identificar cada linha */
+function fonte(nome, colunas, linhas, id) {
+  return { nome, colunas, linhas, id };
+}
+
+const JUNCOES = {
+  /* AUGUSTO · INNER JOIN encadeado: Multa -> Reserva -> Cliente.
+     Igor e Ana estão na tabela Cliente e não produzem nada: é o INNER
+     descartando quem não tem par. */
+  aug: {
+    tipo: "INNER JOIN", cor: "inner",
+    fontes: [
+      fonte("Multa", [["id","id"],["valor","valor"],["reserva","fk_Reserva_id"]],
+            AUG_MULTA, (r) => r.id),
+      fonte("Reserva", [["id","id"],["cpf","fk_Cliente_cpf"]],
+            AUG_RESERVA, (r) => r.id),
+      fonte("Cliente", [["cpf","cpf"],["nome","nome"]],
+            AUG_CLIENTE, (r) => r.cpf)
+    ],
+    colunas: ["multa", "valor", "reserva", "cliente"],
+    montar() {
+      const saida = [];
+      AUG_MULTA.forEach((m) => {
+        const r = AUG_RESERVA.find((x) => x.id === m.reserva);
+        if (!r) return;
+        const c = AUG_CLIENTE.find((x) => x.cpf === r.cpf);
+        if (!c) return;
+        saida.push({
+          cel: [m.id, m.valor, r.id, c.nome],
+          origem: { Multa: [m.id], Reserva: [r.id], Cliente: [c.cpf] }
+        });
+      });
+      return saida;
+    }
+  },
+
+  /* ANDRÉ · LEFT JOIN: Pulse e Civic ficam na lista com NULL do lado direito.
+     Com INNER JOIN eles sumiriam. */
+  and: {
+    tipo: "LEFT JOIN", cor: "left",
+    fontes: [
+      fonte("Veiculo", [["placa","placa"],["modelo","modelo"]],
+            AND_VEICULO, (r) => r.placa),
+      fonte("Manutencao", [["id","id"],["placa","fk_Veiculo_placa"],["valor","valor"]],
+            AND_MANUT, (r) => r.id)
+    ],
+    colunas: ["placa", "modelo", "manutencao", "valor"],
+    montar() {
+      const saida = [];
+      AND_VEICULO.forEach((v) => {
+        const ms = AND_MANUT.filter((m) => m.placa === v.placa);
+        if (ms.length) {
+          ms.forEach((m) => saida.push({
+            cel: [v.placa, v.modelo, m.id, m.valor],
+            origem: { Veiculo: [v.placa], Manutencao: [m.id] }
+          }));
+        } else {
+          saida.push({
+            cel: [v.placa, v.modelo, null, null],
+            origem: { Veiculo: [v.placa], Manutencao: [] }
+          });
+        }
+      });
+      return saida;
+    }
+  },
+
+  /* DANIEL · RIGHT JOIN: as reservas 18 e 20 aparecem sem avaliação.
+     A tabela preservada é a da direita. */
+  dan: {
+    tipo: "RIGHT JOIN", cor: "right",
+    fontes: [
+      fonte("Avaliacao", [["id","id"],["nota","nota"],["plataforma","plataforma"],["reserva","fk_Reserva_id"]],
+            DAN_AVAL, (r) => r.id),
+      fonte("Reserva", [["id","id"],["status","status"]],
+            DAN_RESERVA, (r) => r.id)
+    ],
+    colunas: ["reserva", "plataforma", "nota"],
+    montar() {
+      return DAN_RESERVA.map((r) => {
+        const a = DAN_AVAL.find((x) => x.reserva === r.id);
+        return a
+          ? { cel: [r.id, a.plataforma, a.nota], origem: { Avaliacao: [a.id], Reserva: [r.id] } }
+          : { cel: [r.id, null, null],           origem: { Avaliacao: [],     Reserva: [r.id] } };
+      });
+    }
+  },
+
+  /* GUILHERME · FULL OUTER JOIN: sobra dos dois lados na mesma tabela —
+     carro que ninguém reservou e reserva sem carro alocado. */
+  gui: {
+    tipo: "FULL OUTER JOIN", cor: "full",
+    fontes: [
+      fonte("Veiculo", [["placa","placa"],["modelo","modelo"]],
+            GUI_VEICULO, (r) => r.placa),
+      fonte("Reserva", [["id","id"],["fim","fim"],["placa","fk_Veiculo_placa"]],
+            GUI_RESERVA, (r) => r.id)
+    ],
+    colunas: ["placa", "modelo", "reserva", "fim"],
+    montar() {
+      const saida = [];
+      GUI_VEICULO.forEach((v) => {
+        const rs = GUI_RESERVA.filter((r) => r.placa === v.placa);
+        if (rs.length) {
+          rs.forEach((r) => saida.push({
+            cel: [v.placa, v.modelo, r.id, r.fim],
+            origem: { Veiculo: [v.placa], Reserva: [r.id] }
+          }));
+        } else {
+          saida.push({
+            cel: [v.placa, v.modelo, null, null],
+            origem: { Veiculo: [v.placa], Reserva: [] }
+          });
+        }
+      });
+      GUI_RESERVA.filter((r) => r.placa === null).forEach((r) => saida.push({
+        cel: [null, null, r.id, r.fim],
+        origem: { Veiculo: [], Reserva: [r.id] }
+      }));
+      return saida;
+    }
+  }
 };

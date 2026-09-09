@@ -87,10 +87,24 @@ code,.mono,table{ font-family:"JetBrains Mono",ui-monospace,Menlo,monospace }
 .slide{
   position:absolute; inset:0; padding:4rem 5.5rem 6.5rem;
   display:flex; flex-direction:column; gap:2.4rem;
-  opacity:0; visibility:hidden; transform:translateY(1.2rem);
-  transition:opacity .28s ease, transform .28s cubic-bezier(.22,.8,.3,1), visibility .28s;
+  opacity:0; visibility:hidden; transform:translateX(3rem);
+  transition:opacity .3s ease, transform .34s cubic-bezier(.22,.9,.28,1), visibility .34s;
 }
+/* voltando, o slide entra pelo outro lado: a navegacao ganha sentido fisico */
+.stage[data-dir="tras"] .slide{ transform:translateX(-3rem) }
 .slide.on{ opacity:1; visibility:visible; transform:none }
+
+/* o conteudo do slide assenta em cascata, de cima para baixo */
+.slide.on > *{ animation:assenta .42s cubic-bezier(.22,.9,.28,1) both }
+.slide.on > *:nth-child(1){ animation-delay:.04s }
+.slide.on > *:nth-child(2){ animation-delay:.10s }
+.slide.on > *:nth-child(3){ animation-delay:.16s }
+.slide.on > *:nth-child(4){ animation-delay:.22s }
+.slide.on > *:nth-child(5){ animation-delay:.28s }
+@keyframes assenta{
+  from{ opacity:0; transform:translateY(.9rem) }
+  to  { opacity:1; transform:none }
+}
 .slide.center{ justify-content:center }
 
 /* ---------- TIPOGRAFIA ---------------------------------------------------- */
@@ -107,6 +121,23 @@ h2{ font-size:3.4rem; line-height:1.05; max-width:20ch }
   font-family:"Space Grotesk",sans-serif; font-weight:700; letter-spacing:-.045em;
   line-height:.85; font-variant-numeric:tabular-nums; color:var(--ac,var(--ink));
 }
+
+/* ---------- MARCA -------------------------------------------------------- */
+.marca{ display:inline-flex; align-items:center; gap:.75em; line-height:1 }
+.marca svg{ width:1.5em; height:1.5em; flex:none; display:block }
+.marca .nome{
+  font-family:"Space Grotesk",sans-serif; font-weight:700;
+  letter-spacing:.02em; color:var(--ink);
+}
+.marca .tipo{
+  font-family:"JetBrains Mono",monospace; font-weight:700; font-size:.4em;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-3);
+  align-self:center; padding-left:.9em; border-left:1px solid var(--line-2);
+  margin-left:.5em;
+}
+.marca.g{ font-size:3.4rem }
+.marca.p{ font-size:1.5rem }
+.marca.p .tipo{ display:none }
 
 /* ---------- PLACA (identificador de bloco) -------------------------------- */
 .plate{
@@ -321,6 +352,61 @@ tbody tr.fresh{ animation:pop .3s cubic-bezier(.22,.9,.3,1) both }
   letter-spacing:.18em; text-transform:uppercase; color:var(--ac); display:block; margin-bottom:.6rem;
 }
 
+/* ---------- A JUNÇÃO ACONTECENDO ----------------------------------------- */
+/* Fontes a esquerda, resultado a direita ocupando a altura toda. Empilhado
+   o resultado ficava espremido e precisava rolar — numa apresentacao, linha
+   que precisa de rolagem e linha que ninguem ve. */
+.jx{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
+  grid-template-rows:minmax(0,1fr) auto; gap:1.1rem 1.4rem; flex:1; min-height:0;
+}
+/* Densidade propria: sao duas tabelas empilhadas mais o resultado na mesma
+   tela. 1.2rem ainda esta acima do piso de leitura de 2% da altura. */
+.jx table{ font-size:1.2rem }
+.jx td{ padding:.42rem 1rem }
+.jx th{ padding:.3rem 1rem; font-size:.86rem }
+.jx .cap{ padding:.36rem 1rem; font-size:.86rem }
+.jx-fontes{
+  grid-column:1; grid-row:1;
+  display:flex; flex-direction:column; gap:.7rem; min-height:0;
+}
+.jx-fontes.tres{
+  display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
+  gap:1rem;
+}
+.jx-fontes.tres > :nth-child(3){ grid-column:1 / -1 }
+/* dividem a altura entre si em vez de encolher para o minimo */
+.jx-fonte{ flex:1 1 auto; min-height:0 }
+.jx-acao{ grid-column:1; grid-row:2; display:flex; align-items:center; gap:1.3rem }
+.jx-btn{
+  font-family:"JetBrains Mono",monospace; font-size:1.25rem; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; padding:.7rem 1.8rem;
+  border-radius:var(--r); cursor:pointer; border:2px solid var(--jc);
+  background:var(--jc); color:var(--surface); white-space:nowrap;
+  transition:filter .15s, opacity .15s;
+}
+.jx-btn:hover:not(:disabled){ filter:brightness(1.12) }
+.jx-btn:disabled{ opacity:.55; cursor:progress }
+.jx-dica{
+  font-family:"JetBrains Mono",monospace; font-size:1.15rem; color:var(--ink-2);
+  letter-spacing:.04em;
+}
+.jx-dica b{ color:var(--jc) }
+.jx-res{ grid-column:2; grid-row:1 / span 2; min-height:0 }
+
+/* linha acesa: participou da linha que esta nascendo */
+.jx tr.aceso > td{ background:var(--jc-t) }
+.jx tr.aceso > td:first-child{ box-shadow:inset .3rem 0 0 var(--jc) }
+/* linha escolhida no rastro */
+.jx tr.sel > td{ background:var(--jc-t); font-weight:600 }
+.jx tr.sel > td:first-child{ box-shadow:inset .3rem 0 0 var(--jc) }
+/* linha que a juncao descartou */
+.jx tr.fora > td{ opacity:.4; text-decoration:line-through; text-decoration-thickness:1px }
+.jx tr.aceso > td, .jx tr.sel > td, .jx tr.fora > td{ transition:background .18s, opacity .3s }
+/* depois de montada, as linhas contam de onde vieram */
+.jx.pronta tbody tr{ cursor:pointer }
+.jx.pronta tbody tr:hover > td{ background:var(--surface-2) }
+
 /* ---------- CONTROLES ----------------------------------------------------- */
 .ctrl{
   background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
@@ -406,17 +492,18 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
 <div class="stage">
 
 <!-- ═══════════════ 01 · CAPA ═══════════════ -->
-<section class="slide center on" id="capa" data-titulo="Capa" style="gap:4rem">
-  <span class="eyebrow">Etapa 05 · PostgreSQL</span>
-  <h1>Consultas<br>Avançadas</h1>
+<section class="slide center on" id="capa" data-titulo="Capa" style="gap:2.6rem">
+  <span class="marca g"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="8" fill="var(--brand)"/><path d="M12 29 L20 11 L23.5 11 L15.5 29 Z" fill="var(--brand-ink)"/><path d="M17.5 29 L25.5 11 L29 11 L21 29 Z" fill="var(--brand-ink)" opacity=".45"/></svg><span class="nome">Limas</span><span class="tipo">Concessionária</span></span>
+  <span class="eyebrow">Etapa 05 · Consultas Avançadas · PostgreSQL</span>
+  <h1 style="font-size:6.4rem">Quatro perguntas,<br>quatro junções</h1>
   <p class="lede wide" style="font-size:2.1rem">
-    Banco de dados de uma concessionária: reservas, manutenções, multas e avaliações.</p>
+    O banco de dados da Limas: reservas, manutenções, multas e avaliações.</p>
 
   <div class="crew">
-    <div class="mem"><div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div><div class="who">Augusto</div></div>
-    <div class="mem"><div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div><div class="who">André</div></div>
-    <div class="mem"><div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div><div class="who">Daniel</div></div>
-    <div class="mem"><div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div><div class="who">Guilherme</div></div>
+    <div class="mem"><div class="plate"><b>LIMAS</b><span>INNER JOIN</span></div><div class="who">Augusto</div></div>
+    <div class="mem"><div class="plate"><b>LIMAS</b><span>LEFT JOIN</span></div><div class="who">André</div></div>
+    <div class="mem"><div class="plate"><b>LIMAS</b><span>RIGHT JOIN</span></div><div class="who">Daniel</div></div>
+    <div class="mem"><div class="plate"><b>LIMAS</b><span>FULL OUTER</span></div><div class="who">Guilherme</div></div>
   </div>
 
   <div class="credits">
@@ -430,7 +517,7 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
   <span class="eyebrow">Contextualização</span>
   <h2>O estabelecimento</h2>
   <p class="lede wide" style="font-size:1.9rem">
-    A concessionária registra quatro eventos no banco: a <b>reserva</b> do veículo,
+    A <b>Limas</b> registra quatro eventos no banco: a <b>reserva</b> do veículo,
     a <b>manutenção</b> da frota, as <b>multas</b> cometidas durante o período de posse
     e a <b>avaliação</b> deixada pelo cliente.</p>
 
@@ -490,39 +577,28 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
          data-dono="inner" data-quem="Augusto" style="--ac:var(--inner); gap:3.4rem">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--inner)">Augusto · Evento Multa</span></div>
-    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>INNER JOIN</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
   <p class="ask">Quais clientes acumulam <em>duas ou mais multas</em>?</p>
   <span class="eyebrow">Função de agregação · COUNT</span>
 </section>
 
-<section class="slide" id="aug-dados" data-titulo="Augusto · Dados originais"
+<section class="slide" data-steps="1" id="aug-dados" data-titulo="Augusto · Dados originais"
          data-dono="inner" data-quem="Augusto" style="--ac:var(--inner)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--inner)">Augusto · Dados originais</span>
-      <h2>Três tabelas</h2></div>
-    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+      <h2>A junção, linha a linha</h2></div>
+    <div class="plate"><b>LIMAS</b><span>INNER JOIN</span></div>
   </div>
-  <div class="cols c-3">
-    <div class="tbox"><div class="cap"><span>Multa</span><span>10 linhas</span></div>
-      <div class="tscroll"><table id="t-aug-multa"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Reserva</span><span>20 linhas</span></div>
-      <div class="tscroll"><table id="t-aug-reserva"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Cliente</span><span>12 linhas</span></div>
-      <div class="tscroll"><table id="t-aug-cliente"></table></div></div>
-  </div>
-  <p class="lede wide" style="font-size:1.7rem">
-    <b>Multa</b> tem o valor mas não o nome. <b>Cliente</b> tem o nome mas não as multas.
-    E a multa nem guarda o CPF — <b>Reserva é a ponte</b>. Responder a pergunta exige
-    ler as três ao mesmo tempo, e é isso que o JOIN faz.</p>
+  <div class="jx" data-quem="aug"></div>
 </section>
 
 <section class="slide" id="aug-sql" data-titulo="Augusto · A consulta" data-steps="6"
          data-dono="inner" data-quem="Augusto" style="--ac:var(--inner); --ac-t:var(--inner-t)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--inner)">Augusto · A consulta</span></div>
-    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>INNER JOIN</span></div>
   </div>
   <div class="cols c-sql">
     <div class="sql">
@@ -548,7 +624,7 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
   <div class="top">
     <div><span class="eyebrow" style="color:var(--inner)">Augusto · Resultado</span>
       <h2>Resultado da execução</h2></div>
-    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>INNER JOIN</span></div>
   </div>
   <div class="cols c-res">
     <div class="tbox"><div class="cap"><span>Reincidentes</span><span id="aug-cap">3 linhas</span></div>
@@ -583,36 +659,28 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
          data-dono="left" data-quem="André" style="--ac:var(--left); gap:3.4rem">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--left)">André · Evento Manutenção</span></div>
-    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>LEFT JOIN</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
   <p class="ask">Quais veículos custaram <em>R$ 2.000 ou mais</em> em manutenção, e quais <em>nunca foram à oficina</em>?</p>
   <span class="eyebrow">Função de agregação · SUM</span>
 </section>
 
-<section class="slide" id="and-dados" data-titulo="André · Dados originais"
+<section class="slide" data-steps="1" id="and-dados" data-titulo="André · Dados originais"
          data-dono="left" data-quem="André" style="--ac:var(--left)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--left)">André · Dados originais</span>
-      <h2>Duas tabelas</h2></div>
-    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+      <h2>A junção, linha a linha</h2></div>
+    <div class="plate"><b>LIMAS</b><span>LEFT JOIN</span></div>
   </div>
-  <div class="cols c-2">
-    <div class="tbox"><div class="cap"><span>Veiculo</span><span>12 linhas</span></div>
-      <div class="tscroll"><table id="t-and-veiculo"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Manutencao</span><span>13 linhas</span></div>
-      <div class="tscroll"><table id="t-and-manut"></table></div></div>
-  </div>
-  <p class="lede wide" style="font-size:1.7rem">
-    <b>Quatro veículos não aparecem nenhuma vez em Manutencao.</b> São eles que decidem
-    qual junção usar.</p>
+  <div class="jx" data-quem="and"></div>
 </section>
 
 <section class="slide" id="and-sql" data-titulo="André · A consulta" data-steps="6"
          data-dono="left" data-quem="André" style="--ac:var(--left); --ac-t:var(--left-t)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--left)">André · A consulta</span></div>
-    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>LEFT JOIN</span></div>
   </div>
   <div class="cols c-sql">
     <div class="sql">
@@ -638,7 +706,7 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
   <div class="top">
     <div><span class="eyebrow" style="color:var(--left)">André · Resultado</span>
       <h2>Resultado da execução</h2></div>
-    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>LEFT JOIN</span></div>
   </div>
   <div class="cols c-res">
     <div class="tbox"><div class="cap"><span>Custo por veículo</span><span id="and-cap">8 linhas</span></div>
@@ -673,36 +741,28 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
          data-dono="right" data-quem="Daniel" style="--ac:var(--right); gap:3.4rem">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--right)">Daniel · Evento Avaliação</span></div>
-    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>RIGHT JOIN</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
   <p class="ask">Qual a <em>nota média por canal</em>, e quantas reservas <em>não foram avaliadas</em>?</p>
   <span class="eyebrow">Função de agregação · AVG</span>
 </section>
 
-<section class="slide" id="dan-dados" data-titulo="Daniel · Dados originais"
+<section class="slide" data-steps="1" id="dan-dados" data-titulo="Daniel · Dados originais"
          data-dono="right" data-quem="Daniel" style="--ac:var(--right)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--right)">Daniel · Dados originais</span>
-      <h2>Duas tabelas</h2></div>
-    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+      <h2>A junção, linha a linha</h2></div>
+    <div class="plate"><b>LIMAS</b><span>RIGHT JOIN</span></div>
   </div>
-  <div class="cols c-2">
-    <div class="tbox"><div class="cap"><span>Avaliacao</span><span>12 linhas</span></div>
-      <div class="tscroll"><table id="t-dan-aval"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Reserva</span><span>20 linhas</span></div>
-      <div class="tscroll"><table id="t-dan-reserva"></table></div></div>
-  </div>
-  <p class="lede wide" style="font-size:1.7rem">
-    São 20 reservas para 12 avaliações. <b>Oito reservas não têm avaliação nenhuma</b> —
-    as de id 15, 18 e 20, entre outras.</p>
+  <div class="jx" data-quem="dan"></div>
 </section>
 
 <section class="slide" id="dan-sql" data-titulo="Daniel · A consulta" data-steps="6"
          data-dono="right" data-quem="Daniel" style="--ac:var(--right); --ac-t:var(--right-t)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--right)">Daniel · A consulta</span></div>
-    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>RIGHT JOIN</span></div>
   </div>
   <div class="cols c-sql">
     <div class="sql">
@@ -728,7 +788,7 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
   <div class="top">
     <div><span class="eyebrow" style="color:var(--right)">Daniel · Resultado</span>
       <h2>Resultado da execução</h2></div>
-    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>RIGHT JOIN</span></div>
   </div>
   <div class="cols c-res">
     <div class="tbox"><div class="cap"><span>Satisfação por canal</span><span id="dan-cap">4 linhas</span></div>
@@ -764,36 +824,28 @@ input[type=range]{ width:100%; accent-color:var(--ac,var(--brand)); height:2.4re
          data-dono="full" data-quem="Guilherme" style="--ac:var(--full); gap:3.4rem">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--full)">Guilherme · Evento Reserva</span></div>
-    <div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div>
+    <div class="plate"><b>LIMAS</b><span>FULL OUTER</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
   <p class="ask">Quais veículos estão <em>parados</em>, e quais reservas estão <em>sem veículo alocado</em>?</p>
   <span class="eyebrow">Funções de agregação · MAX e MIN</span>
 </section>
 
-<section class="slide" id="gui-dados" data-titulo="Guilherme · Dados originais"
+<section class="slide" data-steps="1" id="gui-dados" data-titulo="Guilherme · Dados originais"
          data-dono="full" data-quem="Guilherme" style="--ac:var(--full)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--full)">Guilherme · Dados originais</span>
-      <h2>Duas tabelas</h2></div>
-    <div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div>
+      <h2>A junção, linha a linha</h2></div>
+    <div class="plate"><b>LIMAS</b><span>FULL OUTER</span></div>
   </div>
-  <div class="cols c-2">
-    <div class="tbox"><div class="cap"><span>Veiculo</span><span>12 linhas</span></div>
-      <div class="tscroll"><table id="t-gui-veiculo"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Reserva</span><span>20 linhas</span></div>
-      <div class="tscroll"><table id="t-gui-reserva"></table></div></div>
-  </div>
-  <p class="lede wide" style="font-size:1.7rem">
-    Os dois lados têm sobra: veículos que ninguém reservou, e reservas com
-    <code>fk_Veiculo_placa</code> em NULL, ainda sem carro designado.</p>
+  <div class="jx" data-quem="gui"></div>
 </section>
 
 <section class="slide" id="gui-sql" data-titulo="Guilherme · A consulta" data-steps="6"
          data-dono="full" data-quem="Guilherme" style="--ac:var(--full); --ac-t:var(--full-t)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--full)">Guilherme · A consulta</span></div>
-    <div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div>
+    <div class="plate"><b>LIMAS</b><span>FULL OUTER</span></div>
   </div>
   <div class="cols c-sql">
     <div class="sql">
@@ -992,6 +1044,7 @@ ORDER BY total_multas DESC;</textarea>
 <div class="grid" id="grade"></div>
 
 <div class="chrome">
+  <span class="marca p"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="8" fill="var(--brand)"/><path d="M12 29 L20 11 L23.5 11 L15.5 29 Z" fill="var(--brand-ink)"/><path d="M17.5 29 L25.5 11 L29 11 L21 29 Z" fill="var(--brand-ink)" opacity=".45"/></svg><span class="nome">Limas</span></span>
   <span class="count"><b id="contador">1</b> / <span id="total">29</span></span>
   <span class="who-now" id="dono-atual"></span>
   <div class="road" id="estrada"></div>
@@ -1156,9 +1209,9 @@ const AUG_RESULTADO = [
 /* --- ANDRÉ · Manutenção · LEFT JOIN · SUM -------------------------------- */
 const AND_VEICULO = [
   { placa: "ABC1D23", marca: "Volkswagen", modelo: "Nivus" },
-  { placa: "BRA2E19", marca: "Chevrolet",  modelo: "Onix" },
+  { placa: "DEF4G56", marca: "Toyota",     modelo: "Corolla" },
   { placa: "CDE3F45", marca: "Fiat",       modelo: "Pulse" },
-  { placa: "DEF4G56", marca: "Toyota",     modelo: "Corolla" }
+  { placa: "EFG5H67", marca: "Honda",      modelo: "Civic" }
 ];
 const AND_MANUT = [
   { id: 1, placa: "ABC1D23", valor: 1800 },
@@ -1185,15 +1238,14 @@ const AND_RESULTADO = [
 
 /* --- DANIEL · Avaliação · RIGHT JOIN · AVG ------------------------------- */
 const DAN_AVAL = [
-  { id: 1, nota: 9,  plataforma: "Google Maps",  reserva: 1 },
-  { id: 3, nota: 7,  plataforma: "Instagram",    reserva: 3 },
-  { id: 5, nota: 5,  plataforma: "WhatsApp",     reserva: 5 },
-  { id: 8, nota: 9,  plataforma: "Site Proprio", reserva: 8 }
+  { id: 1, nota: 9, plataforma: "Google Maps", reserva: 1 },
+  { id: 3, nota: 7, plataforma: "Instagram",   reserva: 3 },
+  { id: 5, nota: 5, plataforma: "WhatsApp",    reserva: 5 }
 ];
 const DAN_RESERVA = [
   { id: 1,  status: "Concluida" },
   { id: 3,  status: "Concluida" },
-  { id: 15, status: "Concluida" },
+  { id: 5,  status: "Concluida" },
   { id: 18, status: "Pendente" },
   { id: 20, status: "Pendente" }
 ];
@@ -1250,6 +1302,137 @@ const GUI_PERDA = {
   left:  "Mostra os carros parados, mas nao ve as reservas sem veiculo alocado.",
   right: "Mostra as reservas sem carro, mas nao ve os carros que ninguem reservou.",
   full:  "Unico que mostra os dois problemas ao mesmo tempo."
+};
+
+/* ===========================================================================
+   AS JUNÇÕES, PASSO A PASSO
+   Alimenta a animação do slide de dados originais: quais linhas de origem
+   produziram cada linha do resultado. As amostras são subconjuntos fechados
+   da carga — nenhum registro aponta para fora do que está na tela.
+   =========================================================================== */
+
+/* Uma tabela de origem: nome, colunas visíveis e como identificar cada linha */
+function fonte(nome, colunas, linhas, id) {
+  return { nome, colunas, linhas, id };
+}
+
+const JUNCOES = {
+  /* AUGUSTO · INNER JOIN encadeado: Multa -> Reserva -> Cliente.
+     Igor e Ana estão na tabela Cliente e não produzem nada: é o INNER
+     descartando quem não tem par. */
+  aug: {
+    tipo: "INNER JOIN", cor: "inner",
+    fontes: [
+      fonte("Multa", [["id","id"],["valor","valor"],["reserva","fk_Reserva_id"]],
+            AUG_MULTA, (r) => r.id),
+      fonte("Reserva", [["id","id"],["cpf","fk_Cliente_cpf"]],
+            AUG_RESERVA, (r) => r.id),
+      fonte("Cliente", [["cpf","cpf"],["nome","nome"]],
+            AUG_CLIENTE, (r) => r.cpf)
+    ],
+    colunas: ["multa", "valor", "reserva", "cliente"],
+    montar() {
+      const saida = [];
+      AUG_MULTA.forEach((m) => {
+        const r = AUG_RESERVA.find((x) => x.id === m.reserva);
+        if (!r) return;
+        const c = AUG_CLIENTE.find((x) => x.cpf === r.cpf);
+        if (!c) return;
+        saida.push({
+          cel: [m.id, m.valor, r.id, c.nome],
+          origem: { Multa: [m.id], Reserva: [r.id], Cliente: [c.cpf] }
+        });
+      });
+      return saida;
+    }
+  },
+
+  /* ANDRÉ · LEFT JOIN: Pulse e Civic ficam na lista com NULL do lado direito.
+     Com INNER JOIN eles sumiriam. */
+  and: {
+    tipo: "LEFT JOIN", cor: "left",
+    fontes: [
+      fonte("Veiculo", [["placa","placa"],["modelo","modelo"]],
+            AND_VEICULO, (r) => r.placa),
+      fonte("Manutencao", [["id","id"],["placa","fk_Veiculo_placa"],["valor","valor"]],
+            AND_MANUT, (r) => r.id)
+    ],
+    colunas: ["placa", "modelo", "manutencao", "valor"],
+    montar() {
+      const saida = [];
+      AND_VEICULO.forEach((v) => {
+        const ms = AND_MANUT.filter((m) => m.placa === v.placa);
+        if (ms.length) {
+          ms.forEach((m) => saida.push({
+            cel: [v.placa, v.modelo, m.id, m.valor],
+            origem: { Veiculo: [v.placa], Manutencao: [m.id] }
+          }));
+        } else {
+          saida.push({
+            cel: [v.placa, v.modelo, null, null],
+            origem: { Veiculo: [v.placa], Manutencao: [] }
+          });
+        }
+      });
+      return saida;
+    }
+  },
+
+  /* DANIEL · RIGHT JOIN: as reservas 18 e 20 aparecem sem avaliação.
+     A tabela preservada é a da direita. */
+  dan: {
+    tipo: "RIGHT JOIN", cor: "right",
+    fontes: [
+      fonte("Avaliacao", [["id","id"],["nota","nota"],["plataforma","plataforma"],["reserva","fk_Reserva_id"]],
+            DAN_AVAL, (r) => r.id),
+      fonte("Reserva", [["id","id"],["status","status"]],
+            DAN_RESERVA, (r) => r.id)
+    ],
+    colunas: ["reserva", "plataforma", "nota"],
+    montar() {
+      return DAN_RESERVA.map((r) => {
+        const a = DAN_AVAL.find((x) => x.reserva === r.id);
+        return a
+          ? { cel: [r.id, a.plataforma, a.nota], origem: { Avaliacao: [a.id], Reserva: [r.id] } }
+          : { cel: [r.id, null, null],           origem: { Avaliacao: [],     Reserva: [r.id] } };
+      });
+    }
+  },
+
+  /* GUILHERME · FULL OUTER JOIN: sobra dos dois lados na mesma tabela —
+     carro que ninguém reservou e reserva sem carro alocado. */
+  gui: {
+    tipo: "FULL OUTER JOIN", cor: "full",
+    fontes: [
+      fonte("Veiculo", [["placa","placa"],["modelo","modelo"]],
+            GUI_VEICULO, (r) => r.placa),
+      fonte("Reserva", [["id","id"],["fim","fim"],["placa","fk_Veiculo_placa"]],
+            GUI_RESERVA, (r) => r.id)
+    ],
+    colunas: ["placa", "modelo", "reserva", "fim"],
+    montar() {
+      const saida = [];
+      GUI_VEICULO.forEach((v) => {
+        const rs = GUI_RESERVA.filter((r) => r.placa === v.placa);
+        if (rs.length) {
+          rs.forEach((r) => saida.push({
+            cel: [v.placa, v.modelo, r.id, r.fim],
+            origem: { Veiculo: [v.placa], Reserva: [r.id] }
+          }));
+        } else {
+          saida.push({
+            cel: [v.placa, v.modelo, null, null],
+            origem: { Veiculo: [v.placa], Reserva: [] }
+          });
+        }
+      });
+      GUI_RESERVA.filter((r) => r.placa === null).forEach((r) => saida.push({
+        cel: [null, null, r.id, r.fim],
+        origem: { Veiculo: [], Reserva: [r.id] }
+      }));
+      return saida;
+    }
+  }
 };
 
 </script>
@@ -1441,11 +1624,17 @@ const GUI_PERDA = {
      ========================================================================= */
   var slides = [].slice.call(document.querySelectorAll(".slide"));
   var pos = { i: 0, passo: 0 };
+  var palco = document.querySelector(".stage");
 
   function passos(i) { return +(slides[i].dataset.steps || 0); }
 
   function pintarPassos(n) {
     var atual = slides[pos.i];
+
+    /* nos slides de dados originais, avancar dispara a juncao */
+    var jx = atual.querySelector(".jx");
+    if (jx && window.Juncao && n >= 1) window.Juncao.avancar(jx);
+
     var clausulas = atual.querySelectorAll(".cl");
     if (!clausulas.length) return;
     [].forEach.call(clausulas, function (c) {
@@ -1471,6 +1660,9 @@ const GUI_PERDA = {
     rot.textContent = slides[pos.i].dataset.quem || "";
     rot.style.setProperty("--ac", dono ? "var(--" + dono + ")" : "var(--ink-3)");
 
+    var jx = slides[pos.i].querySelector(".jx");
+    if (jx && window.Juncao) window.Juncao.entrar(jx);
+
     pintarPassos(pos.passo);
 
     var id = slides[pos.i].id;
@@ -1488,14 +1680,16 @@ const GUI_PERDA = {
 
   function avancar() {
     if (pos.passo < passos(pos.i)) { pos.passo++; pintarPassos(pos.passo); return; }
-    if (pos.i < slides.length - 1) { pos.i++; pos.passo = 0; desenhar(); }
+    if (pos.i < slides.length - 1) { palco.dataset.dir = "frente"; pos.i++; pos.passo = 0; desenhar(); }
   }
   function voltar() {
     if (pos.passo > 0) { pos.passo--; pintarPassos(pos.passo); return; }
-    if (pos.i > 0) { pos.i--; pos.passo = passos(pos.i); desenhar(); }
+    if (pos.i > 0) { palco.dataset.dir = "tras"; pos.i--; pos.passo = passos(pos.i); desenhar(); }
   }
   function irPara(n) {
-    pos.i = Math.max(0, Math.min(slides.length - 1, n));
+    n = Math.max(0, Math.min(slides.length - 1, n));
+    palco.dataset.dir = n < pos.i ? "tras" : "frente";
+    pos.i = n;
     pos.passo = 0;
     desenhar();
   }
@@ -1616,45 +1810,6 @@ const GUI_PERDA = {
     b.addEventListener("click", function () { guiTipo = b.dataset.j; desenharGuilherme(); });
   });
   desenharGuilherme();
-
-  /* amostras das tabelas de origem dos quatro blocos */
-  montarTabela(document.getElementById("t-aug-multa"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "valor", f: function (r) { return r.valor; }, num: true },
-    { h: "reserva", f: function (r) { return r.reserva; }, num: true }], AUG_MULTA);
-  montarTabela(document.getElementById("t-aug-reserva"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "fk_Cliente_cpf", f: function (r) { return r.cpf; }, num: true }], AUG_RESERVA);
-  montarTabela(document.getElementById("t-aug-cliente"), [
-    { h: "cpf", f: function (r) { return r.cpf; }, num: true },
-    { h: "nome", f: function (r) { return r.nome; } }], AUG_CLIENTE);
-
-  montarTabela(document.getElementById("t-and-veiculo"), [
-    { h: "placa", f: function (r) { return r.placa; } },
-    { h: "marca", f: function (r) { return r.marca; } },
-    { h: "modelo", f: function (r) { return r.modelo; } }], AND_VEICULO);
-  montarTabela(document.getElementById("t-and-manut"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "fk_Veiculo_placa", f: function (r) { return r.placa; } },
-    { h: "valor", f: function (r) { return r.valor; }, num: true }], AND_MANUT);
-
-  montarTabela(document.getElementById("t-dan-aval"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "nota", f: function (r) { return r.nota; }, num: true },
-    { h: "plataforma", f: function (r) { return r.plataforma; } },
-    { h: "reserva", f: function (r) { return r.reserva; }, num: true }], DAN_AVAL);
-  montarTabela(document.getElementById("t-dan-reserva"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "status", f: function (r) { return r.status; } }], DAN_RESERVA);
-
-  montarTabela(document.getElementById("t-gui-veiculo"), [
-    { h: "placa", f: function (r) { return r.placa; } },
-    { h: "modelo", f: function (r) { return r.modelo; } }], GUI_VEICULO);
-  montarTabela(document.getElementById("t-gui-reserva"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "inicio", f: function (r) { return r.inicio; } },
-    { h: "fim", f: function (r) { return r.fim; } },
-    { h: "fk_Veiculo_placa", f: function (r) { return r.placa; } }], GUI_RESERVA);
 
   montarGrade();
 

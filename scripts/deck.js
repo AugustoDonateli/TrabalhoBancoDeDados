@@ -185,11 +185,17 @@
      ========================================================================= */
   var slides = [].slice.call(document.querySelectorAll(".slide"));
   var pos = { i: 0, passo: 0 };
+  var palco = document.querySelector(".stage");
 
   function passos(i) { return +(slides[i].dataset.steps || 0); }
 
   function pintarPassos(n) {
     var atual = slides[pos.i];
+
+    /* nos slides de dados originais, avancar dispara a juncao */
+    var jx = atual.querySelector(".jx");
+    if (jx && window.Juncao && n >= 1) window.Juncao.avancar(jx);
+
     var clausulas = atual.querySelectorAll(".cl");
     if (!clausulas.length) return;
     [].forEach.call(clausulas, function (c) {
@@ -215,6 +221,9 @@
     rot.textContent = slides[pos.i].dataset.quem || "";
     rot.style.setProperty("--ac", dono ? "var(--" + dono + ")" : "var(--ink-3)");
 
+    var jx = slides[pos.i].querySelector(".jx");
+    if (jx && window.Juncao) window.Juncao.entrar(jx);
+
     pintarPassos(pos.passo);
 
     var id = slides[pos.i].id;
@@ -232,14 +241,16 @@
 
   function avancar() {
     if (pos.passo < passos(pos.i)) { pos.passo++; pintarPassos(pos.passo); return; }
-    if (pos.i < slides.length - 1) { pos.i++; pos.passo = 0; desenhar(); }
+    if (pos.i < slides.length - 1) { palco.dataset.dir = "frente"; pos.i++; pos.passo = 0; desenhar(); }
   }
   function voltar() {
     if (pos.passo > 0) { pos.passo--; pintarPassos(pos.passo); return; }
-    if (pos.i > 0) { pos.i--; pos.passo = passos(pos.i); desenhar(); }
+    if (pos.i > 0) { palco.dataset.dir = "tras"; pos.i--; pos.passo = passos(pos.i); desenhar(); }
   }
   function irPara(n) {
-    pos.i = Math.max(0, Math.min(slides.length - 1, n));
+    n = Math.max(0, Math.min(slides.length - 1, n));
+    palco.dataset.dir = n < pos.i ? "tras" : "frente";
+    pos.i = n;
     pos.passo = 0;
     desenhar();
   }
@@ -360,45 +371,6 @@
     b.addEventListener("click", function () { guiTipo = b.dataset.j; desenharGuilherme(); });
   });
   desenharGuilherme();
-
-  /* amostras das tabelas de origem dos quatro blocos */
-  montarTabela(document.getElementById("t-aug-multa"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "valor", f: function (r) { return r.valor; }, num: true },
-    { h: "reserva", f: function (r) { return r.reserva; }, num: true }], AUG_MULTA);
-  montarTabela(document.getElementById("t-aug-reserva"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "fk_Cliente_cpf", f: function (r) { return r.cpf; }, num: true }], AUG_RESERVA);
-  montarTabela(document.getElementById("t-aug-cliente"), [
-    { h: "cpf", f: function (r) { return r.cpf; }, num: true },
-    { h: "nome", f: function (r) { return r.nome; } }], AUG_CLIENTE);
-
-  montarTabela(document.getElementById("t-and-veiculo"), [
-    { h: "placa", f: function (r) { return r.placa; } },
-    { h: "marca", f: function (r) { return r.marca; } },
-    { h: "modelo", f: function (r) { return r.modelo; } }], AND_VEICULO);
-  montarTabela(document.getElementById("t-and-manut"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "fk_Veiculo_placa", f: function (r) { return r.placa; } },
-    { h: "valor", f: function (r) { return r.valor; }, num: true }], AND_MANUT);
-
-  montarTabela(document.getElementById("t-dan-aval"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "nota", f: function (r) { return r.nota; }, num: true },
-    { h: "plataforma", f: function (r) { return r.plataforma; } },
-    { h: "reserva", f: function (r) { return r.reserva; }, num: true }], DAN_AVAL);
-  montarTabela(document.getElementById("t-dan-reserva"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "status", f: function (r) { return r.status; } }], DAN_RESERVA);
-
-  montarTabela(document.getElementById("t-gui-veiculo"), [
-    { h: "placa", f: function (r) { return r.placa; } },
-    { h: "modelo", f: function (r) { return r.modelo; } }], GUI_VEICULO);
-  montarTabela(document.getElementById("t-gui-reserva"), [
-    { h: "id", f: function (r) { return r.id; }, num: true },
-    { h: "inicio", f: function (r) { return r.inicio; } },
-    { h: "fim", f: function (r) { return r.fim; } },
-    { h: "fk_Veiculo_placa", f: function (r) { return r.placa; } }], GUI_RESERVA);
 
   montarGrade();
 

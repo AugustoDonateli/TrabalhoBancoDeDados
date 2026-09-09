@@ -76,10 +76,24 @@ code,.mono,table{ font-family:"JetBrains Mono",ui-monospace,Menlo,monospace }
 .slide{
   position:absolute; inset:0; padding:4rem 5.5rem 6.5rem;
   display:flex; flex-direction:column; gap:2.4rem;
-  opacity:0; visibility:hidden; transform:translateY(1.2rem);
-  transition:opacity .28s ease, transform .28s cubic-bezier(.22,.8,.3,1), visibility .28s;
+  opacity:0; visibility:hidden; transform:translateX(3rem);
+  transition:opacity .3s ease, transform .34s cubic-bezier(.22,.9,.28,1), visibility .34s;
 }
+/* voltando, o slide entra pelo outro lado: a navegacao ganha sentido fisico */
+.stage[data-dir="tras"] .slide{ transform:translateX(-3rem) }
 .slide.on{ opacity:1; visibility:visible; transform:none }
+
+/* o conteudo do slide assenta em cascata, de cima para baixo */
+.slide.on > *{ animation:assenta .42s cubic-bezier(.22,.9,.28,1) both }
+.slide.on > *:nth-child(1){ animation-delay:.04s }
+.slide.on > *:nth-child(2){ animation-delay:.10s }
+.slide.on > *:nth-child(3){ animation-delay:.16s }
+.slide.on > *:nth-child(4){ animation-delay:.22s }
+.slide.on > *:nth-child(5){ animation-delay:.28s }
+@keyframes assenta{
+  from{ opacity:0; transform:translateY(.9rem) }
+  to  { opacity:1; transform:none }
+}
 .slide.center{ justify-content:center }
 
 /* ---------- TIPOGRAFIA ---------------------------------------------------- */
@@ -96,6 +110,23 @@ h2{ font-size:3.4rem; line-height:1.05; max-width:20ch }
   font-family:"Space Grotesk",sans-serif; font-weight:700; letter-spacing:-.045em;
   line-height:.85; font-variant-numeric:tabular-nums; color:var(--ac,var(--ink));
 }
+
+/* ---------- MARCA -------------------------------------------------------- */
+.marca{ display:inline-flex; align-items:center; gap:.75em; line-height:1 }
+.marca svg{ width:1.5em; height:1.5em; flex:none; display:block }
+.marca .nome{
+  font-family:"Space Grotesk",sans-serif; font-weight:700;
+  letter-spacing:.02em; color:var(--ink);
+}
+.marca .tipo{
+  font-family:"JetBrains Mono",monospace; font-weight:700; font-size:.4em;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--ink-3);
+  align-self:center; padding-left:.9em; border-left:1px solid var(--line-2);
+  margin-left:.5em;
+}
+.marca.g{ font-size:3.4rem }
+.marca.p{ font-size:1.5rem }
+.marca.p .tipo{ display:none }
 
 /* ---------- PLACA (identificador de bloco) -------------------------------- */
 .plate{
@@ -309,6 +340,61 @@ tbody tr.fresh{ animation:pop .3s cubic-bezier(.22,.9,.3,1) both }
   font-family:"JetBrains Mono",monospace; font-size:.95rem; font-weight:700;
   letter-spacing:.18em; text-transform:uppercase; color:var(--ac); display:block; margin-bottom:.6rem;
 }
+
+/* ---------- A JUNÇÃO ACONTECENDO ----------------------------------------- */
+/* Fontes a esquerda, resultado a direita ocupando a altura toda. Empilhado
+   o resultado ficava espremido e precisava rolar — numa apresentacao, linha
+   que precisa de rolagem e linha que ninguem ve. */
+.jx{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
+  grid-template-rows:minmax(0,1fr) auto; gap:1.1rem 1.4rem; flex:1; min-height:0;
+}
+/* Densidade propria: sao duas tabelas empilhadas mais o resultado na mesma
+   tela. 1.2rem ainda esta acima do piso de leitura de 2% da altura. */
+.jx table{ font-size:1.2rem }
+.jx td{ padding:.42rem 1rem }
+.jx th{ padding:.3rem 1rem; font-size:.86rem }
+.jx .cap{ padding:.36rem 1rem; font-size:.86rem }
+.jx-fontes{
+  grid-column:1; grid-row:1;
+  display:flex; flex-direction:column; gap:.7rem; min-height:0;
+}
+.jx-fontes.tres{
+  display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
+  gap:1rem;
+}
+.jx-fontes.tres > :nth-child(3){ grid-column:1 / -1 }
+/* dividem a altura entre si em vez de encolher para o minimo */
+.jx-fonte{ flex:1 1 auto; min-height:0 }
+.jx-acao{ grid-column:1; grid-row:2; display:flex; align-items:center; gap:1.3rem }
+.jx-btn{
+  font-family:"JetBrains Mono",monospace; font-size:1.25rem; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; padding:.7rem 1.8rem;
+  border-radius:var(--r); cursor:pointer; border:2px solid var(--jc);
+  background:var(--jc); color:var(--surface); white-space:nowrap;
+  transition:filter .15s, opacity .15s;
+}
+.jx-btn:hover:not(:disabled){ filter:brightness(1.12) }
+.jx-btn:disabled{ opacity:.55; cursor:progress }
+.jx-dica{
+  font-family:"JetBrains Mono",monospace; font-size:1.15rem; color:var(--ink-2);
+  letter-spacing:.04em;
+}
+.jx-dica b{ color:var(--jc) }
+.jx-res{ grid-column:2; grid-row:1 / span 2; min-height:0 }
+
+/* linha acesa: participou da linha que esta nascendo */
+.jx tr.aceso > td{ background:var(--jc-t) }
+.jx tr.aceso > td:first-child{ box-shadow:inset .3rem 0 0 var(--jc) }
+/* linha escolhida no rastro */
+.jx tr.sel > td{ background:var(--jc-t); font-weight:600 }
+.jx tr.sel > td:first-child{ box-shadow:inset .3rem 0 0 var(--jc) }
+/* linha que a juncao descartou */
+.jx tr.fora > td{ opacity:.4; text-decoration:line-through; text-decoration-thickness:1px }
+.jx tr.aceso > td, .jx tr.sel > td, .jx tr.fora > td{ transition:background .18s, opacity .3s }
+/* depois de montada, as linhas contam de onde vieram */
+.jx.pronta tbody tr{ cursor:pointer }
+.jx.pronta tbody tr:hover > td{ background:var(--surface-2) }
 
 /* ---------- CONTROLES ----------------------------------------------------- */
 .ctrl{

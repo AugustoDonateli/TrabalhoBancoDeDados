@@ -1,7 +1,7 @@
-# Quatro Junções
+# Limas · Consultas Avançadas
 
-Deck da **Etapa 05 — Consultas Avançadas** sobre o banco de dados de uma
-concessionária.
+Deck da **Etapa 05 — Consultas Avançadas** sobre o banco de dados da
+concessionária Limas.
 IFES · Banco de Dados · Prof. Rafael Vargas
 
 | Integrante | Evento | Junção | Função |
@@ -62,7 +62,8 @@ slides — o print do SGBD sai igual ao site.
 ```
 index.html          o deck
 styles/deck.css     cores, tipografia e escala
-scripts/dados.js    esquema e amostras das tabelas
+scripts/dados.js    esquema, amostras e as junções passo a passo
+scripts/juncao.js   a animação da junção nos slides de dados
 scripts/deck.js     navegação, diagrama e demonstrações
 assets/fontes.css   fontes embutidas (gerado, não editar)
 assets/pglite/      PostgreSQL compilado para o navegador (18 MB)
@@ -73,6 +74,18 @@ build.mjs           gera preview.html num arquivo só
 
 Para mexer no texto de um slide, edite direto o `index.html` — cada slide é
 uma `<section>` comentada.
+
+## A junção acontecendo
+
+Nos quatro slides de dados originais (7, 12, 17 e 22) as tabelas de origem
+ficam à esquerda e o resultado à direita, vazio. Ao avançar, cada linha do
+resultado nasce: as linhas que a produziram se acendem, e só então ela
+aparece.
+
+Depois de montado, o rastro fica clicável nos dois sentidos — clique numa
+linha do resultado para ver a origem dela, ou numa linha de origem para ver
+tudo que ela produziu. Linha descartada pela junção fica riscada, e no
+INNER JOIN do Augusto são elas que respondem "cadê o Igor e a Ana?".
 
 ## Os 29 slides
 

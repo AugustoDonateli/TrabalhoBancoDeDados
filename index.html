@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Consultas Avançadas · Concessionária</title>
-<meta name="description" content="Etapa 05 — Consultas Avançadas sobre o banco de dados de uma concessionária. IFES · Banco de Dados · Prof. Rafael Vargas.">
+<title>Limas · Consultas Avançadas</title>
+<meta name="description" content="Etapa 05 — Consultas Avançadas sobre o banco de dados da concessionária Limas. IFES · Banco de Dados · Prof. Rafael Vargas.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
 <link rel="stylesheet" href="assets/fontes.css">
 <link rel="stylesheet" href="styles/deck.css">
@@ -14,17 +14,18 @@
 <div class="stage">
 
 <!-- ═══════════════ 01 · CAPA ═══════════════ -->
-<section class="slide center on" id="capa" data-titulo="Capa" style="gap:4rem">
-  <span class="eyebrow">Etapa 05 · PostgreSQL</span>
-  <h1>Consultas<br>Avançadas</h1>
+<section class="slide center on" id="capa" data-titulo="Capa" style="gap:2.6rem">
+  <span class="marca g"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="8" fill="var(--brand)"/><path d="M12 29 L20 11 L23.5 11 L15.5 29 Z" fill="var(--brand-ink)"/><path d="M17.5 29 L25.5 11 L29 11 L21 29 Z" fill="var(--brand-ink)" opacity=".45"/></svg><span class="nome">Limas</span><span class="tipo">Concessionária</span></span>
+  <span class="eyebrow">Etapa 05 · Consultas Avançadas · PostgreSQL</span>
+  <h1 style="font-size:6.4rem">Quatro perguntas,<br>quatro junções</h1>
   <p class="lede wide" style="font-size:2.1rem">
-    Banco de dados de uma concessionária: reservas, manutenções, multas e avaliações.</p>
+    O banco de dados da Limas: reservas, manutenções, multas e avaliações.</p>
 
   <div class="crew">
-    <div class="mem"><div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div><div class="who">Augusto</div></div>
-    <div class="mem"><div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div><div class="who">André</div></div>
-    <div class="mem"><div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div><div class="who">Daniel</div></div>
-    <div class="mem"><div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div><div class="who">Guilherme</div></div>
+    <div class="mem"><div class="plate"><b>LIMAS</b><span>INNER JOIN</span></div><div class="who">Augusto</div></div>
+    <div class="mem"><div class="plate"><b>LIMAS</b><span>LEFT JOIN</span></div><div class="who">André</div></div>
+    <div class="mem"><div class="plate"><b>LIMAS</b><span>RIGHT JOIN</span></div><div class="who">Daniel</div></div>
+    <div class="mem"><div class="plate"><b>LIMAS</b><span>FULL OUTER</span></div><div class="who">Guilherme</div></div>
   </div>
 
   <div class="credits">
@@ -38,7 +39,7 @@
   <span class="eyebrow">Contextualização</span>
   <h2>O estabelecimento</h2>
   <p class="lede wide" style="font-size:1.9rem">
-    A concessionária registra quatro eventos no banco: a <b>reserva</b> do veículo,
+    A <b>Limas</b> registra quatro eventos no banco: a <b>reserva</b> do veículo,
     a <b>manutenção</b> da frota, as <b>multas</b> cometidas durante o período de posse
     e a <b>avaliação</b> deixada pelo cliente.</p>
 
@@ -98,39 +99,28 @@
          data-dono="inner" data-quem="Augusto" style="--ac:var(--inner); gap:3.4rem">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--inner)">Augusto · Evento Multa</span></div>
-    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>INNER JOIN</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
   <p class="ask">Quais clientes acumulam <em>duas ou mais multas</em>?</p>
   <span class="eyebrow">Função de agregação · COUNT</span>
 </section>
 
-<section class="slide" id="aug-dados" data-titulo="Augusto · Dados originais"
+<section class="slide" data-steps="1" id="aug-dados" data-titulo="Augusto · Dados originais"
          data-dono="inner" data-quem="Augusto" style="--ac:var(--inner)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--inner)">Augusto · Dados originais</span>
-      <h2>Três tabelas</h2></div>
-    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+      <h2>A junção, linha a linha</h2></div>
+    <div class="plate"><b>LIMAS</b><span>INNER JOIN</span></div>
   </div>
-  <div class="cols c-3">
-    <div class="tbox"><div class="cap"><span>Multa</span><span>10 linhas</span></div>
-      <div class="tscroll"><table id="t-aug-multa"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Reserva</span><span>20 linhas</span></div>
-      <div class="tscroll"><table id="t-aug-reserva"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Cliente</span><span>12 linhas</span></div>
-      <div class="tscroll"><table id="t-aug-cliente"></table></div></div>
-  </div>
-  <p class="lede wide" style="font-size:1.7rem">
-    <b>Multa</b> tem o valor mas não o nome. <b>Cliente</b> tem o nome mas não as multas.
-    E a multa nem guarda o CPF — <b>Reserva é a ponte</b>. Responder a pergunta exige
-    ler as três ao mesmo tempo, e é isso que o JOIN faz.</p>
+  <div class="jx" data-quem="aug"></div>
 </section>
 
 <section class="slide" id="aug-sql" data-titulo="Augusto · A consulta" data-steps="6"
          data-dono="inner" data-quem="Augusto" style="--ac:var(--inner); --ac-t:var(--inner-t)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--inner)">Augusto · A consulta</span></div>
-    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>INNER JOIN</span></div>
   </div>
   <div class="cols c-sql">
     <div class="sql">
@@ -156,7 +146,7 @@
   <div class="top">
     <div><span class="eyebrow" style="color:var(--inner)">Augusto · Resultado</span>
       <h2>Resultado da execução</h2></div>
-    <div class="plate"><b>BRASIL</b><span>INNER JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>INNER JOIN</span></div>
   </div>
   <div class="cols c-res">
     <div class="tbox"><div class="cap"><span>Reincidentes</span><span id="aug-cap">3 linhas</span></div>
@@ -191,36 +181,28 @@
          data-dono="left" data-quem="André" style="--ac:var(--left); gap:3.4rem">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--left)">André · Evento Manutenção</span></div>
-    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>LEFT JOIN</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
   <p class="ask">Quais veículos custaram <em>R$ 2.000 ou mais</em> em manutenção, e quais <em>nunca foram à oficina</em>?</p>
   <span class="eyebrow">Função de agregação · SUM</span>
 </section>
 
-<section class="slide" id="and-dados" data-titulo="André · Dados originais"
+<section class="slide" data-steps="1" id="and-dados" data-titulo="André · Dados originais"
          data-dono="left" data-quem="André" style="--ac:var(--left)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--left)">André · Dados originais</span>
-      <h2>Duas tabelas</h2></div>
-    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+      <h2>A junção, linha a linha</h2></div>
+    <div class="plate"><b>LIMAS</b><span>LEFT JOIN</span></div>
   </div>
-  <div class="cols c-2">
-    <div class="tbox"><div class="cap"><span>Veiculo</span><span>12 linhas</span></div>
-      <div class="tscroll"><table id="t-and-veiculo"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Manutencao</span><span>13 linhas</span></div>
-      <div class="tscroll"><table id="t-and-manut"></table></div></div>
-  </div>
-  <p class="lede wide" style="font-size:1.7rem">
-    <b>Quatro veículos não aparecem nenhuma vez em Manutencao.</b> São eles que decidem
-    qual junção usar.</p>
+  <div class="jx" data-quem="and"></div>
 </section>
 
 <section class="slide" id="and-sql" data-titulo="André · A consulta" data-steps="6"
          data-dono="left" data-quem="André" style="--ac:var(--left); --ac-t:var(--left-t)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--left)">André · A consulta</span></div>
-    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>LEFT JOIN</span></div>
   </div>
   <div class="cols c-sql">
     <div class="sql">
@@ -246,7 +228,7 @@
   <div class="top">
     <div><span class="eyebrow" style="color:var(--left)">André · Resultado</span>
       <h2>Resultado da execução</h2></div>
-    <div class="plate"><b>BRASIL</b><span>LEFT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>LEFT JOIN</span></div>
   </div>
   <div class="cols c-res">
     <div class="tbox"><div class="cap"><span>Custo por veículo</span><span id="and-cap">8 linhas</span></div>
@@ -281,36 +263,28 @@
          data-dono="right" data-quem="Daniel" style="--ac:var(--right); gap:3.4rem">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--right)">Daniel · Evento Avaliação</span></div>
-    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>RIGHT JOIN</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
   <p class="ask">Qual a <em>nota média por canal</em>, e quantas reservas <em>não foram avaliadas</em>?</p>
   <span class="eyebrow">Função de agregação · AVG</span>
 </section>
 
-<section class="slide" id="dan-dados" data-titulo="Daniel · Dados originais"
+<section class="slide" data-steps="1" id="dan-dados" data-titulo="Daniel · Dados originais"
          data-dono="right" data-quem="Daniel" style="--ac:var(--right)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--right)">Daniel · Dados originais</span>
-      <h2>Duas tabelas</h2></div>
-    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+      <h2>A junção, linha a linha</h2></div>
+    <div class="plate"><b>LIMAS</b><span>RIGHT JOIN</span></div>
   </div>
-  <div class="cols c-2">
-    <div class="tbox"><div class="cap"><span>Avaliacao</span><span>12 linhas</span></div>
-      <div class="tscroll"><table id="t-dan-aval"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Reserva</span><span>20 linhas</span></div>
-      <div class="tscroll"><table id="t-dan-reserva"></table></div></div>
-  </div>
-  <p class="lede wide" style="font-size:1.7rem">
-    São 20 reservas para 12 avaliações. <b>Oito reservas não têm avaliação nenhuma</b> —
-    as de id 15, 18 e 20, entre outras.</p>
+  <div class="jx" data-quem="dan"></div>
 </section>
 
 <section class="slide" id="dan-sql" data-titulo="Daniel · A consulta" data-steps="6"
          data-dono="right" data-quem="Daniel" style="--ac:var(--right); --ac-t:var(--right-t)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--right)">Daniel · A consulta</span></div>
-    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>RIGHT JOIN</span></div>
   </div>
   <div class="cols c-sql">
     <div class="sql">
@@ -336,7 +310,7 @@
   <div class="top">
     <div><span class="eyebrow" style="color:var(--right)">Daniel · Resultado</span>
       <h2>Resultado da execução</h2></div>
-    <div class="plate"><b>BRASIL</b><span>RIGHT JOIN</span></div>
+    <div class="plate"><b>LIMAS</b><span>RIGHT JOIN</span></div>
   </div>
   <div class="cols c-res">
     <div class="tbox"><div class="cap"><span>Satisfação por canal</span><span id="dan-cap">4 linhas</span></div>
@@ -372,36 +346,28 @@
          data-dono="full" data-quem="Guilherme" style="--ac:var(--full); gap:3.4rem">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--full)">Guilherme · Evento Reserva</span></div>
-    <div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div>
+    <div class="plate"><b>LIMAS</b><span>FULL OUTER</span></div>
   </div>
   <span class="eyebrow">Pergunta de negócio</span>
   <p class="ask">Quais veículos estão <em>parados</em>, e quais reservas estão <em>sem veículo alocado</em>?</p>
   <span class="eyebrow">Funções de agregação · MAX e MIN</span>
 </section>
 
-<section class="slide" id="gui-dados" data-titulo="Guilherme · Dados originais"
+<section class="slide" data-steps="1" id="gui-dados" data-titulo="Guilherme · Dados originais"
          data-dono="full" data-quem="Guilherme" style="--ac:var(--full)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--full)">Guilherme · Dados originais</span>
-      <h2>Duas tabelas</h2></div>
-    <div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div>
+      <h2>A junção, linha a linha</h2></div>
+    <div class="plate"><b>LIMAS</b><span>FULL OUTER</span></div>
   </div>
-  <div class="cols c-2">
-    <div class="tbox"><div class="cap"><span>Veiculo</span><span>12 linhas</span></div>
-      <div class="tscroll"><table id="t-gui-veiculo"></table></div></div>
-    <div class="tbox"><div class="cap"><span>Reserva</span><span>20 linhas</span></div>
-      <div class="tscroll"><table id="t-gui-reserva"></table></div></div>
-  </div>
-  <p class="lede wide" style="font-size:1.7rem">
-    Os dois lados têm sobra: veículos que ninguém reservou, e reservas com
-    <code>fk_Veiculo_placa</code> em NULL, ainda sem carro designado.</p>
+  <div class="jx" data-quem="gui"></div>
 </section>
 
 <section class="slide" id="gui-sql" data-titulo="Guilherme · A consulta" data-steps="6"
          data-dono="full" data-quem="Guilherme" style="--ac:var(--full); --ac-t:var(--full-t)">
   <div class="top">
     <div><span class="eyebrow" style="color:var(--full)">Guilherme · A consulta</span></div>
-    <div class="plate"><b>BRASIL</b><span>FULL OUTER</span></div>
+    <div class="plate"><b>LIMAS</b><span>FULL OUTER</span></div>
   </div>
   <div class="cols c-sql">
     <div class="sql">
@@ -600,6 +566,7 @@ ORDER BY total_multas DESC;</textarea>
 <div class="grid" id="grade"></div>
 
 <div class="chrome">
+  <span class="marca p"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="8" fill="var(--brand)"/><path d="M12 29 L20 11 L23.5 11 L15.5 29 Z" fill="var(--brand-ink)"/><path d="M17.5 29 L25.5 11 L29 11 L21 29 Z" fill="var(--brand-ink)" opacity=".45"/></svg><span class="nome">Limas</span></span>
   <span class="count"><b id="contador">1</b> / <span id="total">29</span></span>
   <span class="who-now" id="dono-atual"></span>
   <div class="road" id="estrada"></div>
@@ -608,6 +575,7 @@ ORDER BY total_multas DESC;</textarea>
 </div>
 
 <script src="scripts/dados.js"></script>
+<script src="scripts/juncao.js"></script>
 <script src="scripts/deck.js"></script>
 <script type="module" src="scripts/console.js"></script>
 </body>
