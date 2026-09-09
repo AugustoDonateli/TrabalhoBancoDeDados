@@ -12,9 +12,14 @@
 html{ font-size:min(1vw, 1.7778vh); }
 
 /* ---------- PALETA ----------------------------------------------------------
-   Neutro de aço com viés azul. As quatro cores das junções vêm da
-   sinalização automotiva e carregam significado:
-   autuação (vermelho) · oficina (azul) · avaliação (âmbar) · pátio (verde)
+   Neutro de aço com viés azul. As quatro cores das junções:
+   autuação (vermelho) · oficina (azul) · avaliação (roxo) · pátio (verde)
+
+   O roxo do Daniel foi escolhido no validador, não no olho. Roxo é azul
+   mais vermelho, e é o vermelho que o daltonismo mais comum perde — quase
+   todo roxo colide com o azul do André. #5E35B1 dava ΔE 0,3 (indistinguível)
+   e #6B2FBF dava 2,4. #93257F chega a 8,6, acima do alvo de 8, e ainda fica
+   na mesma faixa de luminosidade dos outros três, então não pesa mais que eles.
 
    Os tons de apoio do tema claro foram escurecidos para passar em WCAG AA
    (4,5 para texto). Projetor lava cor: o que mede 4,5 aqui fica no limite
@@ -28,11 +33,11 @@ html{ font-size:min(1vw, 1.7778vh); }
   --line:#C9D3E0;   --line-2:#7C8A9C;
   --ink:#0B1017;    --ink-2:#43505F;  --ink-3:#5F6E80;
   --brand:#0F3555;  --brand-ink:#FFFFFF;
-  --inner:#B22D1A;  --left:#0F52B0;   --right:#855800;  --full:#046443;
-  --inner-t:#FAE9E6; --left-t:#E6EEFC; --right-t:#FAF0D9; --full-t:#DDF3EA;
+  --inner:#B22D1A;  --left:#0F52B0;   --right:#93257F;  --full:#046443;
+  --inner-t:#FAE9E6; --left-t:#E6EEFC; --right-t:#F7E8F3; --full-t:#DDF3EA;
   --null:#606E80;   --nullbg:#EBEFF5;
   /* versoes vivas, para os paineis escuros — valem nos dois temas */
-  --inner-b:#FF8A6F; --left-b:#7DB4FF; --right-b:#EAB84E; --full-b:#45D69C;
+  --inner-b:#FF8A6F; --left-b:#7DB4FF; --right-b:#E58AD5; --full-b:#45D69C;
   --escuro:#0F141B;  --escuro-2:#1B2430; --escuro-ink:#EEF3F9; --escuro-ink2:#9FADBD;
   --shadow:0 .1rem .2rem rgba(11,16,23,.05), 0 1rem 3rem -1.4rem rgba(11,16,23,.2);
   --r:.4rem;
@@ -43,8 +48,8 @@ html{ font-size:min(1vw, 1.7778vh); }
     --line:#2E3742;   --line-2:#414C5A;
     --ink:#EEF3F9;    --ink-2:#A3B0BF;  --ink-3:#788595;
     --brand:#8CBAE6;  --brand-ink:#0D1117;
-    --inner:#FF8A6F;  --left:#7DB4FF;   --right:#EAB84E;  --full:#45D69C;
-    --inner-t:#2E1B16; --left-t:#12243D; --right-t:#2C2212; --full-t:#102B20;
+    --inner:#FF8A6F;  --left:#7DB4FF;   --right:#E58AD5;  --full:#45D69C;
+    --inner-t:#2E1B16; --left-t:#12243D; --right-t:#3A1733; --full-t:#102B20;
     --null:#788595;   --nullbg:#1D242E;
     --shadow:0 .1rem .2rem rgba(0,0,0,.5), 0 1rem 3rem -1.4rem rgba(0,0,0,.8);
   }
@@ -54,8 +59,8 @@ html{ font-size:min(1vw, 1.7778vh); }
   --line:#2E3742;   --line-2:#414C5A;
   --ink:#EEF3F9;    --ink-2:#A3B0BF;  --ink-3:#788595;
   --brand:#8CBAE6;  --brand-ink:#0D1117;
-  --inner:#FF8A6F;  --left:#7DB4FF;   --right:#EAB84E;  --full:#45D69C;
-  --inner-t:#2E1B16; --left-t:#12243D; --right-t:#2C2212; --full-t:#102B20;
+  --inner:#FF8A6F;  --left:#7DB4FF;   --right:#E58AD5;  --full:#45D69C;
+  --inner-t:#2E1B16; --left-t:#12243D; --right-t:#3A1733; --full-t:#102B20;
   --null:#788595;   --nullbg:#1D242E;
   --shadow:0 .1rem .2rem rgba(0,0,0,.5), 0 1rem 3rem -1.4rem rgba(0,0,0,.8);
 }
