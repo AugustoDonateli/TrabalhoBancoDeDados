@@ -26,16 +26,16 @@
 --   E o unico dos quatro joins que descarta os dois lados sem par.
 -- =====================================================================
 
-SELECT c.nome                    AS cliente,
-       c.contato,
-       COUNT(m.id)               AS total_multas,
-       COUNT(DISTINCT r.id)      AS reservas
+SELECT c.nome AS cliente,
+       COUNT(m.id) AS total_multas
 FROM Multa m
-INNER JOIN Reserva r ON m.fk_Reserva_id  = r.id
-INNER JOIN Cliente c ON r.fk_Cliente_cpf = c.cpf
-GROUP BY c.cpf, c.nome, c.contato
+INNER JOIN Reserva r
+    ON m.fk_Reserva_id = r.id
+INNER JOIN Cliente c
+    ON r.fk_Cliente_cpf = c.cpf
+GROUP BY c.nome
 HAVING COUNT(m.id) >= 2
-ORDER BY total_multas DESC, cliente;
+ORDER BY total_multas DESC;
 
 
 -- =====================================================================
